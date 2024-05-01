@@ -1,7 +1,6 @@
 package com.final_10aeat.global.security.jwt;
 
 
-import com.final_10aeat.global.security.jwt.exception.JwtNotFoundException;
 import com.final_10aeat.global.security.principal.MemberPrincipalService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
