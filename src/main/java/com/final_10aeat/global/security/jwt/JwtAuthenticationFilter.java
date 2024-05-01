@@ -38,13 +38,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         //헤더에서 토큰 값을 읽어오는 과정
         String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION);//기본적으로 포함되는 것
-        if (accessToken==null){
-            throw new JwtNotFoundException();
-        }
-        Authentication authentication = getEmailPassword(accessToken);
+        if(accessToken!=null){
+            Authentication authentication = getEmailPassword(accessToken);
 
-        SecurityContextHolder.getContext()
-                .setAuthentication(authentication);
+            SecurityContextHolder.getContext()
+                    .setAuthentication(authentication);
+        }
 
         filterChain.doFilter(request, response); //이 필터 끝났으니 다음 필터로 진행해라
 

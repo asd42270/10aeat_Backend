@@ -3,7 +3,6 @@ package com.final_10aeat.global.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -18,7 +17,7 @@ public class JwtTokenGenerator {
     private final SecretKey key;
 
     //TODO: yml 구체화 후에 변경
-    private final String secret = "dkanfjagrpsk";
+    private final String secret = "dkanfjagrpskasdfasdfgdfgearfewdxdasdaD";
 
     public JwtTokenGenerator() {
         this.key = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8),
@@ -26,15 +25,15 @@ public class JwtTokenGenerator {
     }
 
     //TODO: yml 파일이 구체화 된 후에 주입으로 변경
-    @Value("${jwt.access-token.access-expired}")
-    private Long accessExpiredTimeMills = 1000 * 30L;
+//    @Value()
+    private final Long accessExpiredTimeMills = 1000 * 30L;
 
 
-    public String createJwtToken(String email){
+    public String createJwtToken(String email) {
         return Jwts.builder()
                 .claim("email", email)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis()+accessExpiredTimeMills))
+                .expiration(new Date(System.currentTimeMillis() + accessExpiredTimeMills))
                 .signWith(key)
                 .compact();
     }
@@ -51,8 +50,6 @@ public class JwtTokenGenerator {
                 .parseSignedClaims(token)
                 .getPayload();
     }
-
-
 
 
 }
