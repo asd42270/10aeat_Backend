@@ -15,7 +15,7 @@ import java.util.Date;
 public class JwtTokenGenerator {
 
     //TODO:yml 파일이 구체화 된 후에 주입으로 변경
-    private SecretKey key;
+    private final SecretKey key;
 
     //TODO: yml 구체화 후에 변경
     private final String secret = "dkanfjagrpsk";

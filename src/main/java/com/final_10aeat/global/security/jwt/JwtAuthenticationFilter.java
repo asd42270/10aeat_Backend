@@ -26,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     /**
-     @AuthenticationPrincipal 컨트롤러에서 Member 사용 시 이 어노테이션으로 바로 파싱 가능
+     //@AuthenticationPrincipal 컨트롤러에서 Member 사용 시 이 어노테이션으로 바로 파싱 가능
      */
 
     private final JwtTokenGenerator jwtTokenGenerator;
