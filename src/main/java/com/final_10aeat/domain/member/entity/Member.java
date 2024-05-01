@@ -1,11 +1,17 @@
-package com.final_10aeat.domain.member;
+package com.final_10aeat.domain.member.entity;
 
 import com.final_10aeat.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 @Entity
 @Getter
+@Builder
+@Table(name = "member", indexes = @Index(
+        name = "idx_email", columnList = "email", unique = true
+))
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseTimeEntity {
 
     @Id
@@ -17,4 +23,5 @@ public class Member extends BaseTimeEntity {
 
     @Column
     private String password;
+
 }
