@@ -1,8 +1,6 @@
 package com.final_10aeat.global.security.principal;
 
-import com.final_10aeat.domain.member.exception.UserException;
 import com.final_10aeat.domain.member.repository.MemberRepository;
-import com.final_10aeat.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
