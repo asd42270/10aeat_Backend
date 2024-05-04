@@ -1,7 +1,6 @@
 package com.final_10aeat.domain.member.repository;
 
 import com.final_10aeat.domain.member.entity.Member;
-import com.final_10aeat.domain.member.exception.MemberNotExistException;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
