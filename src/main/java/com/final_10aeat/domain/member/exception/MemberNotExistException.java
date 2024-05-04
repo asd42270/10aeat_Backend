@@ -10,5 +10,4 @@ public class MemberNotExistException extends ApplicationException {
     public MemberNotExistException() {
         super(ERROR_CODE);
     }
-
 }
