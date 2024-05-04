@@ -21,7 +21,9 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
-    public PasswordEncoder encoder() {return new BCryptPasswordEncoder();}
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -30,12 +32,12 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                    auth -> auth
-                            .anyRequest().permitAll()
+                        auth -> auth
+                                .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(
-                        session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 ).build();
     }
