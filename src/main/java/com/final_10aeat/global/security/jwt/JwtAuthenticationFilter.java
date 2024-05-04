@@ -1,7 +1,7 @@
 package com.final_10aeat.global.security.jwt;
 
 
-import com.final_10aeat.global.security.principal.MemberPrincipalService;
+import com.final_10aeat.global.security.principal.MemberDetailsProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      */
 
     private final JwtTokenGenerator jwtTokenGenerator;
-    private final MemberPrincipalService memberPrincipalService;
+    private final MemberDetailsProvider memberDetailsProvider;
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private Authentication getEmailPassword(String token) {
         String email = jwtTokenGenerator.getUserEmail(token);
         if (email != null){
-            UserDetails userDetails = memberPrincipalService.loadUserByUsername(email);
+            UserDetails userDetails = memberDetailsProvider.loadUserByUsername(email);
             List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
             return new UsernamePasswordAuthenticationToken(
                     userDetails,
