@@ -30,6 +30,9 @@ FROM alpine:latest
 ENV JAVA_HOME=/jre
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 COPY --from=corretto-jdk /jre $JAVA_HOME
+# 환경 변수 설정
+ENV SPRING_PROFILES_ACTIVE=develop
+
 ARG JAR_FILE=/app/build/libs/*.jar
 COPY --from=build /app/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
