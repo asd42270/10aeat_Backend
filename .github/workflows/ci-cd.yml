@@ -56,6 +56,10 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          # build-args에서 secrets를 전달
+          build-args: |
+              DB_URL=${{ secrets.DB_URL }}
+              DB_PASSWORD=${{ secrets.DB_PASSWORD }}
 
       - name: ssh to ec2 and run docker
         uses: appleboy/ssh-action@master
