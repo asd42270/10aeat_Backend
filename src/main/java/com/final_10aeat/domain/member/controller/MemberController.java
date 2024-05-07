@@ -9,14 +9,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/members")
 public class MemberController {
     private final MemberService memberService;
 
-    @PostMapping("/members/register")
+    @PostMapping("/register")
     public ResponseDTO<Void> register(
             @RequestBody MemberRegisterRequestDto request
     ){
@@ -24,7 +26,7 @@ public class MemberController {
         return ResponseDTO.ok();
     }
 
-    @PostMapping("/members/login")
+    @PostMapping("/login")
     public ResponseDTO<Void> login(
             HttpServletResponse response,
             @RequestBody MemberLoginRequestDto request){
