@@ -56,3 +56,15 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: ssh to ec2 and run docker
+        uses: appleboy/ssh-action@master
+        with:
+          key: ${{secrets.EC2_PEM}}
+          host: ${{secrets.EC2_HOST}}
+          username: ${{secrets.EC2_USER}}
+          script: |
+            docker stop my-container
+            docker rm my-container
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:devlop
+            docker run --name my-container -p 8080:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:devlop -d
