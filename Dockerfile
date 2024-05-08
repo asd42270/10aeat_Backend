@@ -2,6 +2,8 @@
 FROM openjdk:17-jdk-slim AS build
 WORKDIR /app
 COPY . .
+ARG DB_URL
+ARG DB_PASSWORD
 #RUN ./gradlew test
 RUN ./gradlew bootJar
 #RUN ./gradlew build --no-daemon -x test
@@ -32,10 +34,12 @@ ENV JAVA_HOME=/jre
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 COPY --from=corretto-jdk /jre $JAVA_HOME
 # 환경 변수 설정
+ARG DB_URL
+ARG DB_PASSWORD
 ENV SPRING_PROFILES_ACTIVE=develop
 # ENV로 실제 애플리케이션에서 사용할 환경변수 설정
-ENV DATABASE_URL="${DB_URL}"
-ENV DATABASE_PASSWORD="${DB_PASSWORD}"
+ENV DATABASE_URL=${DB_URL}
+ENV DATABASE_PASSWORD=${DB_PASSWORD}
 ARG JAR_FILE=/app/build/libs/*.jar
 COPY --from=build /app/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
