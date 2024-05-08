@@ -4,9 +4,9 @@ spring:
       on-profile: develop
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${{secrets.DB_URL}}
+    url: ${{env.DB_URL}}
     username: root
-    password: ${{secrets.DB_PASSWORD}}
+    password: ${{env.DB_PASSWORD}}
 
   jpa:
     hibernate:
