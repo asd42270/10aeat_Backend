@@ -71,4 +71,4 @@ jobs:
             docker stop my-container
             docker rm my-container
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:develop
-            docker run --name my-container -e DATABASE_URL=${{ secrets.DB_URL }} -e DATABASE_PASSWORD=${{ secrets.DB_PASSWORD }} -p 8080:8080 -d ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:develop
+            docker run --name my-container -e DATABASE_URL=${{ secrets.DB_URL }} -e DATABASE_PASSWORD=${{ secrets.DB_PASSWORD }} -p 80:8080 -d ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:develop
