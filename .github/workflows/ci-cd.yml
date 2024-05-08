@@ -56,10 +56,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          # build-args에서 secrets를 전달
-          build-args: |
-              DB_URL=${{ secrets.DB_URL }}
-              DB_PASSWORD=${{ secrets.DB_PASSWORD }}
 
       - name: ssh to ec2 and run docker
         uses: appleboy/ssh-action@master
@@ -71,4 +67,4 @@ jobs:
             docker stop my-container
             docker rm my-container
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:develop
-            docker run --name my-container -p 8080:8080 ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:develop -d
+            docker run --name my-container -e DATABASE_URL=${{secrets.DB_URL}} DATABASE_PASSWORD=${{DB_PASSWORD}} -p 8080:8080 -d ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:develop

@@ -8,12 +8,6 @@ RUN ./gradlew bootJar
 # 실행 단계
 FROM openjdk:17-jdk-slim
 VOLUME /tmp
-# ARG로 환경변수 정의
-ARG DB_URL
-ARG DB_PASSWORD
-# ENV로 실제 애플리케이션에서 사용할 환경변수 설정
-ENV DATABASE_URL=${DB_URL}
-ENV DATABASE_PASSWORD=${DB_PASSWORD}
 
 COPY --from=build /app/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
@@ -39,7 +33,9 @@ ENV PATH="${JAVA_HOME}/bin:${PATH}"
 COPY --from=corretto-jdk /jre $JAVA_HOME
 # 환경 변수 설정
 ENV SPRING_PROFILES_ACTIVE=develop
-
+# ENV로 실제 애플리케이션에서 사용할 환경변수 설정
+ENV DATABASE_URL="${DB_URL}"
+ENV DATABASE_PASSWORD="${DB_PASSWORD}"
 ARG JAR_FILE=/app/build/libs/*.jar
 COPY --from=build /app/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
