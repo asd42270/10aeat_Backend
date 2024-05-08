@@ -38,8 +38,8 @@ ARG DB_URL
 ARG DB_PASSWORD
 ENV SPRING_PROFILES_ACTIVE=develop
 # ENV로 실제 애플리케이션에서 사용할 환경변수 설정
-ENV DATABASE_URL="${DB_URL}"
-ENV DATABASE_PASSWORD="${DB_PASSWORD}"
+ENV DATABASE_URL=${DB_URL}
+ENV DATABASE_PASSWORD=${DB_PASSWORD}
 ARG JAR_FILE=/app/build/libs/*.jar
 COPY --from=build /app/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
