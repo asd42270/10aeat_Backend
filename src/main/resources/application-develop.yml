@@ -16,5 +16,5 @@ spring:
 #    type: redis
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_URL}
+      port: ${REDIS_PORT}
