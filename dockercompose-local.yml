@@ -4,12 +4,12 @@ services:
     container_name: my-redis
     image: redis
     ports:
-      - 6379:6379
+      - ${LOCAL_REDIS_PORT}:6379
 
   my-sql:
     container_name: my-sql
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: ${LOCAL_DB_PASSWORD}
     ports:
-      - 3306:3306
+      - ${LOCAL_DB_PORT}:3306
