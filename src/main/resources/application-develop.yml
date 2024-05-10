@@ -11,3 +11,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+  data:
+    redis:
+      host: ${REDIS_URL}
+      port: ${REDIS_PORT}
