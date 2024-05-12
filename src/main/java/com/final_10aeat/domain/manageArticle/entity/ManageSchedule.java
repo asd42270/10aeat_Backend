@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "manage_schedule")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ManageSchedule extends BaseTimeEntity {
+public class ManageSchedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
