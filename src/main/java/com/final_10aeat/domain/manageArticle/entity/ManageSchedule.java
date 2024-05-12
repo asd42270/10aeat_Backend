@@ -29,8 +29,8 @@ public class ManageSchedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "ischeck")
-    private boolean isCheck;
+    @Column(name = "iscomplete")
+    private boolean isComplete;
 
     @Column
     private LocalDateTime schedule;
