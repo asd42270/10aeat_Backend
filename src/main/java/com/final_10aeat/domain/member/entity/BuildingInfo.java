@@ -29,10 +29,10 @@ public class BuildingInfo {
     private Long id;
 
     @Column
-    private int dong;
+    private String dong;
 
     @Column
-    private int ho;
+    private String ho;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "office_id")
