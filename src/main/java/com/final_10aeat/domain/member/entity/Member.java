@@ -9,7 +9,9 @@ import lombok.*;
 @Entity
 @Getter
 @Builder
-@Table(name = "member")
+@Table(name = "member", indexes = @Index(
+    name = "idx_email_deletedAt", columnList = "email, deletedAt", unique = true
+))
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends SoftDeletableBaseTimeEntity {
