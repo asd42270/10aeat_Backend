@@ -1,11 +1,13 @@
 package com.final_10aeat.global.util;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.final_10aeat.global.exception.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseDTO<T> {
 
     private final int code;
