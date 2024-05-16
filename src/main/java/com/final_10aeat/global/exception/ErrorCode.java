@@ -6,6 +6,11 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
 
+    // EMAIL
+    EMAIL_SENDING_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 전송에 실패했습니다."),
+    EMAIL_TEMPLATE_LOAD_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 템플릿 로드에 실패했습니다."),
+    EMAIL_VERIFICATION_CODE_EXPIRED(HttpStatus.GONE, "인증 코드의 유효 기간이 만료되었습니다."),
+
     // MEMBER
     MEMBER_NOT_EXIST(HttpStatus.BAD_REQUEST, "존재하지 않는 사용자입니다."),
     TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "토큰을 찾을 수 없습니다."),
