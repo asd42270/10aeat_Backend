@@ -51,8 +51,8 @@ public class ResponseDTO<T> {
             .build();
     }
 
-    public static ResponseDTO<Void> errorWithMessage(HttpStatus httpStatus, String errorMessage) {
-        return ResponseDTO.<Void>builder()
+    public static <T> ResponseDTO<T> errorWithMessage(HttpStatus httpStatus, String errorMessage) {
+        return ResponseDTO.<T>builder()
             .code(httpStatus.value())
             .message(errorMessage)
             .data(null)
