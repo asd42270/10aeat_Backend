@@ -2,6 +2,7 @@ package com.final_10aeat.domain.member.service;
 
 import com.final_10aeat.domain.member.dto.response.EmailVerificationResponseDto;
 import com.final_10aeat.domain.member.entity.MemberRole;
+import com.final_10aeat.domain.member.exception.InvalidVerificationCodeException;
 import com.final_10aeat.domain.member.exception.VerificationCodeExpiredException;
 import com.final_10aeat.global.util.ResponseDTO;
 import com.google.gson.Gson;
@@ -49,7 +50,7 @@ public class LocalEmailService implements EmailUseCase {
     }
 
     @Override
-    public ResponseDTO<EmailVerificationResponseDto> verifyEmailCode(String email, String code) {
+    public EmailVerificationResponseDto verifyEmailCode(String email, String code) {
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
         String storedCode = ops.get(email + ":code");
         String userInfoJson = ops.get(email + ":info");
@@ -57,14 +58,10 @@ public class LocalEmailService implements EmailUseCase {
         if (storedCode == null || userInfoJson == null) {
             throw new VerificationCodeExpiredException();
         }
-
         if (!code.equals(storedCode)) {
-            return ResponseDTO.errorWithMessage(HttpStatus.BAD_REQUEST, "인증번호가 일치하지 않습니다.");
+            throw new InvalidVerificationCodeException();
         }
-
-        EmailVerificationResponseDto userInfo = gson.fromJson(userInfoJson,
-            EmailVerificationResponseDto.class);
-        return ResponseDTO.okWithData(userInfo);
+        return gson.fromJson(userInfoJson, EmailVerificationResponseDto.class);
     }
 
     private String generateAuthCode() {
