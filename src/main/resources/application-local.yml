@@ -8,12 +8,10 @@ spring:
     url: jdbc:mysql://${LOCAL_DB_HOST}:${LOCAL_DB_PORT}/${LOCAL_DB_DATABASE}
     username: ${LOCAL_DB_ROOT_USERNAME}
     password: ${LOCAL_DB_PASSWORD}
-
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
-
   data:
     redis:
       host: ${LOCAL_REDIS_URL}
