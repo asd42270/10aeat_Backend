@@ -32,11 +32,11 @@ jobs:
         shell: bash
 
       - name : Creat asciidoctor snippet
-        run: ./gradlew asciidoctor
+        run: ./gradlew clean asciidoctor
         shell: bash
 
       - name: Build and Test with Gradle
-        run: ./gradlew clean build --parallel -x test
+        run: ./gradlew build --parallel -x test
         shell: bash
 
       - name: Log in to Docker Hub
