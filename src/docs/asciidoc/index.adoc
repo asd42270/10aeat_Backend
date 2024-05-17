@@ -12,7 +12,7 @@ endif::[]
 
 == API
 
-=== link:email/email-api.html[이메일 API, window=blank]
+=== link:email-api.html[이메일 API, window=blank]
 
 == API Common Response
 
