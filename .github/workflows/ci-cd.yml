@@ -4,6 +4,10 @@ on:
   push:
     branches: [ develop ]
 
+env:
+  SNIPPETS_DIR: /home/runner/work/10aeat_Backend/10aeat_Backend/build/generated-snippets
+
+
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -31,7 +35,7 @@ jobs:
         run: chmod +x ./gradlew
         shell: bash
 
-      - name : Creat asciidoctor snippet
+      - name: Creat asciidoctor snippet
         run: ./gradlew clean asciidoctor
         shell: bash
 
