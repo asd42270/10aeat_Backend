@@ -9,9 +9,9 @@ import static org.mockito.Mockito.when;
 
 import com.final_10aeat.domain.member.dto.response.EmailVerificationResponseDto;
 import com.final_10aeat.domain.member.entity.MemberRole;
+import com.final_10aeat.domain.member.exception.InvalidVerificationCodeException;
 import com.final_10aeat.domain.member.exception.VerificationCodeExpiredException;
 import com.final_10aeat.domain.member.service.LocalEmailService;
-import com.final_10aeat.global.util.ResponseDTO;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -77,11 +77,8 @@ public class LocalEmailServiceTest {
             when(valueOperations.get(email + ":code")).thenReturn(code);
             when(valueOperations.get(email + ":info")).thenReturn(userInfoJson);
 
-            ResponseDTO<EmailVerificationResponseDto> response = localEmailService.verifyEmailCode(
-                email, code);
-
-            assertEquals(HttpStatus.OK.value(), response.getCode());
-            assertEquals(expectedResponse, response.getData());
+            EmailVerificationResponseDto response = localEmailService.verifyEmailCode(email, code);
+            assertEquals(expectedResponse, response);
         }
 
         @Test
@@ -97,11 +94,9 @@ public class LocalEmailServiceTest {
             when(valueOperations.get(email + ":code")).thenReturn(wrongCode);
             when(valueOperations.get(email + ":info")).thenReturn(userInfoJson);
 
-            ResponseDTO<EmailVerificationResponseDto> response = localEmailService.verifyEmailCode(
-                email, code);
-
-            assertEquals(HttpStatus.BAD_REQUEST.value(), response.getCode());
-            assertEquals("인증번호가 일치하지 않습니다.", response.getMessage());
+            assertThrows(InvalidVerificationCodeException.class, () -> {
+                localEmailService.verifyEmailCode(email, code);
+            });
         }
 
         @Test
