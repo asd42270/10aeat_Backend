@@ -1,4 +1,4 @@
-package com.final_10aeat.domain.member.docs;
+package com.final_10aeat.docs;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
