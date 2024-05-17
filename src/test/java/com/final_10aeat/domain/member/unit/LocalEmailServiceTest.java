@@ -1,0 +1,120 @@
+package com.final_10aeat.domain.member.unit;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.final_10aeat.domain.member.dto.response.EmailVerificationResponseDto;
+import com.final_10aeat.domain.member.entity.MemberRole;
+import com.final_10aeat.domain.member.exception.VerificationCodeExpiredException;
+import com.final_10aeat.domain.member.service.LocalEmailService;
+import com.final_10aeat.global.util.ResponseDTO;
+import com.google.gson.Gson;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.http.HttpStatus;
+
+import java.util.concurrent.TimeUnit;
+
+public class LocalEmailServiceTest {
+
+    @Mock
+    private RedisTemplate<String, String> redisTemplate;
+
+    @Mock
+    private ValueOperations<String, String> valueOperations;
+
+    @InjectMocks
+    private LocalEmailService localEmailService;
+
+    private Gson gson = new Gson();
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        when(redisTemplate.opsForValue()).thenReturn(valueOperations);
+    }
+
+    @Test
+    @DisplayName("인증 코드 전송을 성공한다.")
+    void _willSuccess() {
+        String email = "test@example.com";
+        MemberRole role = MemberRole.TENANT;
+        String dong = "102";
+        String ho = "101";
+
+        String authCode = localEmailService.sendVerificationEmail(email, role, dong, ho);
+
+        verify(valueOperations).set(eq(email + ":code"), eq(authCode), eq(1440L),
+            eq(TimeUnit.MINUTES));
+        verify(valueOperations).set(eq(email + ":info"), anyString(), eq(1440L),
+            eq(TimeUnit.MINUTES));
+    }
+
+    @Nested
+    @DisplayName("verifyEmailCode()는")
+    class Context_VerifyEmailCode {
+
+        @Test
+        @DisplayName("검증을 성공한다.")
+        void _willSuccess() {
+            String email = "test@example.com";
+            String code = "6pidjym";
+            EmailVerificationResponseDto expectedResponse = new EmailVerificationResponseDto(email,
+                "TENANT", "102", "101");
+            String userInfoJson = gson.toJson(expectedResponse);
+
+            when(valueOperations.get(email + ":code")).thenReturn(code);
+            when(valueOperations.get(email + ":info")).thenReturn(userInfoJson);
+
+            ResponseDTO<EmailVerificationResponseDto> response = localEmailService.verifyEmailCode(
+                email, code);
+
+            assertEquals(HttpStatus.OK.value(), response.getCode());
+            assertEquals(expectedResponse, response.getData());
+        }
+
+        @Test
+        @DisplayName("일치하지 않는 인증 코드로 검증에 실패한다.")
+        void BadRequest_willFail() {
+            String email = "test@example.com";
+            String code = "6pidjym";
+            String wrongCode = "wrongcode";
+            EmailVerificationResponseDto expectedResponse = new EmailVerificationResponseDto(email,
+                "TENANT", "102", "101");
+            String userInfoJson = gson.toJson(expectedResponse);
+
+            when(valueOperations.get(email + ":code")).thenReturn(wrongCode);
+            when(valueOperations.get(email + ":info")).thenReturn(userInfoJson);
+
+            ResponseDTO<EmailVerificationResponseDto> response = localEmailService.verifyEmailCode(
+                email, code);
+
+            assertEquals(HttpStatus.BAD_REQUEST.value(), response.getCode());
+            assertEquals("인증번호가 일치하지 않습니다.", response.getMessage());
+        }
+
+        @Test
+        @DisplayName("인증 코드가 만료되어 검증에 실패한다.")
+        void Gone_willFailure() {
+            String email = "test@example.com";
+            String code = "6pidjym";
+
+            when(valueOperations.get(email + ":code")).thenReturn(null);
+            when(valueOperations.get(email + ":info")).thenReturn(null);
+
+            assertThrows(VerificationCodeExpiredException.class,
+                () -> localEmailService.verifyEmailCode(email, code));
+        }
+    }
+}
