@@ -1,0 +1,15 @@
+version: "3"
+services:
+  my-redis:
+    container_name: my-redis
+    image: redis
+    ports:
+      - ${LOCAL_REDIS_PORT}:6379
+
+  my-sql:
+    container_name: my-sql
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${LOCAL_DB_PASSWORD}
+    ports:
+      - ${LOCAL_DB_PORT}:3306

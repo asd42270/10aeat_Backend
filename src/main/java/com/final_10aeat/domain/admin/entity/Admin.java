@@ -50,6 +50,11 @@ public class Admin extends SoftDeletableBaseTimeEntity {
     @Column(name = "lunch_end")
     private LocalDateTime lunchBreakEnd;
 
+    @Column(name = "admin_office")
+    private String adminOffice;
+
+    private String affiliation;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MemberRole role = MemberRole.ADMIN;

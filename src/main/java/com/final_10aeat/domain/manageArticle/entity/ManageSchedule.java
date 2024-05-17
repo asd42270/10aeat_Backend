@@ -23,14 +23,14 @@ import lombok.NoArgsConstructor;
 @Table(name = "manage_schedule")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ManageSchedule extends BaseTimeEntity {
+public class ManageSchedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "ischeck")
-    private boolean isCheck;
+    @Column(name = "iscomplete")
+    private boolean isComplete;
 
     @Column
     private LocalDateTime schedule;

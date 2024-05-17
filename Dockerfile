@@ -2,7 +2,7 @@
 FROM openjdk:17-jdk-slim AS build
 WORKDIR /app
 COPY . .
-#RUN ./gradlew test
+RUN ./gradlew testClasses
 RUN ./gradlew bootJar
 #RUN ./gradlew build --no-daemon -x test
 # 실행 단계
@@ -36,6 +36,8 @@ ENV SPRING_PROFILES_ACTIVE=develop
 # ENV로 실제 애플리케이션에서 사용할 환경변수 설정
 ENV DATABASE_URL=""
 ENV DATABASE_PASSWORD=""
+ENV REDIS_URL=""
+ENV REDIS_PORT=""
 ARG JAR_FILE=/app/build/libs/*.jar
 COPY --from=build /app/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]

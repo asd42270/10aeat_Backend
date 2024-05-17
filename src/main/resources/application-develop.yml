@@ -7,7 +7,14 @@ spring:
     url: ${DATABASE_URL}
     username: root
     password: ${DATABASE_PASSWORD}
-
   jpa:
     hibernate:
       ddl-auto: update
+  data:
+    redis:
+      host: ${REDIS_URL}
+      port: ${REDIS_PORT}
+  mail:
+    host: ${MAIL_HOST}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
