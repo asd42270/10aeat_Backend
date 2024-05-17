@@ -22,7 +22,6 @@ import com.final_10aeat.domain.member.dto.request.EmailVerificationRequestDto;
 import com.final_10aeat.domain.member.dto.response.EmailVerificationResponseDto;
 import com.final_10aeat.domain.member.entity.MemberRole;
 import com.final_10aeat.domain.member.service.EmailUseCase;
-import com.final_10aeat.global.util.ResponseDTO;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -89,7 +88,7 @@ public class EmailControllerDocsTest extends RestDocsSupport {
             "test@example.com", "TENANT", "102", "101");
 
         when(emailUseCase.verifyEmailCode(anyString(), anyString()))
-            .thenReturn(ResponseDTO.okWithData(responseDto));
+            .thenReturn(responseDto);
 
         // when & then
         mockMvc.perform(post("/members/email/verification")
