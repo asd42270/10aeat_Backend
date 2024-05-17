@@ -2,6 +2,7 @@ package com.final_10aeat.domain.member.controller;
 
 import com.final_10aeat.domain.member.dto.request.EmailRequestDto;
 import com.final_10aeat.domain.member.dto.request.EmailVerificationRequestDto;
+import com.final_10aeat.domain.member.dto.response.EmailVerificationResponseDto;
 import com.final_10aeat.domain.member.service.EmailUseCase;
 import com.final_10aeat.global.util.ResponseDTO;
 import jakarta.validation.Valid;
@@ -28,9 +29,9 @@ public class EmailController {
     }
 
     @PostMapping("/verification")
-    public ResponseEntity<ResponseDTO<?>> verifyEmail(
+    public ResponseEntity<ResponseDTO<EmailVerificationResponseDto>> verifyEmail(
         @RequestBody @Valid EmailVerificationRequestDto verificationRequest) {
-        ResponseDTO<?> response = emailUseCase.verifyEmailCode(
+        ResponseDTO<EmailVerificationResponseDto> response = emailUseCase.verifyEmailCode(
             verificationRequest.email(), verificationRequest.code());
         return ResponseEntity.status(response.getCode()).body(response);
     }
