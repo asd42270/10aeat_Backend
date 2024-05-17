@@ -18,3 +18,7 @@ spring:
     host: ${MAIL_HOST}
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
+  web:
+    resources:
+      static-locations:
+        [ "file:/app/generated-snippets/" ]

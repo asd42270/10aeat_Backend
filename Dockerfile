@@ -40,4 +40,5 @@ ENV REDIS_URL=""
 ENV REDIS_PORT=""
 ARG JAR_FILE=/app/build/libs/*.jar
 COPY --from=build /app/build/libs/*.jar app.jar
+COPY --from=build /app/build/generated-snippets /app/generated-snippets
 ENTRYPOINT ["java", "-jar", "app.jar"]
