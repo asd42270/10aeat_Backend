@@ -23,6 +23,5 @@ spring:
   web:
     resources:
       static-locations:
-        - "file:build/generated-snippets/"
         - "classpath:/static/"
         - "classpath:/public/"
