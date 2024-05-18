@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain
     ) throws ServletException, IOException {
         //헤더에서 토큰 값을 읽어오는 과정
-        String accessToken = request.getHeader("accessToken");//기본적으로 포함되는 것
+        String accessToken = request.getHeader("accessToken");//
         if(accessToken!=null){
             Authentication authentication = getEmailPassword(accessToken);
 
@@ -43,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .setAuthentication(authentication);
         }
 
-        filterChain.doFilter(request, response); //이 필터 끝났으니 다음 필터로 진행해라
+        filterChain.doFilter(request, response);//필터 종료 후 다음 필터로 진행
 
     }
 
