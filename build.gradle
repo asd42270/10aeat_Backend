@@ -73,7 +73,12 @@ asciidoctor {
 
 bootJar {
     dependsOn asciidoctor
+    // asciidoctor 문서를 포함
     from("${asciidoctor.outputDir}") {
         into 'static/docs'
+    }
+    // generated snippets를 포함
+    from("${project.buildDir}/generated-snippets") {
+        into 'build/generated-snippets'
     }
 }

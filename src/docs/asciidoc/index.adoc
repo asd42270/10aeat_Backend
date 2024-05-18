@@ -1,5 +1,5 @@
 ifndef::snippets[]
-:snippets: {env:SNIPPETS_DIR}
+:snippets: ../../build/generated-snippets
 endif::[]
 = 10aeat API 문서
 :doctype: book
