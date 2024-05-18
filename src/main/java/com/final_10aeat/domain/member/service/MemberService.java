@@ -50,7 +50,7 @@ public class MemberService {
             throw new MemberNotExistException();
         }
 
-        return jwtTokenGenerator.createJwtToken(request.email());
+        return jwtTokenGenerator.createJwtToken(request.email(),member.getRole());
     }
 
     private Boolean passwordMatcher(final String requestPassword, final Member member) {

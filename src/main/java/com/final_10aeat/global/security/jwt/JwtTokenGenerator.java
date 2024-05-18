@@ -1,6 +1,7 @@
 package com.final_10aeat.global.security.jwt;
 
 
+import com.final_10aeat.domain.member.entity.MemberRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
@@ -26,12 +27,13 @@ public class JwtTokenGenerator {
 
     //TODO: yml 파일이 구체화 된 후에 주입으로 변경
 //    @Value()
-    private final Long accessExpiredTimeMills = 1000 * 30L;
+    private final Long accessExpiredTimeMills = 1000 * 60 * 30L;
 
 
-    public String createJwtToken(String email) {
+    public String createJwtToken(String email, MemberRole memberRole) {
         return Jwts.builder()
                 .claim("email", email)
+                .claim("role",memberRole)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + accessExpiredTimeMills))
                 .signWith(key)
@@ -43,6 +45,10 @@ public class JwtTokenGenerator {
         return claims.get("email", String.class);
     }
 
+    public String getRole(String token) {
+        Claims claims = extractClaim(token);
+        return claims.get("role", String.class);
+    }
 
     private Claims extractClaim(String token) {
         return Jwts.parser()
