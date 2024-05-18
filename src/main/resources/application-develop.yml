@@ -19,6 +19,6 @@ spring:
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
   mvc:
-    static-path-pattern: /**
+    static-path-pattern: "/docs/**"
     resources:
-      static-locations: classpath:/static/,classpath:/public/
+      static-locations: "file:build/generated-snippets/"
