@@ -20,5 +20,7 @@ spring:
     password: ${MAIL_PASSWORD}
   mvc:
     static-path-pattern: "/docs/**"
+  web:
     resources:
-      static-locations: "file:build/generated-snippets/"
+      static-locations:
+          "file:build/generated-snippets/", "classpath:/static/", "classpath:/public/"
