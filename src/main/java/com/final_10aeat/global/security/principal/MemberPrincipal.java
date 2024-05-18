@@ -1,6 +1,7 @@
 package com.final_10aeat.global.security.principal;
 
 import com.final_10aeat.domain.member.entity.Member;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class MemberPrincipal implements UserDetails {
 
+    @Getter
     private final Member member;
 
     @Override
