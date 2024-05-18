@@ -39,6 +39,7 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'io.github.cdimascio:java-dotenv:+'
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 
     // lombok
     compileOnly 'org.projectlombok:lombok'
