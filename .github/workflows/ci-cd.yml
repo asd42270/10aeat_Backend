@@ -5,7 +5,7 @@ on:
     branches: [ develop ]
 
 env:
-  SNIPPETS_DIR: /home/runner/work/10aeat_Backend/10aeat_Backend/build/generated-snippets
+  SNIPPETS_DIR: /home/runner/work/build/generated-snippets
 
 
 jobs:
