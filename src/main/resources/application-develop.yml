@@ -19,8 +19,4 @@ spring:
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
   mvc:
-    static-path-pattern: "static/docs/**"
-  web:
-    resources:
-      static-locations:
-        - "classpath:/static/"
+    static-path-pattern: "/**"
