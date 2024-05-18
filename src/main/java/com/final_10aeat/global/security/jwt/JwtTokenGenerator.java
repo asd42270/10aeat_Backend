@@ -26,7 +26,7 @@ public class JwtTokenGenerator {
 
     //TODO: yml 파일이 구체화 된 후에 주입으로 변경
 //    @Value()
-    private final Long accessExpiredTimeMills = 1000 * 30L;
+    private final Long accessExpiredTimeMills = 1000 * 60 * 30L;
 
 
     public String createJwtToken(String email) {
