@@ -7,7 +7,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     /**
-     //@AuthenticationPrincipal 컨트롤러에서 Member 사용 시 이 어노테이션으로 바로 파싱 가능
+     //컨트롤러에서 Member 사용 시 @AuthenticationPrincipal 어노테이션으로 MemberPrincipal을 불러와 사용
      */
 
     private final JwtTokenGenerator jwtTokenGenerator;
@@ -36,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain
     ) throws ServletException, IOException {
         //헤더에서 토큰 값을 읽어오는 과정
-        String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION);//기본적으로 포함되는 것
+        String accessToken = request.getHeader("accessToken");//기본적으로 포함되는 것
         if(accessToken!=null){
             Authentication authentication = getEmailPassword(accessToken);
 
