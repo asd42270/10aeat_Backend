@@ -75,6 +75,7 @@ jobs:
             docker rm my-container
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:develop
             docker run --name my-container \
+            --network my-network \
             -e REDIS_URL=${{ secrets.REDIS_URL }} \
             -e REDIS_PORT=${{ secrets.REDIS_PORT }} \
             -e DATABASE_URL=${{ secrets.DB_URL }} \
