@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/health")
 @RequiredArgsConstructor
 public class HealthCheckController {
+
     private final StringRedisTemplate redisTemplate;
 
     @GetMapping("/server")
