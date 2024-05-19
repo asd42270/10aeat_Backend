@@ -3,6 +3,7 @@ package com.final_10aeat.domain.member.entity;
 import com.final_10aeat.domain.admin.entity.Office;
 import com.final_10aeat.global.entity.SoftDeletableBaseTimeEntity;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.*;
 
@@ -48,4 +49,8 @@ public class Member extends SoftDeletableBaseTimeEntity {
         inverseJoinColumns = @JoinColumn(name = "office_id")
     )
     private Set<Office> offices;
+
+    public void delete(LocalDateTime currentTime){
+        super.delete(currentTime);
+    }
 }

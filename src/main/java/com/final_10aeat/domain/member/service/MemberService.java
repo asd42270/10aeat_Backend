@@ -2,6 +2,7 @@ package com.final_10aeat.domain.member.service;
 
 import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
+import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.MemberDuplicatedException;
 import com.final_10aeat.domain.member.exception.MemberNotExistException;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +37,7 @@ public class MemberService {
         Member member = Member.builder()
                 .email(request.email())
                 .password(password)
+                .role(request.memberRole())
                 .build();
 
         // 4. save
@@ -51,6 +54,17 @@ public class MemberService {
         }
 
         return jwtTokenGenerator.createJwtToken(request.email(),member.getRole());
+    }
+
+    public void withdraw(MemberWithdrawRequestDto request) {
+        Member member = memberRepository.findByEmail(request.email())
+                .orElseThrow(MemberNotExistException::new);
+
+        if (!passwordMatcher(request.password(), member)) {
+            throw new MemberNotExistException();
+        }
+
+        member.delete(LocalDateTime.now());
     }
 
     private Boolean passwordMatcher(final String requestPassword, final Member member) {
