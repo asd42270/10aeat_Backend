@@ -23,7 +23,7 @@ public class WithdrawServiceTest {
 
         String email = "spring";
         String password= "spring";
-        MemberRegisterRequestDto requestDto = new MemberRegisterRequestDto(email, password, MemberRole.TENANT);
+        MemberRegisterRequestDto requestDto = new MemberRegisterRequestDto(email, password, "103동", "2212호", MemberRole.TENANT);
         memberService.register(requestDto);
     }
 
