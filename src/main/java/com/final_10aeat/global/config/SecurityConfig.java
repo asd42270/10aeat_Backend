@@ -36,6 +36,7 @@ public class SecurityConfig {
                 auth -> auth
                     .requestMatchers(HttpMethod.POST, "/members/register", "/members/login").permitAll()
                     .requestMatchers(HttpMethod.GET,"/health/**").permitAll()
+                    .requestMatchers("/members/**").permitAll()//임시허용
                     .requestMatchers("/docs/**").permitAll()
                     .anyRequest().authenticated()
             )
