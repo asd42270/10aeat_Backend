@@ -56,7 +56,7 @@ class MemberServiceTest {
             //given
             String accessToken = "token";
 
-            given(memberRepository.findByEmail(email))
+            given(memberRepository.findByEmailAndDeletedAtIsNull(email))
                 .willReturn(Optional.of(member));
             given(passwordEncoder.matches(password, member.getPassword()))
                 .willReturn(Boolean.TRUE);
@@ -74,7 +74,7 @@ class MemberServiceTest {
         @DisplayName("존재하지 않는 이메일을 요청하여 실패한다.")
         void _DontExistEmail() {
             //given
-            given(memberRepository.findByEmail(email))
+            given(memberRepository.findByEmailAndDeletedAtIsNull(email))
                 .willReturn(Optional.empty());
 
             // when & then
@@ -87,7 +87,7 @@ class MemberServiceTest {
         @DisplayName("비밀번호가 달라 요청에 실패한다.")
         void _PasswordDoesNotMatches() {
             //given
-            given(memberRepository.findByEmail(email))
+            given(memberRepository.findByEmailAndDeletedAtIsNull(email))
                 .willReturn(Optional.of(member));
             given(passwordEncoder.matches(password, member.getPassword()))
                 .willReturn(Boolean.FALSE);
