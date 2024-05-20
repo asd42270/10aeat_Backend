@@ -5,6 +5,8 @@
 :toc: left
 :toclevels: 2
 
+=== link:../index.html[공통 API]
+
 [[member-login]]
 == 멤버 로그인
 
