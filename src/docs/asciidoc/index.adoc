@@ -12,8 +12,8 @@ endif::[]
 
 == API
 
-=== link:email/email-api.html[이메일 API, window=blank]
-
+=== link:email/email-api.html[이메일 API]
+=== link:login/Member-api.html[로그인 API]
 == API Common Response
 
 [[overview-http-status-code]]

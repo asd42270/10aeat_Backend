@@ -5,6 +5,7 @@
 :toc: left
 :toclevels: 2
 
+=== link:../index.html[공통 API]
 
 [[Email-Send-Verification]]
 == 이메일 인증 코드 전송
