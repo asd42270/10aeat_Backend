@@ -1,0 +1,39 @@
+= Admin REST API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+=== link:../index.html[시작 페이지로 돌아가기]
+
+[[Admin-Register]]
+== 관리자 회원가입
+
+관리자 회원가입 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/admin-register/http-request.adoc[]
+include::{snippets}/admin-register/request-fields.adoc[]
+
+=== Http Response
+include::{snippets}/admin-register/http-response.adoc[]
+include::{snippets}/admin-register/response-fields.adoc[]
+
+[[Admin-Login]]
+== 관리자 로그인
+
+관리자 로그인 API 입니다.
+
+* 발급된 액세스 토큰은 헤더에 저장됩니다.
+
+=== HttpRequest
+
+include::{snippets}/admin-login/http-request.adoc[]
+include::{snippets}/admin-login/request-fields.adoc[]
+
+=== Http Response
+include::{snippets}/admin-login/http-response.adoc[]
+include::{snippets}/admin-login/response-fields.adoc[]
+include::{snippets}/admin-login/response-headers.adoc[]
