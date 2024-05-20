@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
     private final MemberService memberService;
 
-    @PostMapping("/register")
+    @PostMapping
     public ResponseDTO<Void> register(
             @RequestBody MemberRegisterRequestDto request
     ){
@@ -33,7 +33,7 @@ public class MemberController {
         return ResponseDTO.ok();
     }
 
-    @DeleteMapping("/delete/v1/users")
+    @DeleteMapping
     public ResponseDTO<Void> withdraw(
             @RequestBody MemberWithdrawRequestDto request
     ){
