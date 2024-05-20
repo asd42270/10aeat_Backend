@@ -1,4 +1,4 @@
-package com.final_10aeat.domain.admin;
+package com.final_10aeat.domain.admin.docs;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
