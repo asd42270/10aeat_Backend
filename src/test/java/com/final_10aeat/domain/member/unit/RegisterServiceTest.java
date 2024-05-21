@@ -5,6 +5,7 @@ import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.entity.MemberRole;
+import com.final_10aeat.domain.member.exception.DisagreementException;
 import com.final_10aeat.domain.member.exception.MemberDuplicatedException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;
 import com.final_10aeat.domain.member.repository.MemberRepository;
@@ -20,7 +21,6 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 
 public class RegisterServiceTest {
     @Mock
@@ -40,7 +40,7 @@ public class RegisterServiceTest {
     private final MemberRole role = MemberRole.TENANT;
 
 
-    private final MemberRegisterRequestDto request = new MemberRegisterRequestDto(email, password, name, dong, ho, role);
+    private final MemberRegisterRequestDto request = new MemberRegisterRequestDto(email, password, name, dong, ho, role, true);
     private final BuildingInfo buildingInfo = BuildingInfo.builder()
             .dong(dong)
             .ho(ho)
@@ -75,7 +75,6 @@ public class RegisterServiceTest {
             given(buildingInfoRepository.save(any(BuildingInfo.class))).willReturn(buildingInfo);
             given(passwordEncoder.matches(password, member.getPassword())).willReturn(true);
             given(memberRepository.save(any(Member.class))).willReturn(member);
-            given(memberRepository.existsByEmailAndDeletedAtIsNull(email)).willReturn(false);
 
             //when
             MemberLoginRequestDto loginRequest = memberService.register(request);
@@ -98,5 +97,19 @@ public class RegisterServiceTest {
                     () -> memberService.register(request));
         }
 
+        @Test
+        @DisplayName("약관에 동의하지 않아 가입에 실패한다.")
+        void _willDisagreeTerm(){
+            //given
+            given(buildingInfoRepository.save(any(BuildingInfo.class))).willReturn(buildingInfo);
+            given(passwordEncoder.matches(password, member.getPassword())).willReturn(true);
+            given(memberRepository.save(any(Member.class))).willReturn(member);
+            given(memberRepository.existsByEmailAndDeletedAtIsNull(email)).willReturn(false);
+            MemberRegisterRequestDto disagreeRequest = new MemberRegisterRequestDto(email, password, name, dong, ho, role, false);
+
+            //then
+            Assertions.assertThrows(DisagreementException.class,
+                    () -> memberService.register(disagreeRequest));
+        }
     }
 }

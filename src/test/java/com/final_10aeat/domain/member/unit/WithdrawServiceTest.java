@@ -52,7 +52,7 @@ public class WithdrawServiceTest {
                     .office(null)
                     .build()))
             .build();
-    private final MemberRegisterRequestDto requestDto = new MemberRegisterRequestDto(email, password, "스프링", "103동", "2212호", MemberRole.TENANT);
+    private final MemberRegisterRequestDto requestDto = new MemberRegisterRequestDto(email, password, "spring", "103동", "2212호", MemberRole.TENANT, true);
 
     @BeforeEach
     public void setUp() {

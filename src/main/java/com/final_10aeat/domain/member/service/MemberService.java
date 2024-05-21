@@ -5,6 +5,7 @@ import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
+import com.final_10aeat.domain.member.exception.DisagreementException;
 import com.final_10aeat.domain.member.exception.MemberDuplicatedException;
 import com.final_10aeat.domain.member.exception.MemberMissMatchException;
 import com.final_10aeat.domain.member.exception.MemberNotExistException;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -34,6 +36,10 @@ public class MemberService {
             throw new MemberDuplicatedException();
         }
 
+        if (!request.isTermAgreed()){
+            throw new DisagreementException();
+        }
+
         String password = passwordEncoder.encode(request.password());
 
         BuildingInfo buildingInfo = BuildingInfo.builder()
@@ -50,6 +56,7 @@ public class MemberService {
                 .name(request.name())
                 .role(request.memberRole())
                 .buildingInfos(Set.of(savedBuildingInfo))
+                .isTermAgreed(request.isTermAgreed())
                 .build();
 
         memberRepository.save(member);

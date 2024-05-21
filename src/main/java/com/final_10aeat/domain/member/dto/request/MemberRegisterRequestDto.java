@@ -17,5 +17,7 @@ public record MemberRegisterRequestDto(
         @NotBlank
         String ho,
         @NotNull
-        MemberRole memberRole
+        MemberRole memberRole,
+        @NotNull
+        Boolean isTermAgreed
 ) { }

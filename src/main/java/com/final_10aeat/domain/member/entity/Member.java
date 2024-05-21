@@ -34,6 +34,9 @@ public class Member extends SoftDeletableBaseTimeEntity {
     @Column(nullable = false)
     private MemberRole role;
 
+    @Column
+    private Boolean isTermAgreed;
+
     @ManyToMany
     @JoinTable(
         name = "member_building",
