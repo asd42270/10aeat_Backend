@@ -99,10 +99,9 @@ public class AdminControllerDocsTest extends RestDocsSupport {
             "중앙 현관 1층 관리자 사무실", "김씨 관리 협회", 1L
         );
 
-        // When
         when(adminService.register(registerRequest)).thenReturn(null);
 
-        // Then
+        // When & Then
         mockMvc.perform(RestDocumentationRequestBuilders.post("/admin")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerRequest)))
