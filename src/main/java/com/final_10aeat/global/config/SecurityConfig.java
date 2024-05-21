@@ -34,7 +34,7 @@ public class SecurityConfig {
             .cors(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(
                 auth -> auth
-                    .requestMatchers(HttpMethod.POST, "/members/register", "/members/login",
+                    .requestMatchers(HttpMethod.POST, "/members", "/members/login",
                         "/admin","/admin/login").permitAll()
                     .requestMatchers(HttpMethod.GET, "/health/**").permitAll()
                     .requestMatchers("/docs/**").permitAll()
