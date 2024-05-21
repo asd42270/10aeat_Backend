@@ -8,6 +8,7 @@ import com.final_10aeat.global.util.ResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ public class EmailController {
     private final EmailUseCase emailUseCase;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseDTO<Void>> mailConfirm(
         @RequestBody @Valid EmailRequestDto emailRequest) throws Exception {
         emailUseCase.sendVerificationEmail(emailRequest.email(), emailRequest.role(),
