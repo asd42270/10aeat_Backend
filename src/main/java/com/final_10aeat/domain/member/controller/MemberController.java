@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
     private final MemberService memberService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseDTO<Void> register(
             HttpServletResponse response,
             @RequestBody @Valid MemberRegisterRequestDto request
@@ -32,13 +32,13 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseDTO<Void> login(
             HttpServletResponse response,
-            @RequestBody MemberLoginRequestDto request) {
+            @RequestBody @Valid MemberLoginRequestDto request) {
         String token = memberService.login(request);
         response.setHeader("accessToken", token);
         return ResponseDTO.ok();
     }
 
-    @DeleteMapping()
+    @DeleteMapping
     public ResponseDTO<Void> withdraw(
             @RequestBody @Valid MemberWithdrawRequestDto request
     ){
