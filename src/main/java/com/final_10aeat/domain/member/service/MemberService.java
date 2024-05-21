@@ -3,7 +3,7 @@ package com.final_10aeat.domain.member.service;
 import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
 import com.final_10aeat.domain.member.entity.Member;
-import com.final_10aeat.domain.member.exception.MemberDuplicatedException;
+import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
 import com.final_10aeat.domain.member.exception.MemberNotExistException;
 import com.final_10aeat.domain.member.repository.MemberRepository;
 import com.final_10aeat.global.security.jwt.JwtTokenGenerator;
@@ -25,7 +25,7 @@ public class MemberService {
     public void register(MemberRegisterRequestDto request) {
         // 1. 유효성 검사
         if (memberRepository.existsByEmail(request.email())) {
-            throw new MemberDuplicatedException();
+            throw new EmailDuplicatedException();
         }
 
         // 2. 비밀번호 인코딩

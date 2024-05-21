@@ -52,7 +52,7 @@ class MemberServiceTest {
 
         @Test
         @DisplayName("로그인에 성공한다.")
-        void _Success() {
+        void _willSuccess() {
             //given
             String accessToken = "token";
 
@@ -72,7 +72,7 @@ class MemberServiceTest {
 
         @Test
         @DisplayName("존재하지 않는 이메일을 요청하여 실패한다.")
-        void _DontExistEmail() {
+        void NotFound_willFail() {
             //given
             given(memberRepository.findByEmail(email))
                 .willReturn(Optional.empty());
@@ -85,7 +85,7 @@ class MemberServiceTest {
 
         @Test
         @DisplayName("비밀번호가 달라 요청에 실패한다.")
-        void _PasswordDoesNotMatches() {
+        void NotMatcher_willFail() {
             //given
             given(memberRepository.findByEmail(email))
                 .willReturn(Optional.of(member));
