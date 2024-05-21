@@ -1,6 +1,6 @@
-package com.final_10aeat.domain.admin.repository;
+package com.final_10aeat.domain.office.repository;
 
-import com.final_10aeat.domain.admin.entity.Office;
+import com.final_10aeat.domain.office.entity.Office;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OfficeRepository extends JpaRepository<Office, Long> {

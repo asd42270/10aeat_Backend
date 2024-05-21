@@ -14,25 +14,15 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.admin.controller.EmailController;
-import com.final_10aeat.domain.admin.dto.request.EmailRequestDto;
 import com.final_10aeat.domain.admin.dto.request.EmailVerificationRequestDto;
 import com.final_10aeat.domain.admin.dto.response.EmailVerificationResponseDto;
-import com.final_10aeat.domain.admin.entity.Admin;
-import com.final_10aeat.domain.admin.entity.Office;
 import com.final_10aeat.domain.admin.service.AdminService;
 import com.final_10aeat.domain.admin.service.EmailUseCase;
-import com.final_10aeat.global.security.principal.AdminPrincipal;
-import java.time.LocalDateTime;
-import java.time.Month;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 
 public class EmailControllerDocsTest extends RestDocsSupport {
 

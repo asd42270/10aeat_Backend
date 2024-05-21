@@ -1,4 +1,4 @@
-package com.final_10aeat.domain.admin.entity;
+package com.final_10aeat.domain.office.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

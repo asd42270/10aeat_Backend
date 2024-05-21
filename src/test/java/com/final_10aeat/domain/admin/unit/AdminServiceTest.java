@@ -10,10 +10,10 @@ import static org.mockito.Mockito.when;
 
 import com.final_10aeat.domain.admin.dto.request.CreateAdminRequestDto;
 import com.final_10aeat.domain.admin.entity.Admin;
-import com.final_10aeat.domain.admin.entity.Office;
-import com.final_10aeat.domain.admin.exception.OfficeNotFoundException;
+import com.final_10aeat.domain.office.entity.Office;
+import com.final_10aeat.domain.office.exception.OfficeNotFoundException;
 import com.final_10aeat.domain.admin.repository.AdminRepository;
-import com.final_10aeat.domain.admin.repository.OfficeRepository;
+import com.final_10aeat.domain.office.repository.OfficeRepository;
 import com.final_10aeat.domain.admin.service.AdminService;
 import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
 import com.final_10aeat.common.enumclass.MemberRole;

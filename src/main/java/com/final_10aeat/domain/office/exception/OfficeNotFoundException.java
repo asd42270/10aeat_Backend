@@ -1,4 +1,4 @@
-package com.final_10aeat.domain.admin.exception;
+package com.final_10aeat.domain.office.exception;
 
 import com.final_10aeat.global.exception.ApplicationException;
 import com.final_10aeat.global.exception.ErrorCode;
