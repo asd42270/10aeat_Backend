@@ -9,7 +9,7 @@ import com.final_10aeat.domain.admin.repository.OfficeRepository;
 import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
 import com.final_10aeat.domain.member.entity.MemberRole;
 import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
-import com.final_10aeat.domain.member.exception.MemberNotExistException;
+import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.global.security.jwt.JwtTokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -63,10 +63,10 @@ public class AdminService {
     @Transactional(readOnly = true)
     public String login(MemberLoginRequestDto request) {
         Admin admin = adminRepository.findByEmail(request.email())
-            .orElseThrow(MemberNotExistException::new);
+            .orElseThrow(UserNotExistException::new);
 
         if (!passwordEncoder.matches(request.password(), admin.getPassword())) {
-            throw new MemberNotExistException();
+            throw new UserNotExistException();
         }
 
         return jwtTokenGenerator.createJwtToken(admin.getEmail(), admin.getRole());

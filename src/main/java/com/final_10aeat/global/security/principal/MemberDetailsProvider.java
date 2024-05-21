@@ -1,6 +1,6 @@
 package com.final_10aeat.global.security.principal;
 
-import com.final_10aeat.domain.member.exception.MemberNotExistException;
+import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +16,6 @@ public class MemberDetailsProvider implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) {
         return new MemberPrincipal(memberRepository.findByEmailAndDeletedAtIsNull(email)
-                .orElseThrow(MemberNotExistException::new));
+                .orElseThrow(UserNotExistException::new));
     }
 }

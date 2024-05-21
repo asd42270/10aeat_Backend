@@ -3,11 +3,11 @@ package com.final_10aeat.domain.member.exception;
 import com.final_10aeat.global.exception.ApplicationException;
 import com.final_10aeat.global.exception.ErrorCode;
 
-public class MemberNotExistException extends ApplicationException {
+public class UserNotExistException extends ApplicationException {
 
-    private static final ErrorCode ERROR_CODE = ErrorCode.MEMBER_NOT_EXIST;
+    private static final ErrorCode ERROR_CODE = ErrorCode.USER_NOT_EXIST;
 
-    public MemberNotExistException() {
+    public UserNotExistException() {
         super(ERROR_CODE);
     }
 }
