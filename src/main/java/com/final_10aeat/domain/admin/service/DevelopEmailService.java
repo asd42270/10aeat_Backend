@@ -41,7 +41,8 @@ public class DevelopEmailService implements EmailUseCase {
     private static final String TEST_ID_EMAIL = "fasttime123@naver.com";
 
     @Override
-    public String sendVerificationEmail(String to, MemberRole role, String dong, String ho)
+    public String sendVerificationEmail(String to, MemberRole role, String dong, String ho,
+        Long officeId)
         throws MessagingException, UnsupportedEncodingException {
         String authCode = generateAuthCode();
         MimeMessage message = createMessage(to, authCode);
@@ -52,6 +53,7 @@ public class DevelopEmailService implements EmailUseCase {
             userInfo.addProperty("role", role.name());
             userInfo.addProperty("dong", dong);
             userInfo.addProperty("ho", ho);
+            userInfo.addProperty("officeId", officeId);
             saveVerificationCode(to, authCode, userInfo.toString(), 1440);
             return authCode;
         } catch (MailException ex) {

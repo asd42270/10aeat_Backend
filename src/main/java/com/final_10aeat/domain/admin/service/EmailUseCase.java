@@ -7,7 +7,7 @@ import java.io.UnsupportedEncodingException;
 
 public interface EmailUseCase {
 
-    String sendVerificationEmail(String to, MemberRole role, String dong, String ho)
+    String sendVerificationEmail(String to, MemberRole role, String dong, String ho,Long officeId)
         throws MessagingException, UnsupportedEncodingException;
 
     EmailVerificationResponseDto verifyEmailCode(String email, String code);
