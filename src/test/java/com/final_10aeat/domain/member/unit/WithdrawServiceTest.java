@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 public class WithdrawServiceTest {
@@ -32,7 +33,7 @@ public class WithdrawServiceTest {
     @Mock
     private BuildingInfoRepository buildingInfoRepository;
 
-    private final String email = "spring";
+    private final String email = "spring@naver.com";
     private final String password = "spring";
     private final BuildingInfo buildingInfo = BuildingInfo.builder()
             .dong("102동")
@@ -57,13 +58,13 @@ public class WithdrawServiceTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        when(buildingInfoRepository.save(any(BuildingInfo.class))).thenReturn(buildingInfo);
+        given(buildingInfoRepository.save(any(BuildingInfo.class))).willReturn(buildingInfo);
 
         memberService.register(requestDto);
 
-        when(memberRepository.findByEmailAndDeletedAtIsNull(email)).thenReturn(Optional.of(member));
-        when(memberRepository.existsByEmailAndDeletedAtIsNull(email)).thenReturn(true);
-        when(passwordEncoder.matches(password, member.getPassword())).thenReturn(true);
+        given(memberRepository.findByEmailAndDeletedAtIsNull(email)).willReturn(Optional.of(member));
+        given(memberRepository.existsByEmailAndDeletedAtIsNull(email)).willReturn(true);
+        given(passwordEncoder.matches(password, member.getPassword())).willReturn(true);
     }
 
     @Nested
@@ -72,22 +73,22 @@ public class WithdrawServiceTest {
         @Test
         @DisplayName("회원 탈퇴를 성공한다.")
         void _willSuccess() {
-            String email = "spring";
-            String password = "spring";
+            // given
             MemberWithdrawRequestDto memberRequest = new MemberWithdrawRequestDto(email, password);
 
+            // when
             memberService.withdraw(memberRequest);
 
+            // then
             verify(memberRepository).findByEmailAndDeletedAtIsNull(email);
             verify(memberRepository).save(any(Member.class));
         }
 
         @Test
-        @DisplayName("일치하지 않는 사용자의 탈퇴를 시도하여 실패한다.")
+        @DisplayName("비밀번호가 일치하지 않는 사용자의 탈퇴를 시도하여 실패한다.")
         void _willMissMatch() {
-            String email = "spring";
-            String password = "asdasdasd";
-            MemberWithdrawRequestDto memberRequest = new MemberWithdrawRequestDto(email, password);
+            String wrongPassword = "2222";
+            MemberWithdrawRequestDto memberRequest = new MemberWithdrawRequestDto(email, wrongPassword);
 
             Assertions.assertThrows(MemberMissMatchException.class, () -> memberService.withdraw(memberRequest));
         }
@@ -95,9 +96,8 @@ public class WithdrawServiceTest {
         @Test
         @DisplayName("회원 탈퇴하려는 계정이 존재하지 않아 실패한다.")
         void _willNotExist() {
-            String email = "2222";
-            String password = "2222";
-            MemberWithdrawRequestDto memberRequest = new MemberWithdrawRequestDto(email, password);
+            String wrongEmail = "2222@naver.com";
+            MemberWithdrawRequestDto memberRequest = new MemberWithdrawRequestDto(wrongEmail, password);
 
             Assertions.assertThrows(MemberNotExistException.class, () -> memberService.withdraw(memberRequest));
         }

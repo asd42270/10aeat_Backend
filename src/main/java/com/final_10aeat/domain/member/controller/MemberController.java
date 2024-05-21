@@ -18,7 +18,7 @@ public class MemberController {
 
     @PostMapping()
     public ResponseDTO<Void> register(
-            @RequestBody MemberRegisterRequestDto request
+            @RequestBody @Valid MemberRegisterRequestDto request
     ) {
         memberService.register(request);
         return ResponseDTO.ok();
