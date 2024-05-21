@@ -28,7 +28,7 @@ public class Office {
     private String officeName;
 
     @Column
-    private String adress;
+    private String address;
 
     @Column(name = "map_x")
     private String mapX;
