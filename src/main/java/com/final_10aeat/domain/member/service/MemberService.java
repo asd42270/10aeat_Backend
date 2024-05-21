@@ -6,19 +6,18 @@ import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.DisagreementException;
-import com.final_10aeat.domain.member.exception.MemberDuplicatedException;
+import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
 import com.final_10aeat.domain.member.exception.MemberMissMatchException;
 import com.final_10aeat.domain.member.exception.MemberNotExistException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;
 import com.final_10aeat.domain.member.repository.MemberRepository;
 import com.final_10aeat.global.security.jwt.JwtTokenGenerator;
+import java.time.LocalDateTime;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +32,7 @@ public class MemberService {
     public MemberLoginRequestDto register(MemberRegisterRequestDto request) {
 
         if (memberRepository.existsByEmailAndDeletedAtIsNull(request.email())) {
-            throw new MemberDuplicatedException();
+            throw new EmailDuplicatedException();
         }
 
         if (!request.isTermAgreed()){
