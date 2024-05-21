@@ -28,7 +28,7 @@ public class MemberService {
     private final JwtTokenGenerator jwtTokenGenerator;
     private final BuildingInfoRepository buildingInfoRepository;
 
-    public void register(MemberRegisterRequestDto request) {
+    public MemberLoginRequestDto register(MemberRegisterRequestDto request) {
 
         if (memberRepository.existsByEmailAndDeletedAtIsNull(request.email())) {
             throw new MemberDuplicatedException();
@@ -53,6 +53,8 @@ public class MemberService {
                 .build();
 
         memberRepository.save(member);
+
+        return new MemberLoginRequestDto(request.email(), request.password());
     }
 
     @Transactional(readOnly = true)

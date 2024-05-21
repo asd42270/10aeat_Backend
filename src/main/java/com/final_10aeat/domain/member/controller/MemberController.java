@@ -18,9 +18,14 @@ public class MemberController {
 
     @PostMapping()
     public ResponseDTO<Void> register(
+            HttpServletResponse response,
             @RequestBody @Valid MemberRegisterRequestDto request
     ) {
-        memberService.register(request);
+        MemberLoginRequestDto loginDto = memberService.register(request);
+
+        String token = memberService.login(loginDto);
+        response.setHeader("accessToken", token);
+
         return ResponseDTO.ok();
     }
 

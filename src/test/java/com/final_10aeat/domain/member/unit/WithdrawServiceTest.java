@@ -63,7 +63,7 @@ public class WithdrawServiceTest {
         memberService.register(requestDto);
 
         given(memberRepository.findByEmailAndDeletedAtIsNull(email)).willReturn(Optional.of(member));
-        given(memberRepository.existsByEmailAndDeletedAtIsNull(email)).willReturn(true);
+        given(memberRepository.existsByEmailAndDeletedAtIsNull(email)).willReturn(false);
         given(passwordEncoder.matches(password, member.getPassword())).willReturn(true);
     }
 
