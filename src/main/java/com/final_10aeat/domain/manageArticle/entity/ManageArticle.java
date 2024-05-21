@@ -1,6 +1,7 @@
 package com.final_10aeat.domain.manageArticle.entity;
 
-import com.final_10aeat.domain.repairArticle.entity.Progress;
+import com.final_10aeat.common.enumclass.ManagePeriod;
+import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.global.entity.SoftDeletableBaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

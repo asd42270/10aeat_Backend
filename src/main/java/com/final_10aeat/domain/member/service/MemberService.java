@@ -6,7 +6,7 @@ import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.DisagreementException;
-import com.final_10aeat.domain.member.exception.MemberDuplicatedException;
+import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
 import com.final_10aeat.domain.member.exception.MemberMissMatchException;
 import com.final_10aeat.domain.member.exception.MemberNotExistException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;
@@ -33,7 +33,7 @@ public class MemberService {
     public MemberLoginRequestDto register(MemberRegisterRequestDto request) {
 
         if (memberRepository.existsByEmailAndDeletedAtIsNull(request.email())) {
-            throw new MemberDuplicatedException();
+            throw new EmailDuplicatedException();
         }
 
         if (!request.isTermAgreed()){

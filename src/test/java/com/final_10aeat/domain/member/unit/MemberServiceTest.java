@@ -6,7 +6,7 @@ import static org.mockito.BDDMockito.given;
 
 import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
 import com.final_10aeat.domain.member.entity.Member;
-import com.final_10aeat.domain.member.entity.MemberRole;
+import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.member.exception.MemberNotExistException;
 import com.final_10aeat.domain.member.repository.MemberRepository;
 import com.final_10aeat.domain.member.service.MemberService;

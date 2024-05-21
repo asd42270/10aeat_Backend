@@ -24,7 +24,7 @@ import com.final_10aeat.domain.admin.repository.OfficeRepository;
 import com.final_10aeat.domain.admin.service.AdminService;
 import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
 import com.final_10aeat.global.security.jwt.JwtTokenGenerator;
-import com.final_10aeat.domain.member.entity.MemberRole;
+import com.final_10aeat.common.enumclass.MemberRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

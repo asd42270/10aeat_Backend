@@ -1,7 +1,7 @@
 package com.final_10aeat.domain.admin.service;
 
 import com.final_10aeat.domain.admin.dto.response.EmailVerificationResponseDto;
-import com.final_10aeat.domain.member.entity.MemberRole;
+import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.admin.exception.EmailSendingException;
 import com.final_10aeat.domain.admin.exception.EmailTemplateLoadException;
 import com.final_10aeat.domain.admin.exception.InvalidVerificationCodeException;
