@@ -2,15 +2,13 @@ package com.final_10aeat.domain.member.controller;
 
 import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
+import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
 import com.final_10aeat.domain.member.service.MemberService;
 import com.final_10aeat.global.util.ResponseDTO;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,11 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
     private final MemberService memberService;
 
-    @PostMapping("/register")
+    @PostMapping
     public ResponseDTO<Void> register(
-            @RequestBody MemberRegisterRequestDto request
+            HttpServletResponse response,
+            @RequestBody @Valid MemberRegisterRequestDto request
     ) {
-        memberService.register(request);
+        MemberLoginRequestDto loginDto = memberService.register(request);
+
+        String token = memberService.login(loginDto);
+        response.setHeader("accessToken", token);
+
         return ResponseDTO.ok();
     }
 
@@ -32,6 +35,14 @@ public class MemberController {
             @RequestBody @Valid MemberLoginRequestDto request) {
         String token = memberService.login(request);
         response.setHeader("accessToken", token);
+        return ResponseDTO.ok();
+    }
+
+    @DeleteMapping
+    public ResponseDTO<Void> withdraw(
+            @RequestBody @Valid MemberWithdrawRequestDto request
+    ){
+        memberService.withdraw(request);
         return ResponseDTO.ok();
     }
 }

@@ -15,7 +15,7 @@ public class MemberDetailsProvider implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        return new MemberPrincipal(memberRepository.findByEmail(email)
+        return new MemberPrincipal(memberRepository.findByEmailAndDeletedAtIsNull(email)
                 .orElseThrow(MemberNotExistException::new));
     }
 }
