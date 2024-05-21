@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/manager")
+@RequestMapping("/managers")
 public class ManagerController {
 
     private final ManagerService managerService;
