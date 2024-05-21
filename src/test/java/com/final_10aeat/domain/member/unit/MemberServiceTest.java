@@ -7,7 +7,7 @@ import static org.mockito.BDDMockito.given;
 import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.entity.MemberRole;
-import com.final_10aeat.domain.member.exception.MemberNotExistException;
+import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.MemberRepository;
 import com.final_10aeat.domain.member.service.MemberService;
 import com.final_10aeat.global.security.jwt.JwtTokenGenerator;
@@ -78,7 +78,7 @@ class MemberServiceTest {
                 .willReturn(Optional.empty());
 
             // when & then
-            assertThrows(MemberNotExistException.class,
+            assertThrows(UserNotExistException.class,
                 () -> memberService.login(loginRequest)
             );
         }
@@ -93,7 +93,7 @@ class MemberServiceTest {
                 .willReturn(Boolean.FALSE);
 
             // when & then
-            assertThrows(MemberNotExistException.class,
+            assertThrows(UserNotExistException.class,
                 () -> memberService.login(loginRequest));
         }
     }
