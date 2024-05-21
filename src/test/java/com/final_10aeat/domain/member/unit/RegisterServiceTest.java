@@ -8,7 +8,7 @@ import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
-import com.final_10aeat.domain.member.entity.MemberRole;
+import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.member.exception.DisagreementException;
 import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;

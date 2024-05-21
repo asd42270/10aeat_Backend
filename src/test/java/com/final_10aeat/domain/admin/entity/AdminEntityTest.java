@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.final_10aeat.domain.admin.repository.AdminRepository;
 import com.final_10aeat.domain.admin.repository.OfficeRepository;
-import com.final_10aeat.domain.member.entity.MemberRole;
+import com.final_10aeat.common.enumclass.MemberRole;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;

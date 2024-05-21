@@ -7,11 +7,11 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.final_10aeat.domain.member.dto.response.EmailVerificationResponseDto;
-import com.final_10aeat.domain.member.entity.MemberRole;
-import com.final_10aeat.domain.member.exception.InvalidVerificationCodeException;
-import com.final_10aeat.domain.member.exception.VerificationCodeExpiredException;
-import com.final_10aeat.domain.member.service.LocalEmailService;
+import com.final_10aeat.domain.admin.dto.response.EmailVerificationResponseDto;
+import com.final_10aeat.common.enumclass.MemberRole;
+import com.final_10aeat.domain.admin.exception.InvalidVerificationCodeException;
+import com.final_10aeat.domain.admin.exception.VerificationCodeExpiredException;
+import com.final_10aeat.domain.admin.service.LocalEmailService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +22,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.http.HttpStatus;
 
 import java.util.concurrent.TimeUnit;
 
@@ -52,8 +51,9 @@ public class LocalEmailServiceTest {
         MemberRole role = MemberRole.TENANT;
         String dong = "102";
         String ho = "101";
+        Long officeId = 1L;
 
-        String authCode = localEmailService.sendVerificationEmail(email, role, dong, ho);
+        String authCode = localEmailService.sendVerificationEmail(email, role, dong, ho, officeId);
 
         verify(valueOperations).set(eq(email + ":code"), eq(authCode), eq(1440L),
             eq(TimeUnit.MINUTES));

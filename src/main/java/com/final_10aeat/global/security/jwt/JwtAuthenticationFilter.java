@@ -1,13 +1,15 @@
 package com.final_10aeat.global.security.jwt;
 
-
-import com.final_10aeat.domain.member.entity.MemberRole;
+import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.global.security.principal.AdminDetailsProvider;
 import com.final_10aeat.global.security.principal.MemberDetailsProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,10 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor

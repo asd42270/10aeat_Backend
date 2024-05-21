@@ -1,12 +1,11 @@
-package com.final_10aeat.domain.member.service;
+package com.final_10aeat.domain.admin.service;
 
-import com.final_10aeat.domain.member.dto.response.EmailVerificationResponseDto;
-import com.final_10aeat.domain.member.entity.MemberRole;
-import com.final_10aeat.domain.member.exception.EmailSendingException;
-import com.final_10aeat.domain.member.exception.EmailTemplateLoadException;
-import com.final_10aeat.domain.member.exception.InvalidVerificationCodeException;
-import com.final_10aeat.domain.member.exception.VerificationCodeExpiredException;
-import com.final_10aeat.global.util.ResponseDTO;
+import com.final_10aeat.domain.admin.dto.response.EmailVerificationResponseDto;
+import com.final_10aeat.common.enumclass.MemberRole;
+import com.final_10aeat.domain.admin.exception.EmailSendingException;
+import com.final_10aeat.domain.admin.exception.EmailTemplateLoadException;
+import com.final_10aeat.domain.admin.exception.InvalidVerificationCodeException;
+import com.final_10aeat.domain.admin.exception.VerificationCodeExpiredException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import jakarta.mail.MessagingException;
@@ -24,7 +23,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -43,7 +41,8 @@ public class DevelopEmailService implements EmailUseCase {
     private static final String TEST_ID_EMAIL = "fasttime123@naver.com";
 
     @Override
-    public String sendVerificationEmail(String to, MemberRole role, String dong, String ho)
+    public String sendVerificationEmail(String to, MemberRole role, String dong, String ho,
+        Long officeId)
         throws MessagingException, UnsupportedEncodingException {
         String authCode = generateAuthCode();
         MimeMessage message = createMessage(to, authCode);
@@ -54,6 +53,7 @@ public class DevelopEmailService implements EmailUseCase {
             userInfo.addProperty("role", role.name());
             userInfo.addProperty("dong", dong);
             userInfo.addProperty("ho", ho);
+            userInfo.addProperty("officeId", officeId);
             saveVerificationCode(to, authCode, userInfo.toString(), 1440);
             return authCode;
         } catch (MailException ex) {

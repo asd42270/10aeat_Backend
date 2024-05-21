@@ -7,7 +7,7 @@ import com.final_10aeat.domain.admin.exception.OfficeNotFoundException;
 import com.final_10aeat.domain.admin.repository.AdminRepository;
 import com.final_10aeat.domain.admin.repository.OfficeRepository;
 import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
-import com.final_10aeat.domain.member.entity.MemberRole;
+import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.global.security.jwt.JwtTokenGenerator;

@@ -1,5 +1,7 @@
 package com.final_10aeat.domain.repairArticle.entity;
 
+import com.final_10aeat.common.enumclass.ArticleCategory;
+import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.domain.admin.entity.Admin;
 import com.final_10aeat.global.entity.SoftDeletableBaseTimeEntity;
 import jakarta.persistence.CascadeType;

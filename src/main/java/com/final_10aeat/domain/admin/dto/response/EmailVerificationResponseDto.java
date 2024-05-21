@@ -1,4 +1,4 @@
-package com.final_10aeat.domain.member.dto.response;
+package com.final_10aeat.domain.admin.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

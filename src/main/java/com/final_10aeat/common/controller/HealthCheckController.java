@@ -1,4 +1,4 @@
-package com.final_10aeat.controller;
+package com.final_10aeat.common.controller;
 
 import com.final_10aeat.global.util.ResponseDTO;
 import lombok.RequiredArgsConstructor;
