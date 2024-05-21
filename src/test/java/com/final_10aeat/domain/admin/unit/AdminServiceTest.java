@@ -18,7 +18,7 @@ import com.final_10aeat.domain.admin.service.AdminService;
 import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
 import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
-import com.final_10aeat.domain.member.exception.MemberNotExistException;
+import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.global.security.jwt.JwtTokenGenerator;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -173,7 +173,7 @@ public class AdminServiceTest {
 
             when(adminRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-            assertThrows(MemberNotExistException.class, () -> {
+            assertThrows(UserNotExistException.class, () -> {
                 adminService.login(loginRequestDto);
             });
         }
@@ -193,7 +193,7 @@ public class AdminServiceTest {
             when(adminRepository.findByEmail(anyString())).thenReturn(Optional.of(admin));
             when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
 
-            assertThrows(MemberNotExistException.class, () -> {
+            assertThrows(UserNotExistException.class, () -> {
                 adminService.login(loginRequestDto);
             });
         }

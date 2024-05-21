@@ -6,7 +6,7 @@ import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.member.exception.MemberMissMatchException;
-import com.final_10aeat.domain.member.exception.MemberNotExistException;
+import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;
 import com.final_10aeat.domain.member.repository.MemberRepository;
 import com.final_10aeat.domain.member.service.MemberService;
@@ -99,7 +99,7 @@ public class WithdrawServiceTest {
             String wrongEmail = "2222@naver.com";
             MemberWithdrawRequestDto memberRequest = new MemberWithdrawRequestDto(wrongEmail, password);
 
-            Assertions.assertThrows(MemberNotExistException.class, () -> memberService.withdraw(memberRequest));
+            Assertions.assertThrows(UserNotExistException.class, () -> memberService.withdraw(memberRequest));
         }
     }
 }

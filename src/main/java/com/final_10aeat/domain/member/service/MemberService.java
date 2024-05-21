@@ -8,17 +8,16 @@ import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.DisagreementException;
 import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
 import com.final_10aeat.domain.member.exception.MemberMissMatchException;
-import com.final_10aeat.domain.member.exception.MemberNotExistException;
+import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;
 import com.final_10aeat.domain.member.repository.MemberRepository;
 import com.final_10aeat.global.security.jwt.JwtTokenGenerator;
+import java.time.LocalDateTime;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -67,10 +66,10 @@ public class MemberService {
     @Transactional(readOnly = true)
     public String login(MemberLoginRequestDto request) {
         Member member = memberRepository.findByEmailAndDeletedAtIsNull(request.email())
-                .orElseThrow(MemberNotExistException::new);
+                .orElseThrow(UserNotExistException::new);
 
         if (!passwordMatcher(request.password(), member)) {
-            throw new MemberNotExistException();
+            throw new UserNotExistException();
         }
 
         return jwtTokenGenerator.createJwtToken(request.email(),member.getRole());
@@ -78,7 +77,7 @@ public class MemberService {
 
     public void withdraw(MemberWithdrawRequestDto request) {
         Member member = memberRepository.findByEmailAndDeletedAtIsNull(request.email())
-                .orElseThrow(MemberNotExistException::new);
+                .orElseThrow(UserNotExistException::new);
 
         if (!passwordMatcher(request.password(), member)) {
             throw new MemberMissMatchException();
