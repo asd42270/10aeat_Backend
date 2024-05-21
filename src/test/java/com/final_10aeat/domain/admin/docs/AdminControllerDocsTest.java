@@ -100,7 +100,7 @@ public class AdminControllerDocsTest extends RestDocsSupport {
         );
 
         // When
-        when(adminService.registerAdmin(registerRequest)).thenReturn(null);
+        when(adminService.register(registerRequest)).thenReturn(null);
 
         // Then
         mockMvc.perform(RestDocumentationRequestBuilders.post("/admin")

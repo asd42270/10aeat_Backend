@@ -94,7 +94,7 @@ public class AdminServiceTest {
             when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
             when(adminRepository.save(any(Admin.class))).thenReturn(admin);
 
-            Admin result = adminService.registerAdmin(requestDto);
+            Admin result = adminService.register(requestDto);
 
             verify(adminRepository).save(any(Admin.class));
             assertEquals("admin@example.com", result.getEmail());
@@ -116,7 +116,7 @@ public class AdminServiceTest {
             when(adminRepository.findByEmail(anyString())).thenReturn(Optional.of(existingAdmin));
 
             assertThrows(EmailDuplicatedException.class, () -> {
-                adminService.registerAdmin(requestDto);
+                adminService.register(requestDto);
             });
         }
 
@@ -134,7 +134,7 @@ public class AdminServiceTest {
             when(officeRepository.findById(anyLong())).thenReturn(Optional.empty());
 
             assertThrows(OfficeNotFoundException.class, () -> {
-                adminService.registerAdmin(requestDto);
+                adminService.register(requestDto);
             });
         }
     }

@@ -26,7 +26,7 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenGenerator jwtTokenGenerator;
 
-    public Admin registerAdmin(CreateAdminRequestDto request) {
+    public Admin register(CreateAdminRequestDto request) {
         validateEmailNotDuplicated(request.email());
         Office office = validateAndGetOffice(request.officeId());
         return createAndSaveAdmin(request, office);

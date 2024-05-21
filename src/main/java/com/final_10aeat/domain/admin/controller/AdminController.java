@@ -22,9 +22,9 @@ public class AdminController {
     private final AdminService adminService;
 
     @PostMapping
-    public ResponseEntity<ResponseDTO<Void>> registerAdmin(
+    public ResponseEntity<ResponseDTO<Void>> register(
         @RequestBody @Valid CreateAdminRequestDto request) {
-        Admin admin = adminService.registerAdmin(request);
+        Admin admin = adminService.register(request);
         return ResponseEntity.ok(ResponseDTO.ok());
     }
 
