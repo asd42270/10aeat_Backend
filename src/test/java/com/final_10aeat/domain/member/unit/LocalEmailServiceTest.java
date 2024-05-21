@@ -7,11 +7,11 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.final_10aeat.domain.admin.dto.response.EmailVerificationResponseDto;
+import com.final_10aeat.domain.manager.dto.response.EmailVerificationResponseDto;
 import com.final_10aeat.common.enumclass.MemberRole;
-import com.final_10aeat.domain.admin.exception.InvalidVerificationCodeException;
-import com.final_10aeat.domain.admin.exception.VerificationCodeExpiredException;
-import com.final_10aeat.domain.admin.service.LocalEmailService;
+import com.final_10aeat.domain.manager.exception.InvalidVerificationCodeException;
+import com.final_10aeat.domain.manager.exception.VerificationCodeExpiredException;
+import com.final_10aeat.domain.manager.service.LocalEmailService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

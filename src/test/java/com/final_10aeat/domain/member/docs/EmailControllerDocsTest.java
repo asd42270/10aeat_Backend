@@ -15,11 +15,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.final_10aeat.docs.RestDocsSupport;
-import com.final_10aeat.domain.admin.controller.EmailController;
-import com.final_10aeat.domain.admin.dto.request.EmailVerificationRequestDto;
-import com.final_10aeat.domain.admin.dto.response.EmailVerificationResponseDto;
-import com.final_10aeat.domain.admin.service.AdminService;
-import com.final_10aeat.domain.admin.service.EmailUseCase;
+import com.final_10aeat.domain.manager.controller.EmailController;
+import com.final_10aeat.domain.manager.dto.request.EmailVerificationRequestDto;
+import com.final_10aeat.domain.manager.dto.response.EmailVerificationResponseDto;
+import com.final_10aeat.domain.manager.service.ManagerService;
+import com.final_10aeat.domain.manager.service.EmailUseCase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -27,16 +27,16 @@ import org.springframework.http.MediaType;
 public class EmailControllerDocsTest extends RestDocsSupport {
 
     private EmailUseCase emailUseCase;
-    private AdminService adminService;
+    private ManagerService managerService;
     private ObjectMapper objectMapper;
 
     @Override
     public Object initController() {
         emailUseCase = mock(EmailUseCase.class);
-        adminService = mock(AdminService.class);
+        managerService = mock(ManagerService.class);
         objectMapper = new ObjectMapper();
 
-        return new EmailController(emailUseCase, adminService);
+        return new EmailController(emailUseCase, managerService);
     }
 
     /*@DisplayName("이메일 인증 코드 전송 API 문서화")

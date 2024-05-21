@@ -1,7 +1,7 @@
 package com.final_10aeat.global.security.jwt;
 
 import com.final_10aeat.common.enumclass.MemberRole;
-import com.final_10aeat.global.security.principal.AdminDetailsProvider;
+import com.final_10aeat.global.security.principal.ManagerDetailsProvider;
 import com.final_10aeat.global.security.principal.MemberDetailsProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenGenerator jwtTokenGenerator;
     private final MemberDetailsProvider memberDetailsProvider;
-    private final AdminDetailsProvider adminDetailsProvider;
+    private final ManagerDetailsProvider managerDetailsProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -68,8 +68,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private UserDetails getUserDetails(String email, MemberRole role) {
-        if (role == MemberRole.ADMIN) {
-            return adminDetailsProvider.loadUserByUsername(email);
+        if (role == MemberRole.MANAGER) {
+            return managerDetailsProvider.loadUserByUsername(email);
         }
         return memberDetailsProvider.loadUserByUsername(email);
     }

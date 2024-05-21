@@ -2,7 +2,7 @@ package com.final_10aeat.domain.repairArticle.entity;
 
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
-import com.final_10aeat.domain.admin.entity.Admin;
+import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.global.entity.SoftDeletableBaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -65,7 +65,7 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id")
-    private Admin admin;
+    private Manager manager;
 
     @OneToMany(mappedBy = "repairArticle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<RepairArticleImage> images;
