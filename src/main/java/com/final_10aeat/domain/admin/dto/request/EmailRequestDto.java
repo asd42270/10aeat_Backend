@@ -1,4 +1,4 @@
-package com.final_10aeat.domain.member.dto.request;
+package com.final_10aeat.domain.admin.dto.request;
 
 import com.final_10aeat.domain.member.entity.MemberRole;
 import jakarta.validation.constraints.Email;

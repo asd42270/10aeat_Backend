@@ -1,6 +1,6 @@
-package com.final_10aeat.domain.member.service;
+package com.final_10aeat.domain.admin.service;
 
-import com.final_10aeat.domain.member.dto.response.EmailVerificationResponseDto;
+import com.final_10aeat.domain.admin.dto.response.EmailVerificationResponseDto;
 import com.final_10aeat.domain.member.entity.MemberRole;
 import jakarta.mail.MessagingException;
 import java.io.UnsupportedEncodingException;

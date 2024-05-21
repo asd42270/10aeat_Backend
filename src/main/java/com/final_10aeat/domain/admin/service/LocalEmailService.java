@@ -1,10 +1,9 @@
-package com.final_10aeat.domain.member.service;
+package com.final_10aeat.domain.admin.service;
 
-import com.final_10aeat.domain.member.dto.response.EmailVerificationResponseDto;
+import com.final_10aeat.domain.admin.dto.response.EmailVerificationResponseDto;
 import com.final_10aeat.domain.member.entity.MemberRole;
-import com.final_10aeat.domain.member.exception.InvalidVerificationCodeException;
-import com.final_10aeat.domain.member.exception.VerificationCodeExpiredException;
-import com.final_10aeat.global.util.ResponseDTO;
+import com.final_10aeat.domain.admin.exception.InvalidVerificationCodeException;
+import com.final_10aeat.domain.admin.exception.VerificationCodeExpiredException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Random;

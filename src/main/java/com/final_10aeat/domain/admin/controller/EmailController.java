@@ -1,9 +1,9 @@
-package com.final_10aeat.domain.member.controller;
+package com.final_10aeat.domain.admin.controller;
 
-import com.final_10aeat.domain.member.dto.request.EmailRequestDto;
-import com.final_10aeat.domain.member.dto.request.EmailVerificationRequestDto;
-import com.final_10aeat.domain.member.dto.response.EmailVerificationResponseDto;
-import com.final_10aeat.domain.member.service.EmailUseCase;
+import com.final_10aeat.domain.admin.dto.request.EmailRequestDto;
+import com.final_10aeat.domain.admin.dto.request.EmailVerificationRequestDto;
+import com.final_10aeat.domain.admin.dto.response.EmailVerificationResponseDto;
+import com.final_10aeat.domain.admin.service.EmailUseCase;
 import com.final_10aeat.global.util.ResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

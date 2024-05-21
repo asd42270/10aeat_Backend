@@ -16,12 +16,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.final_10aeat.docs.RestDocsSupport;
-import com.final_10aeat.domain.member.controller.EmailController;
-import com.final_10aeat.domain.member.dto.request.EmailRequestDto;
-import com.final_10aeat.domain.member.dto.request.EmailVerificationRequestDto;
-import com.final_10aeat.domain.member.dto.response.EmailVerificationResponseDto;
+import com.final_10aeat.domain.admin.controller.EmailController;
+import com.final_10aeat.domain.admin.dto.request.EmailRequestDto;
+import com.final_10aeat.domain.admin.dto.request.EmailVerificationRequestDto;
+import com.final_10aeat.domain.admin.dto.response.EmailVerificationResponseDto;
 import com.final_10aeat.domain.member.entity.MemberRole;
-import com.final_10aeat.domain.member.service.EmailUseCase;
+import com.final_10aeat.domain.admin.service.EmailUseCase;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
