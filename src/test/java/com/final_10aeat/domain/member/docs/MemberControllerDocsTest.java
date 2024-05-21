@@ -19,7 +19,7 @@ import com.final_10aeat.domain.member.controller.MemberController;
 import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
-import com.final_10aeat.domain.member.entity.MemberRole;
+import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
