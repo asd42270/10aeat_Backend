@@ -51,8 +51,9 @@ public class LocalEmailServiceTest {
         MemberRole role = MemberRole.TENANT;
         String dong = "102";
         String ho = "101";
+        Long officeId = 1L;
 
-        String authCode = localEmailService.sendVerificationEmail(email, role, dong, ho);
+        String authCode = localEmailService.sendVerificationEmail(email, role, dong, ho, officeId);
 
         verify(valueOperations).set(eq(email + ":code"), eq(authCode), eq(1440L),
             eq(TimeUnit.MINUTES));
