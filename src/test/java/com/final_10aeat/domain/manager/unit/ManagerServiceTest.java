@@ -72,8 +72,8 @@ public class ManagerServiceTest {
                 .id(1L)
                 .officeName("미왕 빌딩")
                 .address("123 Gangnam St.")
-                .mapX("35.6895")
-                .mapY("139.6917")
+                .mapX(35.6895)
+                .mapY(139.6917)
                 .build();
 
             Manager manager = Manager.builder()

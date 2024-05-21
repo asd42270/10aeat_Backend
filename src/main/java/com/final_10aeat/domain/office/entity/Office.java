@@ -27,12 +27,12 @@ public class Office {
     @Column(name = "office_name")
     private String officeName;
 
-    @Column
+    @Column(unique = true)
     private String address;
 
     @Column(name = "map_x")
-    private String mapX;
+    private Double mapX;
 
     @Column(name = "map_y")
-    private String mapY;
+    private Double mapY;
 }

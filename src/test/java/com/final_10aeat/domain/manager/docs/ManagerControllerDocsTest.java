@@ -69,8 +69,8 @@ public class ManagerControllerDocsTest extends RestDocsSupport {
             .id(1L)
             .officeName("미왕 빌딩")
             .address("123 Gangnam St.")
-            .mapX("35.6895")
-            .mapY("139.6917")
+            .mapX(35.6895)
+            .mapY(139.6917)
             .build();
         when(officeRepository.findById(1L)).thenReturn(Optional.of(office));
 
@@ -102,7 +102,7 @@ public class ManagerControllerDocsTest extends RestDocsSupport {
         when(managerService.register(registerRequest)).thenReturn(null);
 
         // When & Then
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/manager")
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/managers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(registerRequest)))
             .andExpect(status().isOk())
@@ -139,7 +139,7 @@ public class ManagerControllerDocsTest extends RestDocsSupport {
         when(managerService.login(loginRequest)).thenReturn(token);
 
         // Then
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/manager/login")
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/managers/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
             .andExpect(status().isOk())
