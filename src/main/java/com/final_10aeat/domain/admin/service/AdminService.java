@@ -22,7 +22,7 @@ public class AdminService {
         Admin admin = adminRepository.findByEmail(request.email())
                 .orElseThrow(UserNotExistException::new);
 
-        if (request.password().equals(admin.getPassword())) {
+        if (!request.password().equals(admin.getPassword())) {
             //서버용 계정으로 일단 암호화 X
             throw new UserNotExistException();
         }

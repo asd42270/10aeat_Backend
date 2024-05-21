@@ -4,11 +4,11 @@ import com.final_10aeat.domain.admin.entity.Admin;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
+
+import static com.final_10aeat.global.util.AuthoritiesUtil.ADMIN_AUTHORITIES;
 
 @RequiredArgsConstructor
 public class AdminPrincipal implements UserDetails {
@@ -18,10 +18,7 @@ public class AdminPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        //TODO 추가 권한 설정 필요
-        return Collections.singletonList(
-                new SimpleGrantedAuthority("ROLE_USER")
-        );
+        return ADMIN_AUTHORITIES;
     }
 
     @Override

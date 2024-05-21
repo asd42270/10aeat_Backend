@@ -1,14 +1,14 @@
 package com.final_10aeat.global.security.principal;
 
 import com.final_10aeat.domain.manager.entity.Manager;
-import java.util.Collection;
-import java.util.Collections;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+
+import static com.final_10aeat.global.util.AuthoritiesUtil.MANAGER_AUTHORITIES;
 
 @RequiredArgsConstructor
 public class ManagerPrincipal implements UserDetails {
@@ -18,9 +18,7 @@ public class ManagerPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(
-                new SimpleGrantedAuthority("ROLE_USER")
-        );
+        return MANAGER_AUTHORITIES;
     }
 
     @Override
