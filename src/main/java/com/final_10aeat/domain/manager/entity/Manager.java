@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Builder
-@Table(name = "admin")
+@Table(name = "manager")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Manager extends SoftDeletableBaseTimeEntity {
@@ -51,8 +51,8 @@ public class Manager extends SoftDeletableBaseTimeEntity {
     @Column(name = "lunch_end")
     private LocalDateTime lunchBreakEnd;
 
-    @Column(name = "admin_office")
-    private String adminOffice;
+    @Column(name = "manager_office")
+    private String managerOffice;
 
     private String affiliation;
 

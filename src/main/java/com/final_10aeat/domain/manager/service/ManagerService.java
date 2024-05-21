@@ -1,6 +1,6 @@
 package com.final_10aeat.domain.manager.service;
 
-import com.final_10aeat.domain.manager.dto.request.CreateAdminRequestDto;
+import com.final_10aeat.domain.manager.dto.request.CreateManagerRequestDto;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.office.exception.OfficeNotFoundException;
@@ -26,10 +26,10 @@ public class ManagerService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenGenerator jwtTokenGenerator;
 
-    public Manager register(CreateAdminRequestDto request) {
+    public Manager register(CreateManagerRequestDto request) {
         validateEmailNotDuplicated(request.email());
         Office office = validateAndGetOffice(request.officeId());
-        return createAndSaveAdmin(request, office);
+        return createAndSaveManager(request, office);
     }
 
     private void validateEmailNotDuplicated(String email) {
@@ -43,7 +43,7 @@ public class ManagerService {
             .orElseThrow(OfficeNotFoundException::new);
     }
 
-    private Manager createAndSaveAdmin(CreateAdminRequestDto request, Office office) {
+    private Manager createAndSaveManager(CreateManagerRequestDto request, Office office) {
         Manager manager = Manager.builder()
             .email(request.email())
             .password(passwordEncoder.encode(request.password()))
@@ -51,7 +51,7 @@ public class ManagerService {
             .phoneNumber(request.phoneNumber())
             .lunchBreakStart(request.lunchBreakStart())
             .lunchBreakEnd(request.lunchBreakEnd())
-            .adminOffice(request.adminOffice())
+            .managerOffice(request.managerOffice())
             .affiliation(request.affiliation())
             .office(office)
             .role(MemberRole.MANAGER)

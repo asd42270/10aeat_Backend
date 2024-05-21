@@ -45,15 +45,15 @@ class ManagerEntityTest {
 
     @Test
     @DisplayName("관리자 엔티티 저장 및 조회 테스트")
-    void testSaveAndFindAdmin() {
+    void testSaveAndFindManager() {
         Manager manager = Manager.builder()
-            .email("admin@example.com")
+            .email("manager@example.com")
             .password("securePassword")
             .name("김관리")
             .phoneNumber("010-1234-5678")
             .lunchBreakStart(LocalDateTime.of(2024, 1, 1, 12, 0))
             .lunchBreakEnd(LocalDateTime.of(2024, 1, 1, 13, 0))
-            .adminOffice("중앙 현관 1층 관리자 사무소")
+            .managerOffice("중앙 현관 1층 관리자 사무소")
             .affiliation("김씨 관리 협회")
             .office(office)
             .role(MemberRole.MANAGER)
@@ -64,7 +64,7 @@ class ManagerEntityTest {
         Manager foundManager = managerRepository.findById(manager.getId()).orElse(null);
 
         assertThat(foundManager).isNotNull();
-        assertThat(foundManager.getEmail()).isEqualTo("admin@example.com");
+        assertThat(foundManager.getEmail()).isEqualTo("manager@example.com");
         assertThat(foundManager.getName()).isEqualTo("김관리");
         assertThat(foundManager.getOffice().getOfficeName()).isEqualTo("미왕 빌딩");
     }

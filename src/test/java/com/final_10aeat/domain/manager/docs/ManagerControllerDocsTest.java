@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.manager.controller.ManagerController;
-import com.final_10aeat.domain.manager.dto.request.CreateAdminRequestDto;
+import com.final_10aeat.domain.manager.dto.request.CreateManagerRequestDto;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.manager.repository.ManagerRepository;
@@ -75,27 +75,27 @@ public class ManagerControllerDocsTest extends RestDocsSupport {
         when(officeRepository.findById(1L)).thenReturn(Optional.of(office));
 
         Manager manager = Manager.builder()
-            .email("admin@example.com")
-            .password("adminPassword")
+            .email("manager@example.com")
+            .password("managerPassword")
             .name("김관리")
             .phoneNumber("010-1234-5678")
             .lunchBreakStart(null)
             .lunchBreakEnd(null)
-            .adminOffice("중앙 현관 1층 관리자 사무실")
+            .managerOffice("중앙 현관 1층 관리자 사무실")
             .affiliation("김씨 관리 협회")
             .office(office)
             .role(MemberRole.MANAGER)
             .build();
-        when(managerRepository.findByEmail("admin@example.com")).thenReturn(Optional.of(manager));
-        when(passwordEncoder.matches("adminPassword", "adminPassword")).thenReturn(true);
+        when(managerRepository.findByEmail("manager@example.com")).thenReturn(Optional.of(manager));
+        when(passwordEncoder.matches("managerPassword", "managerPassword")).thenReturn(true);
     }
 
     @DisplayName("관리자 등록 API 문서화")
     @Test
-    void testRegisterAdmin() throws Exception {
+    void testRegisterManager() throws Exception {
         // Given
-        CreateAdminRequestDto registerRequest = new CreateAdminRequestDto(
-            "admin@naver.com", "adminPassword", "김관리", "010-1234-5678", null, null,
+        CreateManagerRequestDto registerRequest = new CreateManagerRequestDto(
+            "manager@naver.com", "managerPassword", "김관리", "010-1234-5678", null, null,
             "중앙 현관 1층 관리자 사무실", "김씨 관리 협회", 1L
         );
 
@@ -116,7 +116,7 @@ public class ManagerControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("phoneNumber").description("전화번호"),
                     fieldWithPath("lunchBreakStart").optional().description("점심시간 시작"),
                     fieldWithPath("lunchBreakEnd").optional().description("점심시간 끝"),
-                    fieldWithPath("adminOffice").description("관리 사무소 위치"),
+                    fieldWithPath("managerOffice").description("관리 사무소 위치"),
                     fieldWithPath("affiliation").description("소속 정보"),
                     fieldWithPath("officeId").description("관리하고 있는 건물 ID")
                 ),
@@ -128,10 +128,10 @@ public class ManagerControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("관리자 로그인 API 문서화")
     @Test
-    void testLoginAdmin() throws Exception {
+    void testLoginManager() throws Exception {
         // Given
         MemberLoginRequestDto loginRequest = new MemberLoginRequestDto(
-            "admin@example.com", "adminPassword"
+            "manager@example.com", "managerPassword"
         );
 
         // When

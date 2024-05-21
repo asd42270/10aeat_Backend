@@ -8,7 +8,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.final_10aeat.domain.manager.dto.request.CreateAdminRequestDto;
+import com.final_10aeat.domain.manager.dto.request.CreateManagerRequestDto;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.office.exception.OfficeNotFoundException;
@@ -54,15 +54,15 @@ public class ManagerServiceTest {
     }
 
     @Nested
-    @DisplayName("registerAdmin()은")
+    @DisplayName("registerManager()은")
     class Context_RegisterManager {
 
 
         @Test
         @DisplayName("성공적으로 관리자를 등록한다.")
         void _willSuccess() {
-            CreateAdminRequestDto requestDto = new CreateAdminRequestDto(
-                "admin@example.com", "securePassword", "김관리", "010-1234-5678",
+            CreateManagerRequestDto requestDto = new CreateManagerRequestDto(
+                "manager@example.com", "securePassword", "김관리", "010-1234-5678",
                 LocalDateTime.of(2024, 1, 1, 12, 0),
                 LocalDateTime.of(2024, 1, 1, 13, 0),
                 "중앙 현관 1층 관리자 사무소", "김씨 관리 협회", 1L
@@ -77,13 +77,13 @@ public class ManagerServiceTest {
                 .build();
 
             Manager manager = Manager.builder()
-                .email("admin@example.com")
+                .email("manager@example.com")
                 .password("encodedPassword")
                 .name("김관리")
                 .phoneNumber("010-1234-5678")
                 .lunchBreakStart(LocalDateTime.of(2024, 1, 1, 12, 0))
                 .lunchBreakEnd(LocalDateTime.of(2024, 1, 1, 13, 0))
-                .adminOffice("중앙 현관 1층 관리자 사무소")
+                .managerOffice("중앙 현관 1층 관리자 사무소")
                 .affiliation("김씨 관리 협회")
                 .office(office)
                 .role(MemberRole.MANAGER)
@@ -97,15 +97,15 @@ public class ManagerServiceTest {
             Manager result = managerService.register(requestDto);
 
             verify(managerRepository).save(any(Manager.class));
-            assertEquals("admin@example.com", result.getEmail());
+            assertEquals("manager@example.com", result.getEmail());
             assertEquals("김관리", result.getName());
         }
 
         @Test
         @DisplayName("이미 존재하는 이메일로 등록을 시도하면 실패한다.")
         void Duplicated_willFail() {
-            CreateAdminRequestDto requestDto = new CreateAdminRequestDto(
-                "admin@example.com", "securePassword", "김관리", "010-1234-5678",
+            CreateManagerRequestDto requestDto = new CreateManagerRequestDto(
+                "manager@example.com", "securePassword", "김관리", "010-1234-5678",
                 LocalDateTime.of(2024, 1, 1, 12, 0),
                 LocalDateTime.of(2024, 1, 1, 13, 0),
                 "중앙 현관 1층 관리자 사무소", "김씨 관리 협회", 1L
@@ -123,8 +123,8 @@ public class ManagerServiceTest {
         @Test
         @DisplayName("존재하지 않는 사무소 ID로 등록을 시도하면 실패한다.")
         void NotFound_willFail() {
-            CreateAdminRequestDto requestDto = new CreateAdminRequestDto(
-                "admin@example.com", "securePassword", "김관리", "010-1234-5678",
+            CreateManagerRequestDto requestDto = new CreateManagerRequestDto(
+                "manager@example.com", "securePassword", "김관리", "010-1234-5678",
                 LocalDateTime.of(2024, 1, 1, 12, 0),
                 LocalDateTime.of(2024, 1, 1, 13, 0),
                 "중앙 현관 1층 관리자 사무소", "김씨 관리 협회", 1L
@@ -146,11 +146,11 @@ public class ManagerServiceTest {
         @Test
         @DisplayName("성공적으로 로그인을 수행한다.")
         void _willSuccess() {
-            MemberLoginRequestDto loginRequestDto = new MemberLoginRequestDto("admin@example.com",
+            MemberLoginRequestDto loginRequestDto = new MemberLoginRequestDto("manager@example.com",
                 "securePassword");
 
             Manager manager = Manager.builder()
-                .email("admin@example.com")
+                .email("manager@example.com")
                 .password("encodedPassword")
                 .role(MemberRole.MANAGER)
                 .build();
@@ -168,7 +168,7 @@ public class ManagerServiceTest {
         @Test
         @DisplayName("존재하지 않는 이메일로 로그인을 시도하면 실패한다.")
         void NotFound_willFail() {
-            MemberLoginRequestDto loginRequestDto = new MemberLoginRequestDto("admin@example.com",
+            MemberLoginRequestDto loginRequestDto = new MemberLoginRequestDto("manager@example.com",
                 "securePassword");
 
             when(managerRepository.findByEmail(anyString())).thenReturn(Optional.empty());
@@ -181,11 +181,11 @@ public class ManagerServiceTest {
         @Test
         @DisplayName("잘못된 비밀번호로 로그인을 시도하면 실패한다.")
         void NotMatch_willFail() {
-            MemberLoginRequestDto loginRequestDto = new MemberLoginRequestDto("admin@example.com",
+            MemberLoginRequestDto loginRequestDto = new MemberLoginRequestDto("manager@example.com",
                 "securePassword");
 
             Manager manager = Manager.builder()
-                .email("admin@example.com")
+                .email("manager@example.com")
                 .password("encodedPassword")
                 .role(MemberRole.MANAGER)
                 .build();

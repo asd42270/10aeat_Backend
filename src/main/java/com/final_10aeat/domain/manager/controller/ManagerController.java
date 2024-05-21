@@ -1,6 +1,6 @@
 package com.final_10aeat.domain.manager.controller;
 
-import com.final_10aeat.domain.manager.dto.request.CreateAdminRequestDto;
+import com.final_10aeat.domain.manager.dto.request.CreateManagerRequestDto;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.manager.service.ManagerService;
 import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
@@ -23,7 +23,7 @@ public class ManagerController {
 
     @PostMapping
     public ResponseEntity<ResponseDTO<Void>> register(
-        @RequestBody @Valid CreateAdminRequestDto request) {
+        @RequestBody @Valid CreateManagerRequestDto request) {
         Manager manager = managerService.register(request);
         return ResponseEntity.ok(ResponseDTO.ok());
     }

@@ -64,7 +64,7 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
     private String companyWebsite;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "admin_id")
+    @JoinColumn(name = "manager_id")
     private Manager manager;
 
     @OneToMany(mappedBy = "repairArticle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -51,26 +51,26 @@ public class EmailControllerDocsTest extends RestDocsSupport {
             .mapY("789.012")
             .build();
 
-        Admin admin = Admin.builder()
+        Manager manager = Manager.builder()
             .id(1L)
-            .email("admin@example.com")
+            .email("manager@example.com")
             .password("encryptedPassword")
-            .name("Admin User")
+            .name("Manager User")
             .phoneNumber("1234567890")
             .lunchBreakStart(LocalDateTime.of(2021, Month.JANUARY, 1, 12, 0))
             .lunchBreakEnd(LocalDateTime.of(2021, Month.JANUARY, 1, 13, 0))
-            .adminOffice("Main Office")
+            .managerOffice("Main Office")
             .affiliation("Headquarters")
             .office(office)
-            .role(MemberRole.ADMIN)
+            .role(MemberRole.MANAGER)
             .build();
 
-        AdminPrincipal adminPrincipal = new AdminPrincipal(admin);
+        ManagerPrincipal managerPrincipal = new ManagerPrincipal(manager);
 
         EmailRequestDto emailRequest = new EmailRequestDto(
             "test@example.com", MemberRole.TENANT, "102", "101");
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(adminPrincipal, null, adminPrincipal.getAuthorities());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(managerPrincipal, null, managerPrincipal.getAuthorities());
 
         // when & then
         mockMvc.perform(post("/members/email")
