@@ -22,7 +22,7 @@ public class EmailController {
     private final EmailUseCase emailUseCase;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseDTO<Void>> mailConfirm(
         @RequestBody @Valid EmailRequestDto emailRequest) throws Exception {
         emailUseCase.sendVerificationEmail(emailRequest.email(), emailRequest.role(),
