@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -67,6 +68,7 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
     @JoinColumn(name = "manager_id")
     private Manager manager;
 
+    @Setter
     @OneToMany(mappedBy = "repairArticle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<RepairArticleImage> images;
 }
