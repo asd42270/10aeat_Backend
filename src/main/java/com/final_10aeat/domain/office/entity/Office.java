@@ -1,7 +1,17 @@
 package com.final_10aeat.domain.office.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -22,11 +32,9 @@ public class Office {
     @Column(unique = true)
     private String address;
 
-    @Setter
     @Column(name = "map_x")
     private Double mapX;
 
-    @Setter
     @Column(name = "map_y")
     private Double mapY;
 }
