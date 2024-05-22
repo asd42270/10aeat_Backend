@@ -1,5 +1,6 @@
-package com.final_10aeat.domain.member.docs;
+package com.final_10aeat.domain.manager.docs;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -14,15 +15,25 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.manager.controller.EmailController;
+import com.final_10aeat.domain.manager.dto.request.EmailRequestDto;
 import com.final_10aeat.domain.manager.dto.request.EmailVerificationRequestDto;
 import com.final_10aeat.domain.manager.dto.response.EmailVerificationResponseDto;
-import com.final_10aeat.domain.manager.service.ManagerService;
+import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.manager.service.EmailUseCase;
+import com.final_10aeat.domain.manager.service.ManagerService;
+import com.final_10aeat.domain.office.entity.Office;
+import com.final_10aeat.global.security.principal.ManagerPrincipal;
+import com.final_10aeat.global.util.AuthoritiesUtil;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 
 public class EmailControllerDocsTest extends RestDocsSupport {
 
@@ -36,59 +47,73 @@ public class EmailControllerDocsTest extends RestDocsSupport {
         managerService = mock(ManagerService.class);
         objectMapper = new ObjectMapper();
 
-        return new EmailController(emailUseCase, managerService);
+        return new EmailController(emailUseCase);
     }
 
-    /*@DisplayName("이메일 인증 코드 전송 API 문서화")
+   /* @DisplayName("이메일 전송 API 문서화")
     @Test
     void testSendVerificationEmail() throws Exception {
         // given
-        Office office = Office.builder()
-            .id(1L)
-            .officeName("Main Office")
-            .address("123 Main St")
-            .mapX("123.456")
-            .mapY("789.012")
-            .build();
-
-        Manager manager = Manager.builder()
-            .id(1L)
-            .email("manager@example.com")
-            .password("encryptedPassword")
-            .name("Manager User")
-            .phoneNumber("1234567890")
-            .lunchBreakStart(LocalDateTime.of(2021, Month.JANUARY, 1, 12, 0))
-            .lunchBreakEnd(LocalDateTime.of(2021, Month.JANUARY, 1, 13, 0))
-            .managerOffice("Main Office")
-            .affiliation("Headquarters")
-            .office(office)
-            .role(MemberRole.MANAGER)
-            .build();
-
-        ManagerPrincipal managerPrincipal = new ManagerPrincipal(manager);
-
         EmailRequestDto emailRequest = new EmailRequestDto(
             "test@example.com", MemberRole.TENANT, "102", "101");
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(managerPrincipal, null, managerPrincipal.getAuthorities());
+        Office office = Office.builder()
+            .id(1L)
+            .officeName("Office Name")
+            .address("123 Main St")
+            .mapX(123.45)
+            .mapY(678.90)
+            .build();
+
+        office.getId(), office.getOfficeName(), office.getAddress(), office.getMapX(), office.getMapY());
+
+        Manager manager = Manager.builder()
+            .email("manager@example.com")
+            .password("password")
+            .name("John Doe")
+            .phoneNumber("123-456-7890")
+            .lunchBreakStart(LocalDateTime.of(2024, 5, 22, 12, 0))
+            .lunchBreakEnd(LocalDateTime.of(2024, 5, 22, 13, 0))
+            .managerOffice("Manager Office")
+            .affiliation("Affiliation")
+            .role(MemberRole.MANAGER)
+            .office(office)
+            .build();
+
+        manager.getEmail(), manager.getPassword(), manager.getName(), manager.getPhoneNumber(), manager.getLunchBreakStart(), manager.getLunchBreakEnd(), manager.getManagerOffice(), manager.getAffiliation(), manager.getRole(), manager.getOffice())
+        ;
+        ManagerPrincipal managerPrincipal = new ManagerPrincipal(manager);
+
+        when(emailUseCase.sendVerificationEmail(anyString(), any(MemberRole.class), anyString(),
+            anyString(), any(Long.class)))
+            .thenReturn("Verification email sent");
+
+        SecurityContextHolder.getContext().setAuthentication(
+            new UsernamePasswordAuthenticationToken(managerPrincipal, null,
+                AuthoritiesUtil.MANAGER_AUTHORITIES)
+        );
 
         // when & then
         mockMvc.perform(post("/members/email")
-                .with(SecurityMockMvcRequestPostProcessors.authentication(authentication))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(emailRequest)))
+                .content(objectMapper.writeValueAsString(emailRequest))
+                .with(SecurityMockMvcRequestPostProcessors.authentication(
+                    new UsernamePasswordAuthenticationToken(managerPrincipal, null,
+                        AuthoritiesUtil.MANAGER_AUTHORITIES)
+                )))
             .andExpect(status().isOk())
             .andDo(document("email-send-verification",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestFields(
-                    fieldWithPath("email").description("인증 코드를 보낼 이메일"),
+                    fieldWithPath("email").description("이메일"),
                     fieldWithPath("role").description("회원 권한 (OWNER, TENANT)"),
                     fieldWithPath("dong").description("동 정보"),
                     fieldWithPath("ho").description("호 정보")
                 ),
                 responseFields(
-                    fieldWithPath("code").description("응답 상태 코드")
+                    fieldWithPath("code").description("응답 상태 코드"),
+                    fieldWithPath("data").description("응답 데이터")
                 )
             ));
     }*/

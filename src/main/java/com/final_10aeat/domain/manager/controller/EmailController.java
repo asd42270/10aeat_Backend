@@ -10,6 +10,7 @@ import com.final_10aeat.global.util.ResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,10 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmailController {
 
     private final EmailUseCase emailUseCase;
-    private final ManagerService managerService;
 
     @PostMapping
-    // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseDTO<Void>> mailConfirm(
         @RequestBody @Valid EmailRequestDto emailRequest,
         @AuthenticationPrincipal ManagerPrincipal managerPrincipal) throws Exception {
