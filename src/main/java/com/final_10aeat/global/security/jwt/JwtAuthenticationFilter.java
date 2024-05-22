@@ -8,6 +8,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,8 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
@@ -33,8 +32,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain
+        HttpServletResponse response,
+        FilterChain filterChain
     ) throws ServletException, IOException {
         //헤더에서 토큰 값을 읽어오는 과정
         String accessToken = request.getHeader("accessToken");//
@@ -42,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = getEmailPassword(accessToken);
 
             SecurityContextHolder.getContext()
-                    .setAuthentication(authentication);
+                .setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);//필터 종료 후 다음 필터로 진행
@@ -53,12 +52,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private Authentication getEmailPassword(String token) {
         String email = jwtTokenGenerator.getUserEmail(token);
         MemberRole role = jwtTokenGenerator.getRole(token);
-        if (email != null) {
+        if (email != null && (role != MemberRole.TENANT)) {
             UserDetails userDetails = getUserDetails(email, role);
             return new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities()
+                userDetails,
+                null,
+                userDetails.getAuthorities()
             );
         }
         return null;
