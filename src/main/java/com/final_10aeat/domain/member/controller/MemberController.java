@@ -4,10 +4,12 @@ import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
 import com.final_10aeat.domain.member.service.MemberService;
+import com.final_10aeat.global.security.principal.MemberPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -44,5 +46,12 @@ public class MemberController {
     ){
         memberService.withdraw(request);
         return ResponseDTO.ok();
+    }
+
+    @GetMapping
+    public ResponseDTO<?> test(
+        @AuthenticationPrincipal MemberPrincipal principal
+    ){
+        return ResponseDTO.okWithData(principal.getMember());
     }
 }
