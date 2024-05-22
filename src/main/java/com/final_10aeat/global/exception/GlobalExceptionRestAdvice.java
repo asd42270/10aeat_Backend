@@ -18,40 +18,40 @@ public class GlobalExceptionRestAdvice {
     public ResponseEntity<ResponseDTO<Void>> applicationException(ApplicationException e) {
         log.error(e.getMessage(), e);
         return ResponseEntity
-                .status(e.getErrorCode().getHttpStatus())
-                .body(ResponseDTO.error(e.getErrorCode()));
+            .status(e.getErrorCode().getHttpStatus())
+            .body(ResponseDTO.error(e.getErrorCode()));
     }
 
     @ExceptionHandler
     public ResponseEntity<ResponseDTO<Void>> bindException(BindException e) {
         log.error(e.getMessage(), e);
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(ResponseDTO.errorWithMessage(HttpStatus.BAD_REQUEST,
-                        e.getBindingResult().getAllErrors().get(0).getDefaultMessage()));
+            .status(HttpStatus.BAD_REQUEST)
+            .body(ResponseDTO.errorWithMessage(HttpStatus.BAD_REQUEST,
+                e.getBindingResult().getAllErrors().get(0).getDefaultMessage()));
     }
 
     @ExceptionHandler
     public ResponseEntity<ResponseDTO<Void>> dbException(DataAccessException e) {
         log.error(e.getMessage(), e);
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ResponseDTO.errorWithMessage(HttpStatus.INTERNAL_SERVER_ERROR, "db 에러!"));
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(ResponseDTO.errorWithMessage(HttpStatus.INTERNAL_SERVER_ERROR, "db 에러!"));
     }
 
     @ExceptionHandler
     public ResponseEntity<ResponseDTO<Void>> serverException(RuntimeException e) {
         log.error(e.getMessage(), e);
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ResponseDTO.errorWithMessage(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러!"));
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(ResponseDTO.errorWithMessage(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러!"));
     }
 
     @ExceptionHandler
     public ResponseEntity<ResponseDTO<Void>> serverException(AccessDeniedException e) {
         log.error(e.getMessage(), e);
         return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body(ResponseDTO.errorWithMessage(HttpStatus.FORBIDDEN, "권한이 없습니다!"));
+            .status(HttpStatus.UNAUTHORIZED)
+            .body(ResponseDTO.errorWithMessage(HttpStatus.UNAUTHORIZED, "권한이 없습니다!"));
     }
 }
