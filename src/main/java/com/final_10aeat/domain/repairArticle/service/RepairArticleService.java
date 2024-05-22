@@ -61,7 +61,7 @@ public class RepairArticleService {
             .orElseThrow(ArticleNotFoundException::new);
 
         if (!repairArticle.getManager().getId().equals(managerId)) {
-            throw new UnauthorizedAccessException("게시글 삭제 권한이 없습니다.");
+            throw new UnauthorizedAccessException();
         }
 
         repairArticle.delete(LocalDateTime.now());
