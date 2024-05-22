@@ -1,12 +1,15 @@
 package com.final_10aeat.domain.repairArticle.service;
 
+import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.manager.repository.ManagerRepository;
 import com.final_10aeat.domain.repairArticle.dto.request.CreateRepairArticleRequestDto;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticleImage;
+import com.final_10aeat.domain.repairArticle.exception.ArticleNotFoundException;
 import com.final_10aeat.domain.repairArticle.exception.ManagerNotFoundException;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -51,5 +54,17 @@ public class RepairArticleService {
                 .repairArticle(repairArticle)
                 .build())
             .collect(Collectors.toSet());
+    }
+
+    public void deleteRepairArticleById(Long repairArticleId, Long managerId) {
+        RepairArticle repairArticle = repairArticleRepository.findById(repairArticleId)
+            .orElseThrow(ArticleNotFoundException::new);
+
+        if (!repairArticle.getManager().getId().equals(managerId)) {
+            throw new UnauthorizedAccessException("게시글 삭제 권한이 없습니다.");
+        }
+
+        repairArticle.delete(LocalDateTime.now());
+        repairArticleRepository.save(repairArticle);
     }
 }

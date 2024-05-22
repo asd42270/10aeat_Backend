@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +26,19 @@ public class RepairArticleController {
     @PostMapping
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseDTO<Void>> createRepairArticle(@RequestBody @Valid
-        CreateRepairArticleRequestDto request,@AuthenticationPrincipal ManagerPrincipal managerPrincipal){
+    CreateRepairArticleRequestDto request,
+        @AuthenticationPrincipal ManagerPrincipal managerPrincipal) {
         repairArticleService.createRepairArticle(request, managerPrincipal.getManager().getId());
+        return ResponseEntity.ok(ResponseDTO.ok());
+    }
+
+    @DeleteMapping("/{repairArticleId}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<ResponseDTO<Void>> deleteRepairArticleById(
+        @PathVariable Long repairArticleId,
+        @AuthenticationPrincipal ManagerPrincipal managerPrincipal) {
+        repairArticleService.deleteRepairArticleById(repairArticleId,
+            managerPrincipal.getManager().getId());
         return ResponseEntity.ok(ResponseDTO.ok());
     }
 }

@@ -71,4 +71,8 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
     @Setter
     @OneToMany(mappedBy = "repairArticle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<RepairArticleImage> images;
+
+    public void delete(LocalDateTime currentTime){
+        super.delete(currentTime);
+    }
 }
