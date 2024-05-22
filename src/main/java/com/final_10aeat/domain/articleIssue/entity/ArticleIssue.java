@@ -2,20 +2,11 @@ package com.final_10aeat.domain.articleIssue.entity;
 
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.final_10aeat.global.entity.BaseTimeEntity;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -23,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "article_issue")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ArticleIssue {
+public class ArticleIssue extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,4 +33,18 @@ public class ArticleIssue {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "repair_article_id", referencedColumnName = "id")
     private RepairArticle repairArticle;
+
+    public ArticleIssue(String title, String content, ManageArticle manageArticle, LocalDateTime createdAt) {
+        this.title = title;
+        this.content = content;
+        this.manageArticle = manageArticle;
+        this.createdAt = createdAt;
+    }
+
+    public ArticleIssue(String title, String content, RepairArticle repairArticle, LocalDateTime createdAt) {
+        this.title = title;
+        this.content = content;
+        this.repairArticle = repairArticle;
+        this.createdAt = createdAt;
+    }
 }
