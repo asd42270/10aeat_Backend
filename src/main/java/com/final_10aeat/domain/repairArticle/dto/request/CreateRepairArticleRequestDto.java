@@ -14,7 +14,7 @@ public record CreateRepairArticleRequestDto(
     LocalDateTime constructionEnd,
     String repairCompany,
     String repairCompanyWebsite,
-    List<RepairArticleImageDto> images
+    List<String> images
 ) {
 
 }

@@ -3,7 +3,6 @@ package com.final_10aeat.domain.repairArticle.service;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.manager.repository.ManagerRepository;
 import com.final_10aeat.domain.repairArticle.dto.request.CreateRepairArticleRequestDto;
-import com.final_10aeat.domain.repairArticle.dto.request.RepairArticleImageDto;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticleImage;
 import com.final_10aeat.domain.repairArticle.exception.ManagerNotFoundException;
@@ -44,11 +43,11 @@ public class RepairArticleService {
         repairArticleRepository.save(repairArticle);
     }
 
-    private Set<RepairArticleImage> createImageEntities(List<RepairArticleImageDto> imageDtos,
+    private Set<RepairArticleImage> createImageEntities(List<String> imageUrls,
         RepairArticle repairArticle) {
-        return imageDtos.stream()
-            .map(dto -> RepairArticleImage.builder()
-                .imageUrl(dto.imageUrl())
+        return imageUrls.stream()
+            .map(url -> RepairArticleImage.builder()
+                .imageUrl(url)
                 .repairArticle(repairArticle)
                 .build())
             .collect(Collectors.toSet());
