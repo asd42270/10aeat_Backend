@@ -14,7 +14,7 @@ endif::[]
 
 === link:email/email-api.html[이메일 API]
 === link:member/member-api.html[회원가입/로그인 API]
-=== link:admin/admin-api.html[관리자 회원가입/로그인 API]
+=== link:manager/manager-api.html[관리자 회원가입/로그인 API]
 
 == API Common Response
 

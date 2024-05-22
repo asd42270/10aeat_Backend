@@ -1,7 +1,7 @@
 package com.final_10aeat.domain.member.entity;
 
 import com.final_10aeat.common.enumclass.MemberRole;
-import com.final_10aeat.domain.admin.entity.Office;
+import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.global.entity.SoftDeletableBaseTimeEntity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

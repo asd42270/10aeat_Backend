@@ -1,6 +1,6 @@
 package com.final_10aeat.domain.member.entity;
 
-import com.final_10aeat.domain.admin.entity.Office;
+import com.final_10aeat.domain.office.entity.Office;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

@@ -1,6 +1,6 @@
 package com.final_10aeat.global.security.principal;
 
-import com.final_10aeat.domain.admin.entity.Admin;
+import com.final_10aeat.domain.manager.entity.Manager;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,27 +8,27 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-import static com.final_10aeat.global.util.AuthoritiesUtil.ADMIN_AUTHORITIES;
+import static com.final_10aeat.global.util.AuthoritiesUtil.MANAGER_AUTHORITIES;
 
 @RequiredArgsConstructor
-public class AdminPrincipal implements UserDetails {
+public class ManagerPrincipal implements UserDetails {
 
     @Getter
-    private final Admin admin;
+    private final Manager manager;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return ADMIN_AUTHORITIES;
+        return MANAGER_AUTHORITIES;
     }
 
     @Override
     public String getPassword() {
-        return admin.getPassword();
+        return manager.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return admin.getEmail();
+        return manager.getEmail();
     }
 
     @Override

@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+import static com.final_10aeat.global.util.AuthoritiesUtil.MEMBER_AUTHORITIES;
+
 @RequiredArgsConstructor
 public class MemberPrincipal implements UserDetails {
 
@@ -16,7 +18,7 @@ public class MemberPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return MEMBER_AUTHORITIES;
     }
 
     @Override
