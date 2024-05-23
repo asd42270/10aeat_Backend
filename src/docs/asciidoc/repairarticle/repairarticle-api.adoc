@@ -1,0 +1,95 @@
+= Repair Article REST API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+=== link:../index.html[시작 페이지로 돌아가기]
+
+[[Create-Repair-Article]]
+== 유지보수 게시글 생성
+
+유지보수 게시글을 생성하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/create-repair-article/http-request.adoc[]
+include::{snippets}/create-repair-article/request-fields.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/create-repair-article/http-response.adoc[]
+include::{snippets}/create-repair-article/response-fields.adoc[]
+
+[[Delete-Repair-Article]]
+== 유지보수 게시글 삭제
+
+유지보수 게시글을 삭제하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/delete-repair-article/http-request.adoc[]
+include::{snippets}/delete-repair-article/path-parameters.adoc[]
+
+
+=== HttpResponse
+
+include::{snippets}/delete-repair-article/http-response.adoc[]
+include::{snippets}/delete-repair-article/response-fields.adoc[]
+
+[[Update-Repair-Article]]
+== 유지보수 게시글 수정
+
+유지보수 게시글을 수정하는 API 입니다.
+
+* PATCH 요청이므로, request body의 일부만 제공되어도 수정이 가능합니다.
+
+=== HttpRequest
+
+include::{snippets}/update-repair-article/http-request.adoc[]
+include::{snippets}/update-repair-article/path-parameters.adoc[]
+include::{snippets}/update-repair-article/request-fields.adoc[]
+
+
+=== HttpResponse
+
+include::{snippets}/update-repair-article/http-response.adoc[]
+include::{snippets}/update-repair-article/response-fields.adoc[]
+
+[[Create-Custom-Progress]]
+== 유지보수 안건진행사항 생성
+
+유지보수 안건진행사항을 생성하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/create-custom-progress/http-request.adoc[]
+include::{snippets}/create-custom-progress/path-parameters.adoc[]
+include::{snippets}/create-custom-progress/request-fields.adoc[]
+
+
+=== HttpResponse
+
+include::{snippets}/create-custom-progress/http-response.adoc[]
+include::{snippets}/create-custom-progress/response-fields.adoc[]
+
+[[Update-Custom-Progress]]
+== 유지보수 안건진행사항 수정
+
+유지보수 안건진행사항을 수정하는 API 입니다.
+
+* PATCH 요청이므로, request body의 일부만 제공되어도 수정이 가능합니다.
+* 게시글 내 안건진행사항들 중에서 하나만이 inProgress값을 true로 가질 수 있습니다. (나머지는 false로 자동 업데이트)
+
+=== HttpRequest
+
+include::{snippets}/update-custom-progress/http-request.adoc[]
+include::{snippets}/update-custom-progress/path-parameters.adoc[]
+include::{snippets}/update-custom-progress/request-fields.adoc[]
+
+
+=== HttpResponse
+
+include::{snippets}/update-custom-progress/http-response.adoc[]
+include::{snippets}/update-custom-progress/response-fields.adoc[]
