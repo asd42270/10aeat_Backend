@@ -9,7 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,34 +22,37 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('MANAGER')")
 @RequestMapping("/managers/repair/article")
-public class CreateRepairArticleController {
+public class ManagerRepairArticleController {
 
     private final RepairArticleService repairArticleService;
 
     @PostMapping
     public ResponseEntity<ResponseDTO<Void>> createRepairArticle(@RequestBody @Valid
-    CreateRepairArticleRequestDto request,
-        @AuthenticationPrincipal ManagerPrincipal managerPrincipal) {
-        repairArticleService.createRepairArticle(request, managerPrincipal.getManager().getId());
+    CreateRepairArticleRequestDto request) {
+        ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+        repairArticleService.createRepairArticle(request, principal.getManager().getId());
         return ResponseEntity.ok(ResponseDTO.ok());
     }
 
     @DeleteMapping("/{repairArticleId}")
     public ResponseEntity<ResponseDTO<Void>> deleteRepairArticleById(
-        @PathVariable Long repairArticleId,
-        @AuthenticationPrincipal ManagerPrincipal managerPrincipal) {
+        @PathVariable Long repairArticleId) {
+        ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
         repairArticleService.deleteRepairArticleById(repairArticleId,
-            managerPrincipal.getManager().getId());
+            principal.getManager().getId());
         return ResponseEntity.ok(ResponseDTO.ok());
     }
 
     @PatchMapping("/{repairArticleId}")
     public ResponseEntity<ResponseDTO<Void>> updateRepairArticleById(
         @PathVariable Long repairArticleId,
-        @RequestBody UpdateRepairArticleRequestDto request,
-        @AuthenticationPrincipal ManagerPrincipal managerPrincipal) {
+        @RequestBody UpdateRepairArticleRequestDto request) {
+        ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
         repairArticleService.updateRepairArticle(repairArticleId, request,
-            managerPrincipal.getManager().getId());
+            principal.getManager().getId());
         return ResponseEntity.ok(ResponseDTO.ok());
     }
 }
