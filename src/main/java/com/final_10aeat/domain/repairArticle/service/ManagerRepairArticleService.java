@@ -12,6 +12,7 @@ import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticleImage;
 import com.final_10aeat.domain.repairArticle.exception.ArticleAlreadyDeletedException;
 import com.final_10aeat.domain.repairArticle.exception.ArticleNotFoundException;
+import com.final_10aeat.domain.repairArticle.exception.CustomProgressNotFoundException;
 import com.final_10aeat.domain.repairArticle.exception.ManagerNotFoundException;
 import com.final_10aeat.domain.repairArticle.repository.CustomProgressRepository;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
@@ -153,10 +154,9 @@ public class ManagerRepairArticleService {
     public void updateCustomProgress(Long progressId, Long managerId,
         UpdateCustomProgressRequestDto request) {
         CustomProgress customProgress = customProgressRepository.findById(progressId)
-            .orElseThrow(() -> new RuntimeException("CustomProgress not found"));
+            .orElseThrow(CustomProgressNotFoundException::new);
 
         RepairArticle repairArticle = customProgress.getRepairArticle();
-
         verifyManager(repairArticle, managerId);
 
         if (request.startSchedule() != null) {
@@ -171,5 +171,16 @@ public class ManagerRepairArticleService {
         if (request.content() != null) {
             customProgress.setContent(request.content());
         }
+        if (request.inProgress() != null) {
+            if (request.inProgress()) {
+                customProgress.getRepairArticle().getCustomProgressSet().forEach(cp -> {
+                    if (!cp.equals(customProgress)) {
+                        cp.setInProgress(false);
+                    }
+                });
+            }
+            customProgress.setInProgress(request.inProgress());
+        }
+        customProgressRepository.save(customProgress);
     }
 }
