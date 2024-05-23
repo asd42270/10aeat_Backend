@@ -12,8 +12,6 @@ public enum ErrorCode {
     // MANAGER
     MANAGER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 관리자입니다"),
 
-    // ARTICLE
-    ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 게시글입니다."),
     ARTICLE_ALREADY_DELETED(HttpStatus.BAD_REQUEST, "이미 삭제된 게시글입니다."),
 
     // PROGRESS

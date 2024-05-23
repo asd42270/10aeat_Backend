@@ -2,9 +2,11 @@ package com.final_10aeat.domain.articleIssue.controller;
 
 import com.final_10aeat.domain.articleIssue.dto.ArticleIssuePublishRequestDto;
 import com.final_10aeat.domain.articleIssue.service.ArticleIssueService;
+import com.final_10aeat.global.security.principal.ManagerPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +22,10 @@ public class ArticleIssueController {
             @PathVariable("manage_article_id") Long id,
             @RequestBody ArticleIssuePublishRequestDto request
     ) {
-        articleIssueService.manageIssuePublish(request, id);
+        ManagerPrincipal managerPrincipal = (ManagerPrincipal) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+
+        articleIssueService.manageIssuePublish(request, id, managerPrincipal.getManager());
         return ResponseDTO.ok();
     }
 
@@ -29,7 +34,10 @@ public class ArticleIssueController {
             @PathVariable("repair_article_id") Long id,
             @RequestBody ArticleIssuePublishRequestDto request
     ) {
-        articleIssueService.repairIssuePublish(request, id);
+        ManagerPrincipal managerPrincipal = (ManagerPrincipal) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+
+        articleIssueService.repairIssuePublish(request, id, managerPrincipal.getManager());
         return ResponseDTO.ok();
     }
 

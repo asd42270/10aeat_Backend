@@ -1,6 +1,7 @@
 package com.final_10aeat.domain.articleIssue.entity;
 
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
+import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.final_10aeat.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -34,17 +35,25 @@ public class ArticleIssue extends BaseTimeEntity {
     @JoinColumn(name = "repair_article_id", referencedColumnName = "id")
     private RepairArticle repairArticle;
 
-    public ArticleIssue(String title, String content, ManageArticle manageArticle, LocalDateTime createdAt) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manager_id")
+    private Manager manager;
+
+    public ArticleIssue(String title, String content, ManageArticle manageArticle,
+                        LocalDateTime createdAt, Manager manager) {
         this.title = title;
         this.content = content;
         this.manageArticle = manageArticle;
         this.createdAt = createdAt;
+        this.manager = manager;
     }
 
-    public ArticleIssue(String title, String content, RepairArticle repairArticle, LocalDateTime createdAt) {
+    public ArticleIssue(String title, String content, RepairArticle repairArticle,
+                        LocalDateTime createdAt, Manager manager) {
         this.title = title;
         this.content = content;
         this.repairArticle = repairArticle;
         this.createdAt = createdAt;
+        this.manager = manager;
     }
 }
