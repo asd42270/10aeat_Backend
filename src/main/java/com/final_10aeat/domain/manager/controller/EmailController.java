@@ -3,7 +3,6 @@ package com.final_10aeat.domain.manager.controller;
 import com.final_10aeat.domain.manager.dto.request.EmailRequestDto;
 import com.final_10aeat.domain.manager.dto.request.EmailVerificationRequestDto;
 import com.final_10aeat.domain.manager.dto.response.EmailVerificationResponseDto;
-import com.final_10aeat.domain.manager.service.ManagerService;
 import com.final_10aeat.domain.manager.service.EmailUseCase;
 import com.final_10aeat.global.security.principal.ManagerPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;
@@ -11,7 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,9 +26,13 @@ public class EmailController {
     @PostMapping
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ResponseDTO<Void>> mailConfirm(
-        @RequestBody @Valid EmailRequestDto emailRequest,
-        @AuthenticationPrincipal ManagerPrincipal managerPrincipal) throws Exception {
-        Long officeId = managerPrincipal.getManager().getOffice().getId();
+        @RequestBody @Valid EmailRequestDto emailRequest
+    ) throws Exception {
+
+        ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+
+        Long officeId = principal.getManager().getOffice().getId();
         emailUseCase.sendVerificationEmail(emailRequest.email(), emailRequest.role(),
             emailRequest.dong(), emailRequest.ho(), officeId);
         return ResponseEntity.ok(ResponseDTO.ok());
