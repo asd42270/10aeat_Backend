@@ -20,9 +20,11 @@ import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.common.util.manager.WithManager;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.repairArticle.controller.ManagerRepairArticleController;
+import com.final_10aeat.domain.repairArticle.dto.request.CreateCustomProgressRequestDto;
 import com.final_10aeat.domain.repairArticle.dto.request.CreateRepairArticleRequestDto;
+import com.final_10aeat.domain.repairArticle.dto.request.UpdateCustomProgressRequestDto;
 import com.final_10aeat.domain.repairArticle.dto.request.UpdateRepairArticleRequestDto;
-import com.final_10aeat.domain.repairArticle.service.RepairArticleService;
+import com.final_10aeat.domain.repairArticle.service.ManagerRepairArticleService;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +35,7 @@ public class ManagerRepairArticleDocsTest extends RestDocsSupport {
 
     @Override
     public Object initController() {
-        RepairArticleService repairArticleService = mock(RepairArticleService.class);
+        ManagerRepairArticleService repairArticleService = mock(ManagerRepairArticleService.class);
         return new ManagerRepairArticleController(repairArticleService);
     }
 
@@ -143,6 +145,79 @@ public class ManagerRepairArticleDocsTest extends RestDocsSupport {
                     fieldWithPath("repairCompany").description("수리 담당 회사의 이름").optional(),
                     fieldWithPath("repairCompanyWebsite").description("수리 회사 웹사이트 URL").optional(),
                     fieldWithPath("images").description("이미지 URL 목록").optional()
+                ),
+                responseFields(
+                    fieldWithPath("code").description("응답 상태 코드")
+                )
+            ));
+    }
+
+    @DisplayName("안건진행사항 생성 API 문서화")
+    @Test
+    @WithManager
+    void testCreateCustomProgress() throws Exception {
+        // given
+        CreateCustomProgressRequestDto requestDto = new CreateCustomProgressRequestDto(
+            LocalDateTime.now(),
+            LocalDateTime.now().plusDays(10),
+            "안건진행사항 제목",
+            "안건진행사항 내용"
+        );
+
+        // when & then
+        mockMvc.perform(post("/managers/repair/articles/progress/{repairArticleId}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestDto)))
+            .andExpect(status().isOk())
+            .andDo(document("create-custom-progress",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                pathParameters(
+                    parameterWithName("repairArticleId").description("유지보수 게시글 ID")
+                ),
+                requestFields(
+                    fieldWithPath("startSchedule").description("안건진행사항 시작 일정"),
+                    fieldWithPath("endSchedule").description("안건진행사항 종료 일정").optional(),
+                    fieldWithPath("title").description("안건진행사항 제목"),
+                    fieldWithPath("content").description("안건진행사항 내용")
+                ),
+                responseFields(
+                    fieldWithPath("code").description("응답 상태 코드")
+                )
+            ));
+    }
+
+    @DisplayName("안건진행사항 수정 API 문서화")
+    @Test
+    @WithManager
+    void testUpdateCustomProgress() throws Exception {
+        // given
+        UpdateCustomProgressRequestDto requestDto = new UpdateCustomProgressRequestDto(
+            LocalDateTime.now(),
+            LocalDateTime.now().plusDays(15),
+            "안건진행사항 제목 수정",
+            "안건진행사항 내용 수정",
+            true
+        );
+
+        // when & then
+        mockMvc.perform(patch("/managers/repair/articles/progress/{progressId}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestDto)))
+            .andExpect(status().isOk())
+            .andDo(document("update-custom-progress",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                pathParameters(
+                    parameterWithName("progressId").description("Custom Progress ID")
+                ),
+                requestFields(
+                    fieldWithPath("startSchedule").description("안건진행사항 시작 일정").optional(),
+                    fieldWithPath("endSchedule").description("안건진행사항 종료 일정").optional(),
+                    fieldWithPath("title").description("안건진행사항 제목").optional(),
+                    fieldWithPath("content").description("안건진행사항 내용").optional(),
+                    fieldWithPath("inProgress").description("진행 중인 안건인지 여부")
+                        .description("진행중 = true/ 종료,진행전 = false").optional()
                 ),
                 responseFields(
                     fieldWithPath("code").description("응답 상태 코드")
