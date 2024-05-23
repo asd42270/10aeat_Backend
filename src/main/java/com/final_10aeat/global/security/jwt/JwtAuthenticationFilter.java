@@ -22,7 +22,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     /**
-     * //컨트롤러에서 Member 사용 시 @AuthenticationPrincipal 어노테이션으로 MemberPrincipal을 불러와 사용
+     * Controller에서 로그인 정보 사용시 아래와 같은 방식으로 사용
+     * 다운 캐스팅 필수!
+     * ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
+     *             .getAuthentication().getPrincipal();
      */
 
     private final JwtTokenGenerator jwtTokenGenerator;
