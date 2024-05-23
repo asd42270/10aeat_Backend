@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -37,29 +38,37 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Progress progress = Progress.INPROGRESS;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ArticleCategory category;
 
+    @Setter
     @Column
     private String title;
 
+    @Setter
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Setter
     @Column(name = "construction_start")
     private LocalDateTime startConstruction;
 
+    @Setter
     @Column(name = "construction_end")
     private LocalDateTime endConstruction;
 
+    @Setter
     @Column(name = "repair_company")
     private String company;
 
+    @Setter
     @Column(name = "repair_company_website", columnDefinition = "TEXT")
     private String companyWebsite;
 
@@ -67,6 +76,15 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
     @JoinColumn(name = "manager_id")
     private Manager manager;
 
-    @OneToMany(mappedBy = "repairArticle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Setter
+    @OneToMany(mappedBy = "repairArticle", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RepairArticleImage> images;
+
+    @Setter
+    @OneToMany(mappedBy = "repairArticle", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CustomProgress> customProgressSet;
+
+    public void delete(LocalDateTime currentTime) {
+        super.delete(currentTime);
+    }
 }

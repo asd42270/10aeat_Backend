@@ -1,4 +1,4 @@
-package com.final_10aeat.domain.member.exception;
+package com.final_10aeat.common.exception;
 
 import com.final_10aeat.global.exception.ApplicationException;
 import com.final_10aeat.global.exception.ErrorCode;
