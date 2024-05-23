@@ -46,7 +46,7 @@ public class CreateRepairArticleController {
     @PatchMapping("/{repairArticleId}")
     public ResponseEntity<ResponseDTO<Void>> updateRepairArticleById(
         @PathVariable Long repairArticleId,
-        @RequestBody @Valid UpdateRepairArticleRequestDto request,
+        @RequestBody UpdateRepairArticleRequestDto request,
         @AuthenticationPrincipal ManagerPrincipal managerPrincipal) {
         repairArticleService.updateRepairArticle(repairArticleId, request,
             managerPrincipal.getManager().getId());
