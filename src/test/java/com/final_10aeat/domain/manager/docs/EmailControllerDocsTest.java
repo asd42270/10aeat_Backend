@@ -22,36 +22,19 @@ import com.final_10aeat.domain.manager.controller.EmailController;
 import com.final_10aeat.domain.manager.dto.request.EmailRequestDto;
 import com.final_10aeat.domain.manager.dto.request.EmailVerificationRequestDto;
 import com.final_10aeat.domain.manager.dto.response.EmailVerificationResponseDto;
-import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.manager.service.EmailUseCase;
-import com.final_10aeat.domain.manager.service.ManagerService;
-import com.final_10aeat.domain.office.entity.Office;
-import com.final_10aeat.global.security.jwt.JwtAuthenticationFilter;
-import com.final_10aeat.global.security.principal.ManagerPrincipal;
-import com.final_10aeat.global.util.AuthoritiesUtil;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.SpringBootContextLoader;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 
 public class EmailControllerDocsTest extends RestDocsSupport {
 
     private EmailUseCase emailUseCase;
-    private ManagerService managerService;
     private ObjectMapper objectMapper;
 
     @Override
     public Object initController() {
         emailUseCase = mock(EmailUseCase.class);
-        managerService = mock(ManagerService.class);
         objectMapper = new ObjectMapper();
 
         return new EmailController(emailUseCase);
@@ -59,6 +42,7 @@ public class EmailControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("이메일 전송 API 문서화")
     @Test
+    @WithManager
     void testSendVerificationEmail() throws Exception {
         // given
         EmailRequestDto emailRequest = new EmailRequestDto(
@@ -68,14 +52,12 @@ public class EmailControllerDocsTest extends RestDocsSupport {
             anyString(), any(Long.class)))
             .thenReturn("Verification email sent");
 
-        SecurityContext context = SecurityContextHolder.getContext();
-        System.out.println("Authentication: " + context.getAuthentication());
-
         // when & then
         mockMvc.perform(post("/members/email")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(emailRequest))
+                .content(objectMapper.writeValueAsString(emailRequest)
                 )
+            )
             .andExpect(status().isOk())
             .andDo(document("email-send-verification",
                 preprocessRequest(prettyPrint()),
@@ -87,8 +69,7 @@ public class EmailControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("ho").description("호 정보")
                 ),
                 responseFields(
-                    fieldWithPath("code").description("응답 상태 코드"),
-                    fieldWithPath("data").description("응답 데이터")
+                    fieldWithPath("code").description("응답 상태 코드")
                 )
             ));
     }
