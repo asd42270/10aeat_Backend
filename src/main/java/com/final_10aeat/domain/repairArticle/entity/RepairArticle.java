@@ -38,29 +38,37 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Progress progress = Progress.INPROGRESS;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ArticleCategory category;
 
+    @Setter
     @Column
     private String title;
 
+    @Setter
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Setter
     @Column(name = "construction_start")
     private LocalDateTime startConstruction;
 
+    @Setter
     @Column(name = "construction_end")
     private LocalDateTime endConstruction;
 
+    @Setter
     @Column(name = "repair_company")
     private String company;
 
+    @Setter
     @Column(name = "repair_company_website", columnDefinition = "TEXT")
     private String companyWebsite;
 
@@ -72,7 +80,7 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
     @OneToMany(mappedBy = "repairArticle", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RepairArticleImage> images;
 
-    public void delete(LocalDateTime currentTime){
+    public void delete(LocalDateTime currentTime) {
         super.delete(currentTime);
     }
 }
