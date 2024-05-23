@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('MANAGER')")
-@RequestMapping("/managers/repair/article")
+@RequestMapping("/managers/repair/articles")
 public class ManagerRepairArticleController {
 
     private final RepairArticleService repairArticleService;
