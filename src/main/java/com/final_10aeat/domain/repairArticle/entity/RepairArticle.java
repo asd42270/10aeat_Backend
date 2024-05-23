@@ -80,6 +80,10 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
     @OneToMany(mappedBy = "repairArticle", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RepairArticleImage> images;
 
+    @Setter
+    @OneToMany(mappedBy = "repairArticle", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CustomProgress> customProgressSet;
+
     public void delete(LocalDateTime currentTime) {
         super.delete(currentTime);
     }

@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -29,18 +30,23 @@ public class CustomProgress {
     private Long id;
 
     @Column
+    @Setter
     private String title;
 
     @Column
+    @Setter
     private String content;
 
     @Column(name = "inprogress")
+    @Setter
     private boolean inProgress;
 
     @Column(name = "schedule_start")
+    @Setter
     private LocalDateTime startSchedule;
 
     @Column(name = "schedule_end")
+    @Setter
     private LocalDateTime endSchedule;
 
     @ManyToOne(fetch = FetchType.LAZY)

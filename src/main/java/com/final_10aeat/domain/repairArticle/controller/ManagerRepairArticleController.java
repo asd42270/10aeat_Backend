@@ -1,8 +1,10 @@
 package com.final_10aeat.domain.repairArticle.controller;
 
+import com.final_10aeat.domain.repairArticle.dto.request.CreateCustomProgressRequestDto;
 import com.final_10aeat.domain.repairArticle.dto.request.CreateRepairArticleRequestDto;
+import com.final_10aeat.domain.repairArticle.dto.request.UpdateCustomProgressRequestDto;
 import com.final_10aeat.domain.repairArticle.dto.request.UpdateRepairArticleRequestDto;
-import com.final_10aeat.domain.repairArticle.service.RepairArticleService;
+import com.final_10aeat.domain.repairArticle.service.ManagerRepairArticleService;
 import com.final_10aeat.global.security.principal.ManagerPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;
 import jakarta.validation.Valid;
@@ -24,14 +26,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/managers/repair/articles")
 public class ManagerRepairArticleController {
 
-    private final RepairArticleService repairArticleService;
+    private final ManagerRepairArticleService managerRepairArticleService;
 
     @PostMapping
     public ResponseEntity<ResponseDTO<Void>> createRepairArticle(@RequestBody @Valid
     CreateRepairArticleRequestDto request) {
         ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
-        repairArticleService.createRepairArticle(request, principal.getManager().getId());
+        managerRepairArticleService.createRepairArticle(request, principal.getManager().getId());
         return ResponseEntity.ok(ResponseDTO.ok());
     }
 
@@ -40,7 +42,7 @@ public class ManagerRepairArticleController {
         @PathVariable Long repairArticleId) {
         ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
-        repairArticleService.deleteRepairArticleById(repairArticleId,
+        managerRepairArticleService.deleteRepairArticleById(repairArticleId,
             principal.getManager().getId());
         return ResponseEntity.ok(ResponseDTO.ok());
     }
@@ -51,8 +53,29 @@ public class ManagerRepairArticleController {
         @RequestBody UpdateRepairArticleRequestDto request) {
         ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
-        repairArticleService.updateRepairArticle(repairArticleId, request,
+        managerRepairArticleService.updateRepairArticle(repairArticleId, request,
             principal.getManager().getId());
+        return ResponseEntity.ok(ResponseDTO.ok());
+    }
+
+    @PostMapping("/progress/{repairArticleId}")
+    public ResponseEntity<ResponseDTO<Void>> createCustomProgress(
+        @PathVariable Long repairArticleId,
+        @RequestBody @Valid CreateCustomProgressRequestDto request) {
+        ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+        managerRepairArticleService.createCustomProgress(repairArticleId,
+            principal.getManager().getId(), request);
+        return ResponseEntity.ok(ResponseDTO.ok());
+    }
+
+    @PatchMapping("/progress/{progressId}")
+    public ResponseEntity<ResponseDTO<Void>> updateCustomProgress(@PathVariable Long progressId,
+        @RequestBody @Valid UpdateCustomProgressRequestDto request) {
+        ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+        managerRepairArticleService.updateCustomProgress(progressId, principal.getManager().getId(),
+            request);
         return ResponseEntity.ok(ResponseDTO.ok());
     }
 }
