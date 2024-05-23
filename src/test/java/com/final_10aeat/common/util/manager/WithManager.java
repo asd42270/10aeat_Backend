@@ -1,4 +1,4 @@
-package com.final_10aeat.common.util;
+package com.final_10aeat.common.util.manager;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -7,6 +7,8 @@ import org.springframework.security.test.context.support.WithSecurityContext;
 @Retention(RetentionPolicy.RUNTIME)
 @WithSecurityContext(factory = WithManagerSecurityContextFactory.class)
 public @interface WithManager {
+
+    long id() default 0L;
 
     String email() default "";
 

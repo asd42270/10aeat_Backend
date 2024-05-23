@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.final_10aeat.common.enumclass.MemberRole;
-import com.final_10aeat.common.util.WithManager;
+import com.final_10aeat.common.util.manager.WithManager;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.manager.controller.EmailController;
 import com.final_10aeat.domain.manager.dto.request.EmailRequestDto;
