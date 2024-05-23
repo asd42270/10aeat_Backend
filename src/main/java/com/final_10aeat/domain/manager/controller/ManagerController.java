@@ -24,7 +24,7 @@ public class ManagerController {
     @PostMapping
     public ResponseEntity<ResponseDTO<Void>> register(
         @RequestBody @Valid CreateManagerRequestDto request) {
-        Manager manager = managerService.register(request);
+        managerService.register(request);
         return ResponseEntity.ok(ResponseDTO.ok());
     }
 
