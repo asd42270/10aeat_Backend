@@ -71,11 +71,11 @@ public class ManagerRepairArticleDocsTest extends RestDocsSupport {
                         .description("COMPLETE, INPROGRESS, PENDING"),
                     fieldWithPath("title").description("유지보수 게시글 제목"),
                     fieldWithPath("content").description("유지보수 게시글 내용"),
-                    fieldWithPath("constructionStart").description("작업 시작 예정일").optional(),
-                    fieldWithPath("constructionEnd").description("작업 종료 예정일").optional(),
-                    fieldWithPath("repairCompany").description("수리 담당 회사의 이름").optional(),
-                    fieldWithPath("repairCompanyWebsite").description("수리 회사 웹사이트 URL").optional(),
-                    fieldWithPath("images").description("이미지 URL 목록").optional()
+                    fieldWithPath("constructionStart").description("작업 시작 예정일"),
+                    fieldWithPath("constructionEnd").description("작업 종료 예정일"),
+                    fieldWithPath("repairCompany").description("수리 담당 회사의 이름"),
+                    fieldWithPath("repairCompanyWebsite").description("수리 회사 웹사이트 URL"),
+                    fieldWithPath("images").description("이미지 URL 목록")
                 ),
                 responseFields(
                     fieldWithPath("code").description("응답 상태 코드")
@@ -135,16 +135,16 @@ public class ManagerRepairArticleDocsTest extends RestDocsSupport {
                 ),
                 requestFields(
                     fieldWithPath("category").description("게시글 카테고리")
-                        .description("INSTALL, REPAIR, REPLACE").optional(),
+                        .description("INSTALL, REPAIR, REPLACE"),
                     fieldWithPath("progress").description("진행 상황")
-                        .description("COMPLETE, INPROGRESS, PENDING").optional(),
-                    fieldWithPath("title").description("유지보수 게시글 제목").optional(),
-                    fieldWithPath("content").description("유지보수 게시글 내용").optional(),
-                    fieldWithPath("constructionStart").description("작업 시작 예정일").optional(),
-                    fieldWithPath("constructionEnd").description("작업 종료 예정일").optional(),
-                    fieldWithPath("repairCompany").description("수리 담당 회사의 이름").optional(),
-                    fieldWithPath("repairCompanyWebsite").description("수리 회사 웹사이트 URL").optional(),
-                    fieldWithPath("images").description("이미지 URL 목록").optional()
+                        .description("COMPLETE, INPROGRESS, PENDING"),
+                    fieldWithPath("title").description("유지보수 게시글 제목"),
+                    fieldWithPath("content").description("유지보수 게시글 내용"),
+                    fieldWithPath("constructionStart").description("작업 시작 예정일"),
+                    fieldWithPath("constructionEnd").description("작업 종료 예정일"),
+                    fieldWithPath("repairCompany").description("수리 담당 회사의 이름"),
+                    fieldWithPath("repairCompanyWebsite").description("수리 회사 웹사이트 URL"),
+                    fieldWithPath("images").description("이미지 URL 목록")
                 ),
                 responseFields(
                     fieldWithPath("code").description("응답 상태 코드")
@@ -177,7 +177,7 @@ public class ManagerRepairArticleDocsTest extends RestDocsSupport {
                 ),
                 requestFields(
                     fieldWithPath("startSchedule").description("안건진행사항 시작 일정"),
-                    fieldWithPath("endSchedule").description("안건진행사항 종료 일정").optional(),
+                    fieldWithPath("endSchedule").description("안건진행사항 종료 일정"),
                     fieldWithPath("title").description("안건진행사항 제목"),
                     fieldWithPath("content").description("안건진행사항 내용")
                 ),
@@ -212,12 +212,12 @@ public class ManagerRepairArticleDocsTest extends RestDocsSupport {
                     parameterWithName("progressId").description("Custom Progress ID")
                 ),
                 requestFields(
-                    fieldWithPath("startSchedule").description("안건진행사항 시작 일정").optional(),
-                    fieldWithPath("endSchedule").description("안건진행사항 종료 일정").optional(),
-                    fieldWithPath("title").description("안건진행사항 제목").optional(),
-                    fieldWithPath("content").description("안건진행사항 내용").optional(),
+                    fieldWithPath("startSchedule").description("안건진행사항 시작 일정"),
+                    fieldWithPath("endSchedule").description("안건진행사항 종료 일정"),
+                    fieldWithPath("title").description("안건진행사항 제목"),
+                    fieldWithPath("content").description("안건진행사항 내용"),
                     fieldWithPath("inProgress").description("진행 중인 안건인지 여부")
-                        .description("진행중 = true/ 종료,진행전 = false").optional()
+                        .description("진행중 = true/ 종료,진행전 = false")
                 ),
                 responseFields(
                     fieldWithPath("code").description("응답 상태 코드")
