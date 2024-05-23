@@ -14,6 +14,7 @@ public enum ErrorCode {
 
     // ARTICLE
     ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 게시글입니다."),
+    ARTICLE_ALREADY_DELETED(HttpStatus.BAD_REQUEST, "이미 삭제된 게시글입니다."),
 
     // EMAIL
     EMAIL_SENDING_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 전송에 실패했습니다."),
