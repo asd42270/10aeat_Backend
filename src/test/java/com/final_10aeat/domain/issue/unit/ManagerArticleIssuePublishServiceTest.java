@@ -37,21 +37,21 @@ public class ManagerArticleIssuePublishServiceTest {
     private final String email = "test@naver.com";
     private final String password = "spring";
 
-    ArticleIssuePublishRequestDto requestDto = new ArticleIssuePublishRequestDto(issueTitle, issueContent);
+    private final ArticleIssuePublishRequestDto requestDto = new ArticleIssuePublishRequestDto(issueTitle, issueContent);
 
-    Manager manager = Manager.builder()
+    private final Manager manager = Manager.builder()
             .email(email)
             .password(password)
             .role(MemberRole.MANAGER)
             .build();
 
-    ManageArticle manageArticle = ManageArticle.builder()
+    private final ManageArticle manageArticle = ManageArticle.builder()
             .id(articleId)
             .title(articleTitle)
             .note(articleContent)
             .build();
 
-    ArticleIssue articleIssue = ArticleIssue.builder()
+    private final ArticleIssue articleIssue = ArticleIssue.builder()
             .title(issueTitle)
             .content(issueContent)
             .manager(manager)
@@ -90,7 +90,7 @@ public class ManagerArticleIssuePublishServiceTest {
             given(articleIssueRepository.save(any(ArticleIssue.class))).willReturn(articleIssue);
             Long wrongArticleId = 123L;
 
-            //when
+            // when&then
             Assertions.assertThrows(ArticleNotFoundException.class,
                     () -> articleIssueService.manageIssuePublish(requestDto, wrongArticleId, manager));
         }
