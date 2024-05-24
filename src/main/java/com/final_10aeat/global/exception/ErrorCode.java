@@ -35,8 +35,8 @@ public enum ErrorCode {
     MEMBER_MISMATCH(HttpStatus.CONFLICT, "일치하지 않는 사용자입니다."),
     DISAGREE_TERM(HttpStatus.CONFLICT, "약관에 동의해야 합니다."),
 
-    // ManagerArticle/RepairArticle
-    ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 기사입니다."),
+    // Articles
+    ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 게시글입니다."),
 
     // 5xx
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 에러");
