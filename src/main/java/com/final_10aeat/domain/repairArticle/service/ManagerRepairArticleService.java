@@ -56,6 +56,7 @@ public class ManagerRepairArticleService {
             .company(request.repairCompany())
             .companyWebsite(request.repairCompanyWebsite())
             .manager(manager)
+            .office(manager.getOffice())
             .build();
     }
 
