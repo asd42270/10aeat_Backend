@@ -4,6 +4,7 @@ import com.final_10aeat.domain.articleIssue.dto.ArticleIssuePublishRequestDto;
 import com.final_10aeat.domain.articleIssue.service.ArticleIssueService;
 import com.final_10aeat.global.security.principal.ManagerPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +21,7 @@ public class ArticleIssueController {
     @PostMapping("/manage/issue/{manage_article_id}")
     public ResponseDTO<Void> managePublish(
             @PathVariable("manage_article_id") Long id,
-            @RequestBody ArticleIssuePublishRequestDto request
+            @RequestBody @Valid ArticleIssuePublishRequestDto request
     ) {
         ManagerPrincipal managerPrincipal = (ManagerPrincipal) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
@@ -32,7 +33,7 @@ public class ArticleIssueController {
     @PostMapping("/repair/issue/{repair_article_id}")
     public ResponseDTO<Void> repairPublish(
             @PathVariable("repair_article_id") Long id,
-            @RequestBody ArticleIssuePublishRequestDto request
+            @RequestBody @Valid ArticleIssuePublishRequestDto request
     ) {
         ManagerPrincipal managerPrincipal = (ManagerPrincipal) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
