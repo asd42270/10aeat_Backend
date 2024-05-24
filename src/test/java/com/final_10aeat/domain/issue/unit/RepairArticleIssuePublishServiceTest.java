@@ -6,9 +6,9 @@ import com.final_10aeat.domain.articleIssue.dto.ArticleIssuePublishRequestDto;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
 import com.final_10aeat.domain.articleIssue.repository.ArticleIssueRepository;
 import com.final_10aeat.domain.articleIssue.service.ArticleIssueService;
-import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
-import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
 import com.final_10aeat.domain.manager.entity.Manager;
+import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
+import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,10 +20,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-public class ManagerArticleIssuePublishServiceTest {
+public class RepairArticleIssuePublishServiceTest {
 
     @Mock
-    private ManageArticleRepository manageArticleRepository;
+    private RepairArticleRepository repairArticleRepository;
     @Mock
     private ArticleIssueRepository articleIssueRepository;
     @InjectMocks
@@ -45,17 +45,17 @@ public class ManagerArticleIssuePublishServiceTest {
             .role(MemberRole.MANAGER)
             .build();
 
-    ManageArticle manageArticle = ManageArticle.builder()
+    RepairArticle repairArticle = RepairArticle.builder()
             .id(articleId)
             .title(articleTitle)
-            .note(articleContent)
+            .content(articleContent)
             .build();
 
     ArticleIssue articleIssue = ArticleIssue.builder()
             .title(issueTitle)
             .content(issueContent)
             .manager(manager)
-            .manageArticle(manageArticle)
+            .repairArticle(repairArticle)
             .build();
 
     @BeforeEach
@@ -64,21 +64,21 @@ public class ManagerArticleIssuePublishServiceTest {
     }
 
     @Nested
-    @DisplayName("manageArticleIssuePublic()은")
-    class Context_ManageIssuePublish {
+    @DisplayName("repairArticleIssuePublic()은")
+    class Context_repairIssuePublish {
 
         @Test
-        @DisplayName("유지관리게시글 이슈 발행에 성공한다.")
+        @DisplayName("유지보수게시글 이슈 발행에 성공한다.")
         void _willSuccess() {
             // given
-            given(manageArticleRepository.findById(articleId)).willReturn(Optional.of(manageArticle));
+            given(repairArticleRepository.findById(articleId)).willReturn(Optional.of(repairArticle));
             given(articleIssueRepository.save(any(ArticleIssue.class))).willReturn(articleIssue);
 
             // when
-            articleIssueService.manageIssuePublish(requestDto, articleId, manager);
+            articleIssueService.repairIssuePublish(requestDto, articleId, manager);
 
             // then
-            verify(manageArticleRepository).findById(articleId);
+            verify(repairArticleRepository).findById(articleId);
             verify(articleIssueRepository).save(any(ArticleIssue.class));
         }
 
@@ -86,13 +86,13 @@ public class ManagerArticleIssuePublishServiceTest {
         @DisplayName("게시글이 존재하지 않아 발행에 실패한다.")
         void _articleNotFound() {
             // given
-            given(manageArticleRepository.findById(articleId)).willReturn(Optional.of(manageArticle));
+            given(repairArticleRepository.findById(articleId)).willReturn(Optional.of(repairArticle));
             given(articleIssueRepository.save(any(ArticleIssue.class))).willReturn(articleIssue);
             Long wrongArticleId = 123L;
 
             //when
             Assertions.assertThrows(ArticleNotFoundException.class,
-                    () -> articleIssueService.manageIssuePublish(requestDto, wrongArticleId, manager));
+                    () -> articleIssueService.repairIssuePublish(requestDto, wrongArticleId, manager));
         }
     }
 }
