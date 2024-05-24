@@ -54,9 +54,10 @@ public class ArticleIssueControllerDocsTest extends RestDocsSupport {
         //given
         ArticleIssuePublishRequestDto issueRequest = new ArticleIssuePublishRequestDto(
                 "title", "content");
-        // when&then
+
         doNothing().when(articleIssueService).manageIssuePublish(eq(issueRequest), any(Long.class), any(Manager.class));
 
+        // when&then
         mockMvc.perform(RestDocumentationRequestBuilders.post("/managers/articles/manage/issue/{manage_article_id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(issueRequest)))
@@ -84,9 +85,10 @@ public class ArticleIssueControllerDocsTest extends RestDocsSupport {
         //given
         ArticleIssuePublishRequestDto issueRequest = new ArticleIssuePublishRequestDto(
                 "title", "content");
-        // when&then
+
         doNothing().when(articleIssueService).repairIssuePublish(eq(issueRequest), any(Long.class), any(Manager.class));
 
+        // when&then
         mockMvc.perform(RestDocumentationRequestBuilders.post("/managers/articles/repair/issue/{repair_article_id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(issueRequest)))
