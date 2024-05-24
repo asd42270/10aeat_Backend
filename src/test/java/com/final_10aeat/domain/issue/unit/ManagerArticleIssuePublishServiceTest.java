@@ -1,4 +1,4 @@
-package com.final_10aeat.domain.member.unit;
+package com.final_10aeat.domain.issue.unit;
 
 import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.common.exception.ArticleNotFoundException;
