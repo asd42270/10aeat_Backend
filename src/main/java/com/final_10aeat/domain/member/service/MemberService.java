@@ -55,7 +55,7 @@ public class MemberService {
                 .name(request.name())
                 .role(request.memberRole())
                 .buildingInfos(Set.of(savedBuildingInfo))
-                .isTermAgreed(request.isTermAgreed())
+                .termAgreed(request.isTermAgreed())
                 .build();
 
         memberRepository.save(member);
