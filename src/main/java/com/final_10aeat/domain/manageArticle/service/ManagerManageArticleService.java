@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class ManagerManageArticleService {
 
@@ -28,10 +28,12 @@ public class ManagerManageArticleService {
 
     private ManageArticle createArticle(CreateManageArticleRequestDto request, Office office) {
         return ManageArticle.builder()
-            .progress(Progress.INPROGRESS)
+            .progress(Progress.PENDING)
             .period(request.period())
             .periodCount(request.periodCount())
-            .target(request.title())
+            .title(request.title())
+            .legalBasis(request.legalBasis())
+            .target(request.target())
             .responsibility(request.responsibility())
             .note(request.note())
             .office(office)
