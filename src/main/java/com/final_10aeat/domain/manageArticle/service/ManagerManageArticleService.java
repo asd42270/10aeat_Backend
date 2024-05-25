@@ -8,6 +8,7 @@ import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.office.entity.Office;
+import com.final_10aeat.domain.repairArticle.exception.ArticleAlreadyDeletedException;
 import com.final_10aeat.domain.repairArticle.exception.ArticleNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,10 @@ public class ManagerManageArticleService {
         Manager manager) {
         ManageArticle article = manageArticleRepository.findById(manageArticleId)
             .orElseThrow(ArticleNotFoundException::new);
+
+        if(article.isDeleted()){
+            throw new ArticleAlreadyDeletedException();
+        }
 
         if (!article.getOffice().getId().equals(manager.getOffice().getId())) {
             throw new UnauthorizedAccessException();

@@ -17,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -77,4 +78,8 @@ public class ManageArticle extends SoftDeletableBaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "office_id")
     private Office office;
+
+    public void delete(LocalDateTime currentTime) {
+        super.delete(currentTime);
+    }
 }
