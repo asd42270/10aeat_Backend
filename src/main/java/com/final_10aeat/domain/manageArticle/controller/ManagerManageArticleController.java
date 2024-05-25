@@ -8,6 +8,7 @@ import com.final_10aeat.global.util.ResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,6 +42,18 @@ public class ManagerManageArticleController {
             .getAuthentication().getPrincipal();
 
         managerManageArticleService.update(manageArticleId, request, principal.getManager());
+
+        return ResponseDTO.ok();
+    }
+
+    @DeleteMapping("/{manageArticleId}")
+    public ResponseDTO<Void> delete(
+        @PathVariable Long manageArticleId
+    ){
+        ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+
+        managerManageArticleService.delete(manageArticleId, principal.getManager());
 
         return ResponseDTO.ok();
     }

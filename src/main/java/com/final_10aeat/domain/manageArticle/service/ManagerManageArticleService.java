@@ -10,6 +10,7 @@ import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.repairArticle.exception.ArticleAlreadyDeletedException;
 import com.final_10aeat.domain.repairArticle.exception.ArticleNotFoundException;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +29,11 @@ public class ManagerManageArticleService {
         manageArticleRepository.save(article);
     }
 
-    public void update(Long manageArticleId, UpdateManageArticleRequestDto request,
-        Manager manager) {
+    public void update(
+        Long manageArticleId,
+        UpdateManageArticleRequestDto request,
+        Manager manager
+    ) {
         ManageArticle article = manageArticleRepository.findById(manageArticleId)
             .orElseThrow(ArticleNotFoundException::new);
 
@@ -42,8 +46,6 @@ public class ManagerManageArticleService {
         }
 
         updateArticle(request, article);
-
-        manageArticleRepository.save(article);
     }
 
     private void updateArticle(UpdateManageArticleRequestDto request, ManageArticle article) {
@@ -82,5 +84,20 @@ public class ManagerManageArticleService {
             .note(request.note())
             .office(office)
             .build();
+    }
+
+    public void delete(Long manageArticleId, Manager manager) {
+        ManageArticle article = manageArticleRepository.findById(manageArticleId)
+            .orElseThrow(ArticleNotFoundException::new);
+
+        if(article.isDeleted()){
+            throw new ArticleAlreadyDeletedException();
+        }
+
+        if (!article.getOffice().getId().equals(manager.getOffice().getId())) {
+            throw new UnauthorizedAccessException();
+        }
+
+        article.delete(LocalDateTime.now());
     }
 }
