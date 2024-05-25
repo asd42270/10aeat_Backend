@@ -23,6 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -36,29 +37,37 @@ public class ManageArticle extends SoftDeletableBaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Progress progress;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ManagePeriod period;
 
+    @Setter
     @Column(name = "period_count")
     private Integer periodCount;
 
+    @Setter
     @Column
     private String title;
 
+    @Setter
     @Column(name = "legal_basis")
     private String legalBasis;
 
+    @Setter
     @Column
     private String target;
 
+    @Setter
     @Column
     private String responsibility;
 
+    @Setter
     @Column(columnDefinition = "TEXT")
     private String note;
 
