@@ -1,5 +1,7 @@
 package com.final_10aeat.common.enumclass;
 
 public enum Progress {
-    COMPLETE, INPROGRESS, PENDING
+    COMPLETE, //완료
+    INPROGRESS, //진행중
+    PENDING //미진행
 }
