@@ -19,6 +19,6 @@ public record MemberRegisterRequestDto(
         @NotNull
         MemberRole memberRole,
         @NotNull
-        Boolean isTermAgreed
+        Boolean termAgreed
 ) {
 }

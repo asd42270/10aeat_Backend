@@ -10,4 +10,8 @@ public class MemberMissMatchException extends ApplicationException {
     public MemberMissMatchException() {
         super(ERROR_CODE);
     }
+
+    public MemberMissMatchException(String message) {
+        super(ERROR_CODE, message);
+    }
 }

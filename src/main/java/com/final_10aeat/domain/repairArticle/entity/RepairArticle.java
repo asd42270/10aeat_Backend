@@ -3,6 +3,7 @@ package com.final_10aeat.domain.repairArticle.entity;
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.domain.manager.entity.Manager;
+import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.global.entity.SoftDeletableBaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -83,6 +84,10 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
     @Setter
     @OneToMany(mappedBy = "repairArticle", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CustomProgress> customProgressSet;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "office_id")
+    private Office office;
 
     public void delete(LocalDateTime currentTime) {
         super.delete(currentTime);
