@@ -8,6 +8,7 @@ public enum ErrorCode {
 
     // COMMON
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "접근 권한이 없습니다."),
+    UNEXPECTED_PRINCIPAL(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 Principal 타입입니다."),
 
     // MANAGER
     MANAGER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 관리자입니다"),
