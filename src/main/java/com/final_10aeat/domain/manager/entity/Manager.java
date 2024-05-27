@@ -1,6 +1,7 @@
 package com.final_10aeat.domain.manager.entity;
 
 import com.final_10aeat.common.enumclass.MemberRole;
+import com.final_10aeat.domain.manager.dto.response.GetManagerResponseDto;
 import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.global.entity.SoftDeletableBaseTimeEntity;
 import jakarta.persistence.Column;
@@ -63,4 +64,16 @@ public class Manager extends SoftDeletableBaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "office_id")
     private Office office;
+
+    public GetManagerResponseDto toDto() {
+        return GetManagerResponseDto.builder()
+            .email(this.email)
+            .name(this.name)
+            .phoneNumber(this.phoneNumber)
+            .lunchBreakStart(this.lunchBreakStart)
+            .lunchBreakEnd(this.lunchBreakEnd)
+            .managerOffice(this.managerOffice)
+            .affiliation(this.affiliation)
+            .build();
+    }
 }
