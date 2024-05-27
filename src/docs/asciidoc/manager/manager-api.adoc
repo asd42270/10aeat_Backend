@@ -37,3 +37,17 @@ include::{snippets}/manager-login/request-fields.adoc[]
 include::{snippets}/manager-login/http-response.adoc[]
 include::{snippets}/manager-login/response-fields.adoc[]
 include::{snippets}/manager-login/response-headers.adoc[]
+
+[[Manager-Profile]]
+== 관리자 정보 조회
+
+관리자 정보 조회 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/manager-profile/http-request.adoc[]
+include::{snippets}/manager-profile/path-parameters.adoc[]
+
+=== Http Response
+include::{snippets}/manager-profile/http-response.adoc[]
+include::{snippets}/manager-profile/response-fields.adoc[]
