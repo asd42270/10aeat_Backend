@@ -37,6 +37,8 @@ public enum ErrorCode {
 
     // Articles
     ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 게시글입니다."),
+    ARTICLE_NOT_LIKED(HttpStatus.BAD_REQUEST, "좋아요를 누르지 않은 게시글입니다."),
+    ARTICLE_ALREADY_LIKED(HttpStatus.CONFLICT, "이미 좋아요를 누른 게시글입니다."),
 
     // 5xx
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 에러");
