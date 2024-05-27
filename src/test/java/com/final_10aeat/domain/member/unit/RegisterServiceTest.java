@@ -85,27 +85,27 @@ public class RegisterServiceTest {
         @Test
         @DisplayName("회원가입에 성공한다.")
         void _willSuccess() {
-            // Arrange
+            // Given
             given(memberRepository.existsByEmailAndDeletedAtIsNull(request.email())).willReturn(
                 false);
 
-            // Act
+            // When
             memberService.register(request);
 
-            // Assert
+            // Then
             verify(memberRepository).save(any(Member.class));
             verify(redisTemplate.opsForValue(), times(2)).get(
                 anyString());
         }
 
         @Test
-        @DisplayName("이메일이 중복된 회원의 가입을 시도하여 실패한다.")
+        @DisplayName("이메일이 중복되어 회원 가입에 실패한다.")
         void _willDuplicatedEmail() {
-            // Arrange
+            // Given
             given(memberRepository.existsByEmailAndDeletedAtIsNull(request.email())).willReturn(
                 true);
 
-            // Assert
+            // When & Then
             Assertions.assertThrows(EmailDuplicatedException.class, () -> {
                 memberService.register(request);
             });
@@ -114,11 +114,11 @@ public class RegisterServiceTest {
         @Test
         @DisplayName("약관에 동의하지 않아 가입에 실패한다.")
         void _willDisagreeTerm() {
-            // Arrange
+            // Given
             MemberRegisterRequestDto disagreeRequest = new MemberRegisterRequestDto(
                 "test@test.com", "password", "spring", "102동", "2212호", MemberRole.TENANT, false);
 
-            // Assert
+            // When & Then
             Assertions.assertThrows(DisagreementException.class, () -> {
                 memberService.register(disagreeRequest);
             });
