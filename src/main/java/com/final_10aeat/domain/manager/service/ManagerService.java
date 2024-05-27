@@ -10,6 +10,7 @@ import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
 import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
+import com.final_10aeat.domain.repairArticle.exception.ManagerNotFoundException;
 import com.final_10aeat.global.security.jwt.JwtTokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -70,5 +71,10 @@ public class ManagerService {
         }
 
         return jwtTokenGenerator.createJwtToken(manager.getEmail(), manager.getRole());
+    }
+
+    public Manager getManagerById(Long id) {
+        return managerRepository.findById(id)
+            .orElseThrow(ManagerNotFoundException::new);
     }
 }
