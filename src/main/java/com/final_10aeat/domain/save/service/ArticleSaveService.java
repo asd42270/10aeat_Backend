@@ -24,10 +24,8 @@ public class ArticleSaveService {
     private final MemberRepository memberRepository;
 
     public void saveArticle(Long repairArticleId, Long memberId) {
-        RepairArticle repairArticle = repairArticleRepository.findById(repairArticleId)
-            .orElseThrow(ArticleNotFoundException::new);
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(UserNotExistException::new);
+        RepairArticle repairArticle = getRepairArticle(repairArticleId);
+        Member member = getMember(memberId);
 
         if (articleSaveRepository.existsByRepairArticleAndMember(repairArticle, member)) {
             throw new ArticleAlreadyLikedException();
@@ -42,15 +40,23 @@ public class ArticleSaveService {
     }
 
     public void unsaveArticle(Long repairArticleId, Long memberId) {
-        RepairArticle repairArticle = repairArticleRepository.findById(repairArticleId)
-            .orElseThrow(ArticleNotFoundException::new);
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(UserNotExistException::new);
+        RepairArticle repairArticle = getRepairArticle(repairArticleId);
+        Member member = getMember(memberId);
 
         ArticleSave articleSave = articleSaveRepository.findByRepairArticleAndMember(repairArticle,
                 member)
             .orElseThrow(ArticleNotLikedException::new);
 
         articleSaveRepository.delete(articleSave);
+    }
+
+    private RepairArticle getRepairArticle(Long repairArticleId) {
+        return repairArticleRepository.findById(repairArticleId)
+            .orElseThrow(ArticleNotFoundException::new);
+    }
+
+    private Member getMember(Long memberId) {
+        return memberRepository.findById(memberId)
+            .orElseThrow(UserNotExistException::new);
     }
 }
