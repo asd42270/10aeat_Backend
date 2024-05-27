@@ -69,7 +69,7 @@ public class WithMemberSecurityContextFactory implements WithSecurityContextFact
             .password(nullIfEmpty(annotation.password(), defaultMember.getPassword()))
             .name(nullIfEmpty(annotation.name(), defaultMember.getName()))
             .role(MemberRole.OWNER)
-            .isTermAgreed(true)
+            .termAgreed(true)
             .offices(Set.of(office))
             .buildingInfos(Set.of(buildingInfo))
             .build();

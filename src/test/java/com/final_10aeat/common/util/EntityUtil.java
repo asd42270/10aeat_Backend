@@ -42,7 +42,7 @@ public class EntityUtil {
         .password("password")
         .name("John Doe")
         .role(MemberRole.OWNER)
-        .isTermAgreed(true)
+        .termAgreed(true)
         .build();
 
     public static final BuildingInfo DEFAULT_BUILDINGINFO = BuildingInfo.builder()

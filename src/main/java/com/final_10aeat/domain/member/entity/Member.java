@@ -35,8 +35,8 @@ public class Member extends SoftDeletableBaseTimeEntity {
     @Column(nullable = false)
     private MemberRole role;
 
-    @Column
-    private Boolean isTermAgreed;
+    @Column(name = "term_agreed")
+    private Boolean termAgreed;
 
     @ManyToMany
     @JoinTable(
@@ -54,7 +54,10 @@ public class Member extends SoftDeletableBaseTimeEntity {
     )
     private Set<Office> offices;
 
-    public void delete(LocalDateTime currentTime){
+    @Column(name = "default_office_id")
+    private Long defaultOffice;
+
+    public void delete(LocalDateTime currentTime) {
         super.delete(currentTime);
     }
 }
