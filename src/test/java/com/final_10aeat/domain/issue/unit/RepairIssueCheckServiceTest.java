@@ -9,6 +9,9 @@ import com.final_10aeat.domain.articleIssue.repository.ArticleIssueCheckReposito
 import com.final_10aeat.domain.articleIssue.repository.ArticleIssueRepository;
 import com.final_10aeat.domain.articleIssue.service.ArticleIssueCheckService;
 import com.final_10aeat.domain.member.entity.Member;
+import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
+import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -24,8 +27,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-public class IssueCheckServiceTest {
+public class RepairIssueCheckServiceTest {
 
+    @Mock
+    private RepairArticleRepository repairArticleRepository;
     @Mock
     private ArticleIssueCheckRepository articleIssueCheckRepository;
     @Mock
@@ -41,10 +46,17 @@ public class IssueCheckServiceTest {
             .role(MemberRole.OWNER)
             .build();
 
+    private final RepairArticle repairArticle = RepairArticle.builder()
+            .id(1L)
+            .title("유지관리 게시글")
+            .content("유지관리 게시글 내용")
+            .build();
+
     private final ArticleIssue articleIssue = ArticleIssue.builder()
             .id(1L)
             .title("이슈가 발행됐어요")
             .content("이슈에요")
+            .repairArticle(repairArticle)
             .build();
 
     @BeforeEach
@@ -54,22 +66,39 @@ public class IssueCheckServiceTest {
 
 
     @Nested
-    @DisplayName("check()는")
-    class Context_Check {
+    @DisplayName("repairIssueCheck()는")
+    class Context_repairIssueCheck {
 
         @Test
         @DisplayName("이슈 확인에 성공한다.")
         void _willSuccess() {
             // given
             ArticleIssueCheckRequestDto requestDto = new ArticleIssueCheckRequestDto(true);
-            given(articleIssueRepository.findById(articleIssue.getId())).willReturn(Optional.of(articleIssue));
+            given(repairArticleRepository.findById(repairArticle.getId())).willReturn(Optional.of(repairArticle));
+            given(articleIssueRepository.findFirstByRepairArticleOrderByCreatedAtDesc(repairArticle))
+                    .willReturn(Optional.of(articleIssue));
 
             // when
-            articleIssueCheckService.issueCheck(requestDto, 1L, member);
+            ArticleIssueCheckResponseDto responseDto = articleIssueCheckService.repairIssueCheck(requestDto,
+                    repairArticle.getId(), member);
 
             // then
-            verify(articleIssueRepository).findById(articleIssue.getId());
+            verify(repairArticleRepository).findById(repairArticle.getId());
+            verify(articleIssueRepository).findFirstByRepairArticleOrderByCreatedAtDesc(repairArticle);
             verify(articleIssueCheckRepository).save(any(ArticleIssueCheck.class));
+            Assertions.assertThat(responseDto.title()).isEqualTo(articleIssue.getTitle());
+        }
+
+        @Test
+        @DisplayName("게시글이 없어 확인에 실패한다.")
+        void _articleNotFound() {
+            // given
+            ArticleIssueCheckRequestDto requestDto = new ArticleIssueCheckRequestDto(true);
+            given(repairArticleRepository.findById(repairArticle.getId())).willReturn(Optional.empty());
+
+            // when&then
+            assertThrows(ArticleNotFoundException.class,
+                    () -> articleIssueCheckService.repairIssueCheck(requestDto, repairArticle.getId(), member));
         }
 
         @Test
@@ -77,14 +106,12 @@ public class IssueCheckServiceTest {
         void _issueNotFound() {
             // given
             ArticleIssueCheckRequestDto requestDto = new ArticleIssueCheckRequestDto(true);
-            given(articleIssueRepository.findById(articleIssue.getId())).willReturn(Optional.empty());
-
+            given(repairArticleRepository.findById(repairArticle.getId())).willReturn(Optional.of(repairArticle));
+            given(articleIssueRepository.findFirstByRepairArticleOrderByCreatedAtDesc(repairArticle)).willReturn(Optional.empty());
 
             // when&then
             assertThrows(IssueNotFoundException.class,
-                    () -> articleIssueCheckService.issueCheck(requestDto, 1L, member));
+                    () -> articleIssueCheckService.repairIssueCheck(requestDto, repairArticle.getId(), member));
         }
     }
-
-
 }

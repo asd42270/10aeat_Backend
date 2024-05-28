@@ -8,17 +8,33 @@
 === link:../index.html[시작 페이지로 돌아가기]
 
 [[Mangae-Issue-Publish]]
-== 이슈 확인 API
+== 유지관리 이슈 확인 API
 
-이슈를 확인 기능 API 입니다.
+유지관리 이슈 확인 기능 API 입니다.
 
 === HttpRequest
 
-include::{snippets}/issue-check/path-parameters.adoc[]
-include::{snippets}/issue-check/http-request.adoc[]
-include::{snippets}/issue-check/request-fields.adoc[]
+include::{snippets}/manage-issue-check/path-parameters.adoc[]
+include::{snippets}/manage-issue-check/http-request.adoc[]
+include::{snippets}/manage-issue-check/request-fields.adoc[]
 
 === HttpResponse
 
-include::{snippets}/issue-check/http-response.adoc[]
-include::{snippets}/issue-check/response-fields.adoc[]
+include::{snippets}/manage-issue-check/http-response.adoc[]
+include::{snippets}/manage-issue-check/response-fields.adoc[]
+
+[[Repair-Issue-Publish]]
+== 유지보수 이슈 확인 API
+
+유지보수 이슈 확인 기능 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/repair-issue-check/path-parameters.adoc[]
+include::{snippets}/repair-issue-check/http-request.adoc[]
+include::{snippets}/repair-issue-check/request-fields.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/repair-issue-check/http-response.adoc[]
+include::{snippets}/repair-issue-check/response-fields.adoc[]
