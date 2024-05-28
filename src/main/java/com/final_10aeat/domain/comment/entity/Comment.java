@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,4 +52,7 @@ public class Comment extends SoftDeletableBaseTimeEntity {
     @JoinColumn(name = "repair_article_id")
     private RepairArticle repairArticle;
 
+    public void delete(LocalDateTime currentTime) {
+        super.delete(currentTime);
+    }
 }

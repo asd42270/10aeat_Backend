@@ -17,6 +17,7 @@ import com.final_10aeat.domain.member.repository.MemberRepository;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.final_10aeat.domain.repairArticle.exception.ManagerNotFoundException;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,6 +79,16 @@ public class CommentService {
         checkAuthorization(comment, userId, isManager);
 
         comment.setContent(request.content());
+        commentRepository.save(comment);
+    }
+
+    public void deleteComment(Long commentId, Long userId, boolean isManager) {
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(CommentNotFoundException::new);
+
+        checkAuthorization(comment, userId, isManager);
+
+        comment.delete(LocalDateTime.now());
         commentRepository.save(comment);
     }
 

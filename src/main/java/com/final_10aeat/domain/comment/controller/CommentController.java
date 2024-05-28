@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,5 +55,13 @@ public class CommentController {
             return new UserIdAndRole(((ManagerPrincipal) principal).getManager().getId(), true);
         }
         throw new UnexpectedPrincipalException();
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<ResponseDTO<Void>> deleteComment(
+        @PathVariable Long commentId) {
+        UserIdAndRole userIdAndRole = getCurrentIdAndRole();
+        commentService.deleteComment(commentId, userIdAndRole.getId(), userIdAndRole.isManager());
+        return ResponseEntity.ok(ResponseDTO.ok());
     }
 }
