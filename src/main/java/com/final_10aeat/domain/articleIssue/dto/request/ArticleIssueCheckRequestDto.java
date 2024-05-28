@@ -1,4 +1,4 @@
-package com.final_10aeat.domain.articleIssue.dto;
+package com.final_10aeat.domain.articleIssue.dto.request;
 
 import jakarta.validation.constraints.AssertTrue;
 

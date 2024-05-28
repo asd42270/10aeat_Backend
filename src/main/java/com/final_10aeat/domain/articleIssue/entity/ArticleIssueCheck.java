@@ -17,7 +17,7 @@ public class ArticleIssueCheck {
     private Long id;
 
     @Column(name = "checked")
-    private boolean checked;
+    private boolean checked=false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_issue_id")

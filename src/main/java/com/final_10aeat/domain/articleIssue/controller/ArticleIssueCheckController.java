@@ -1,6 +1,6 @@
 package com.final_10aeat.domain.articleIssue.controller;
 
-import com.final_10aeat.domain.articleIssue.dto.ArticleIssueCheckRequestDto;
+import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssueCheckRequestDto;
 import com.final_10aeat.domain.articleIssue.service.ArticleIssueCheckService;
 import com.final_10aeat.global.security.principal.MemberPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;

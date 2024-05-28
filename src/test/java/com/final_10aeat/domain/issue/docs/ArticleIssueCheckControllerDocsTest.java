@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.final_10aeat.common.util.member.WithMember;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.articleIssue.controller.ArticleIssueCheckController;
-import com.final_10aeat.domain.articleIssue.dto.ArticleIssueCheckRequestDto;
+import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssueCheckRequestDto;
 import com.final_10aeat.domain.articleIssue.service.ArticleIssueCheckService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

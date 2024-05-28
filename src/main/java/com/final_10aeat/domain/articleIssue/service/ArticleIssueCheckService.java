@@ -1,6 +1,6 @@
 package com.final_10aeat.domain.articleIssue.service;
 
-import com.final_10aeat.domain.articleIssue.dto.ArticleIssueCheckRequestDto;
+import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssueCheckRequestDto;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssueCheck;
 import com.final_10aeat.domain.articleIssue.exception.IssueNotFoundException;
