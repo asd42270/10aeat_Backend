@@ -40,6 +40,9 @@ public enum ErrorCode {
     ARTICLE_NOT_LIKED(HttpStatus.BAD_REQUEST, "저장하지 않은 게시글입니다."),
     ARTICLE_ALREADY_LIKED(HttpStatus.CONFLICT, "이미 저장한 게시글입니다."),
 
+    // ISSUE
+    ISSUE_NOT_FOUND(HttpStatus.NOT_FOUND, "이슈를 찾을 수 없습니다."),
+
     // 5xx
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 에러");
 
