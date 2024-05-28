@@ -1,7 +1,9 @@
 package com.final_10aeat.domain.issue.unit;
 
 import com.final_10aeat.common.enumclass.MemberRole;
+import com.final_10aeat.common.exception.ArticleNotFoundException;
 import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssueCheckRequestDto;
+import com.final_10aeat.domain.articleIssue.dto.response.ArticleIssueCheckResponseDto;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssueCheck;
 import com.final_10aeat.domain.articleIssue.exception.IssueNotFoundException;

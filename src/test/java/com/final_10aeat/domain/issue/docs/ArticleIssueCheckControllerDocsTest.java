@@ -35,7 +35,6 @@ public class ArticleIssueCheckControllerDocsTest extends RestDocsSupport {
 
     @Override
     public Object initController() {
-        ArticleIssueCheckService articleIssueCheckService = Mockito.mock(ArticleIssueCheckService.class);
         objectMapper = new ObjectMapper();
         return new ArticleIssueCheckController(articleIssueCheckService);
     }
