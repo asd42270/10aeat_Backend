@@ -1,4 +1,4 @@
-= Repair Article REST API Docs
+= Issue Check REST API Docs
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
