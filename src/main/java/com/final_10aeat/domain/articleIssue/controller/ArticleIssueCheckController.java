@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/issues")
-@PreAuthorize("hasRole('OWNER')")
+@PreAuthorize("hasRole('MEMBER')")
 public class ArticleIssueCheckController {
 
     private final ArticleIssueCheckService articleIssueCheckService;
