@@ -44,6 +44,7 @@ public enum ErrorCode {
     // COMMENT
     INVALID_COMMENT_DEPTH(HttpStatus.BAD_REQUEST, "대댓글은 1단만 작성할 수 있습니다."),
     PARENT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "부모 댓글을 찾을 수 없습니다."),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 댓글입니다."),
 
     // 5xx
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 에러");
