@@ -1,8 +1,7 @@
-package com.final_10aeat.domain.articleInteraction.entity;
+package com.final_10aeat.domain.save.entity;
 
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
-import com.final_10aeat.global.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -23,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "repair_article_save")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ArticleSave extends BaseTimeEntity {
+public class ArticleSave {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

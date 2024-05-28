@@ -13,12 +13,12 @@
 
 * 회원가입 후 바로 로그인 절차를 진행합니다.
 
-== HttpRequest
+=== HttpRequest
 
 include::{snippets}/member-register/http-request.adoc[]
 include::{snippets}/member-register/request-fields.adoc[]
 
-== HttpResponse
+=== HttpResponse
 
 include::{snippets}/member-register/http-response.adoc[]
 include::{snippets}/member-register/response-fields.adoc[]
@@ -47,12 +47,12 @@ include::{snippets}/member-login/response-headers.adoc[]
 
 멤버 회원탈퇴 API 입니다.
 
-== HttpRequest
+=== HttpRequest
 
 include::{snippets}/member-withdraw/http-request.adoc[]
 include::{snippets}/member-withdraw/request-fields.adoc[]
 
-== HttpResponse
+=== HttpResponse
 
 include::{snippets}/member-withdraw/http-response.adoc[]
 include::{snippets}/member-withdraw/response-fields.adoc[]
