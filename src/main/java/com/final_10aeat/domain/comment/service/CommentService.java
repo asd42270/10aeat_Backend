@@ -1,8 +1,11 @@
 package com.final_10aeat.domain.comment.service;
 
 import com.final_10aeat.common.exception.ArticleNotFoundException;
+import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.comment.dto.request.CreateCommentRequestDto;
+import com.final_10aeat.domain.comment.dto.request.UpdateCommentRequestDto;
 import com.final_10aeat.domain.comment.entity.Comment;
+import com.final_10aeat.domain.comment.exception.CommentNotFoundException;
 import com.final_10aeat.domain.comment.exception.InvalidCommentDepthException;
 import com.final_10aeat.domain.comment.exception.ParentCommentNotFoundException;
 import com.final_10aeat.domain.comment.repository.CommentRepository;
@@ -65,5 +68,28 @@ public class CommentService {
         }
         return commentRepository.findById(parentCommentId)
             .orElseThrow(ParentCommentNotFoundException::new);
+    }
+
+    public void updateComment(Long commentId, UpdateCommentRequestDto request, Long userId,
+        boolean isManager) {
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(CommentNotFoundException::new);
+
+        checkAuthorization(comment, userId, isManager);
+
+        comment.setContent(request.content());
+        commentRepository.save(comment);
+    }
+
+    private void checkAuthorization(Comment comment, Long userId, boolean isManager) {
+        if (isManager) {
+            if (comment.getManager() == null || !comment.getManager().getId().equals(userId)) {
+                throw new UnauthorizedAccessException();
+            }
+        } else {
+            if (comment.getMember() == null || !comment.getMember().getId().equals(userId)) {
+                throw new UnauthorizedAccessException();
+            }
+        }
     }
 }

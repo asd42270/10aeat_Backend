@@ -2,6 +2,7 @@ package com.final_10aeat.domain.comment.controller;
 
 import com.final_10aeat.common.exception.UnexpectedPrincipalException;
 import com.final_10aeat.domain.comment.dto.request.CreateCommentRequestDto;
+import com.final_10aeat.domain.comment.dto.request.UpdateCommentRequestDto;
 import com.final_10aeat.domain.comment.dto.request.UserIdAndRole;
 import com.final_10aeat.domain.comment.service.CommentService;
 import com.final_10aeat.global.security.principal.ManagerPrincipal;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +32,16 @@ public class CommentController {
         @RequestBody @Valid CreateCommentRequestDto request) {
         UserIdAndRole userIdAndRole = getCurrentIdAndRole();
         commentService.createComment(repairArticleId, request, userIdAndRole.getId(),
+            userIdAndRole.isManager());
+        return ResponseEntity.ok(ResponseDTO.ok());
+    }
+
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<ResponseDTO<Void>> updateComment(
+        @PathVariable Long commentId,
+        @RequestBody @Valid UpdateCommentRequestDto request) {
+        UserIdAndRole userIdAndRole = getCurrentIdAndRole();
+        commentService.updateComment(commentId, request, userIdAndRole.getId(),
             userIdAndRole.isManager());
         return ResponseEntity.ok(ResponseDTO.ok());
     }
