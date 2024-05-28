@@ -35,7 +35,7 @@ public class CommentController {
         @PathVariable Long repairArticleId,
         @RequestBody @Valid CreateCommentRequestDto request) {
         UserIdAndRole userIdAndRole = getCurrentIdAndRole();
-        commentService.createComment(repairArticleId, request, userIdAndRole.getId(),
+        commentService.createComment(repairArticleId, request, userIdAndRole.id(),
             userIdAndRole.isManager());
         return ResponseEntity.ok(ResponseDTO.ok());
     }
@@ -45,7 +45,7 @@ public class CommentController {
         @PathVariable Long commentId,
         @RequestBody @Valid UpdateCommentRequestDto request) {
         UserIdAndRole userIdAndRole = getCurrentIdAndRole();
-        commentService.updateComment(commentId, request, userIdAndRole.getId(),
+        commentService.updateComment(commentId, request, userIdAndRole.id(),
             userIdAndRole.isManager());
         return ResponseEntity.ok(ResponseDTO.ok());
     }
@@ -64,7 +64,7 @@ public class CommentController {
     public ResponseEntity<ResponseDTO<Void>> deleteComment(
         @PathVariable Long commentId) {
         UserIdAndRole userIdAndRole = getCurrentIdAndRole();
-        commentService.deleteComment(commentId, userIdAndRole.getId(), userIdAndRole.isManager());
+        commentService.deleteComment(commentId, userIdAndRole.id(), userIdAndRole.isManager());
         return ResponseEntity.ok(ResponseDTO.ok());
     }
 
