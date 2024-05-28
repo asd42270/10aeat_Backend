@@ -1,0 +1,24 @@
+= Repair Article REST API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+=== link:../index.html[시작 페이지로 돌아가기]
+
+[[Mangae-Issue-Publish]]
+== 이슈 확인 API
+
+이슈를 확인 기능 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/issue-check/path-parameters.adoc[]
+include::{snippets}/issue-check/http-request.adoc[]
+include::{snippets}/issue-check/request-fields.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/issue-check/http-response.adoc[]
+include::{snippets}/issue-check/response-fields.adoc[]
