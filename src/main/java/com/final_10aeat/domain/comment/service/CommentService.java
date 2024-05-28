@@ -4,6 +4,7 @@ import com.final_10aeat.common.exception.ArticleNotFoundException;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.comment.dto.request.CreateCommentRequestDto;
 import com.final_10aeat.domain.comment.dto.request.UpdateCommentRequestDto;
+import com.final_10aeat.domain.comment.dto.response.CommentResponseDto;
 import com.final_10aeat.domain.comment.entity.Comment;
 import com.final_10aeat.domain.comment.exception.CommentNotFoundException;
 import com.final_10aeat.domain.comment.exception.InvalidCommentDepthException;
@@ -18,6 +19,8 @@ import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.final_10aeat.domain.repairArticle.exception.ManagerNotFoundException;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,5 +105,22 @@ public class CommentService {
                 throw new UnauthorizedAccessException();
             }
         }
+    }
+
+    public List<CommentResponseDto> getCommentsByArticleId(Long repairArticleId) {
+        List<Comment> comments = commentRepository.findByRepairArticleIdAndDeletedAtIsNull(
+            repairArticleId);
+
+        return comments.stream()
+            .map(comment -> new CommentResponseDto(
+                comment.getId(),
+                comment.getContent(),
+                comment.getUpdatedAt(),
+                comment.getParentComment(),
+                comment.getManager() != null,
+                comment.getManager() != null ? comment.getManager().getName()
+                    : comment.getMember().getName()
+            ))
+            .collect(Collectors.toList());
     }
 }

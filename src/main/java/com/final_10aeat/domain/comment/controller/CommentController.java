@@ -4,15 +4,18 @@ import com.final_10aeat.common.exception.UnexpectedPrincipalException;
 import com.final_10aeat.domain.comment.dto.request.CreateCommentRequestDto;
 import com.final_10aeat.domain.comment.dto.request.UpdateCommentRequestDto;
 import com.final_10aeat.domain.comment.dto.request.UserIdAndRole;
+import com.final_10aeat.domain.comment.dto.response.CommentResponseDto;
 import com.final_10aeat.domain.comment.service.CommentService;
 import com.final_10aeat.global.security.principal.ManagerPrincipal;
 import com.final_10aeat.global.security.principal.MemberPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,5 +66,12 @@ public class CommentController {
         UserIdAndRole userIdAndRole = getCurrentIdAndRole();
         commentService.deleteComment(commentId, userIdAndRole.getId(), userIdAndRole.isManager());
         return ResponseEntity.ok(ResponseDTO.ok());
+    }
+
+    @GetMapping("/{repairArticleId}")
+    public ResponseEntity<ResponseDTO<List<CommentResponseDto>>> getCommentsByArticleId(
+        @PathVariable Long repairArticleId) {
+        List<CommentResponseDto> comments = commentService.getCommentsByArticleId(repairArticleId);
+        return ResponseEntity.ok(ResponseDTO.okWithData(comments));
     }
 }

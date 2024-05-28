@@ -11,4 +11,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Query("SELECT c FROM Comment c WHERE c.deletedAt IS NOT NULL AND c.deletedAt < :cutoffDate")
     List<Comment> findSoftDeletedBefore(@Param("cutoffDate") LocalDateTime cutoffDate);
+
+    List<Comment> findByRepairArticleIdAndDeletedAtIsNull(Long repairArticleId);
 }
