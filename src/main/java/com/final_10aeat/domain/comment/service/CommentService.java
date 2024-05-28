@@ -107,6 +107,7 @@ public class CommentService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<CommentResponseDto> getCommentsByArticleId(Long repairArticleId) {
         List<Comment> comments = commentRepository.findByRepairArticleIdAndDeletedAtIsNull(
             repairArticleId);
