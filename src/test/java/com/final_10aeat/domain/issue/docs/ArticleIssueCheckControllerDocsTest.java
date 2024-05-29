@@ -47,7 +47,7 @@ public class ArticleIssueCheckControllerDocsTest extends RestDocsSupport {
                 .build();
     }
 
-    @DisplayName("유지보수 이슈 확인 API 문서화")
+    @DisplayName("유지관리 이슈 확인 API 문서화")
     @Test
     @WithMember
     void testManageIssueCheck() throws Exception {
@@ -68,7 +68,7 @@ public class ArticleIssueCheckControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("manage_article_id").description("유지보수 게시글 id")
+                                parameterWithName("manage_article_id").description("유지관리 게시글 id")
                         ),
                         requestFields(
                                 fieldWithPath("check").description("이슈 확인 여부")
@@ -83,7 +83,7 @@ public class ArticleIssueCheckControllerDocsTest extends RestDocsSupport {
                 ));
     }
 
-    @DisplayName("유지관리 이슈 확인 API 문서화")
+    @DisplayName("유지보수 이슈 확인 API 문서화")
     @Test
     @WithMember
     void testRepairIssueCheck() throws Exception {
@@ -104,7 +104,7 @@ public class ArticleIssueCheckControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("repair_article_id").description("유지관리 게시글 id")
+                                parameterWithName("repair_article_id").description("유지보수 게시글 id")
                         ),
                         requestFields(
                                 fieldWithPath("check").description("이슈 확인 여부")
@@ -119,4 +119,63 @@ public class ArticleIssueCheckControllerDocsTest extends RestDocsSupport {
                 ));
     }
 
+    @DisplayName("유지관리 이슈 상세조회 API 문서화")
+    @Test
+    @WithMember
+    void testManageArticleIssueDetail() throws Exception {
+
+        // given
+        ArticleIssueCheckResponseDto responseDto = new ArticleIssueCheckResponseDto(1L, "이슈 제목", "이슈 내용", true);
+
+        // when
+        when(articleIssueCheckService.getManageIssueDetail(any(Long.class))).thenReturn(responseDto);
+
+        // then
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/issues/manage/{manage_article_id}", 1))
+                .andExpect(status().isOk())
+                .andDo(document("manage-issue-detail",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("manage_article_id").description("유지관리 게시글 id")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("응답 상태 코드"),
+                                fieldWithPath("data.id").description("이슈 id"),
+                                fieldWithPath("data.title").description("이슈 제목"),
+                                fieldWithPath("data.content").description("이슈 내용"),
+                                fieldWithPath("data.check").description("이슈 확인 여부")
+                        )
+                ));
+    }
+
+    @DisplayName("유지관리 이슈 상세조회 API 문서화")
+    @Test
+    @WithMember
+    void testRepairArticleIssueDetail() throws Exception {
+
+        // given
+        ArticleIssueCheckResponseDto responseDto = new ArticleIssueCheckResponseDto(1L, "이슈 제목", "이슈 내용", true);
+
+        // when
+        when(articleIssueCheckService.getRepairIssueDetail(any(Long.class))).thenReturn(responseDto);
+
+        // then
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/issues/repair/{repair_article_id}", 1))
+                .andExpect(status().isOk())
+                .andDo(document("repair-issue-detail",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("repair_article_id").description("유지보수 게시글 id")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("응답 상태 코드"),
+                                fieldWithPath("data.id").description("이슈 id"),
+                                fieldWithPath("data.title").description("이슈 제목"),
+                                fieldWithPath("data.content").description("이슈 내용"),
+                                fieldWithPath("data.check").description("이슈 확인 여부")
+                        )
+                ));
+    }
 }
