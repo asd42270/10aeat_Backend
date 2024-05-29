@@ -20,7 +20,7 @@ public interface RepairArticleRepository extends JpaRepository<RepairArticle, Lo
     long countByOfficeIdAndProgress(@Param("officeId") Long officeId,
         @Param("progress") Progress progress);
 
-    long countByOfficeId(@Param("officeId") Long officeId); // 전체 게시글 수를 사무실 ID로 카운트
+    long countByOfficeId(@Param("officeId") Long officeId);
 
     @Query("SELECT ra FROM RepairArticle ra WHERE ra.office.id = :officeId " +
         "AND (:progresses IS NULL OR ra.progress IN :progresses) " +
