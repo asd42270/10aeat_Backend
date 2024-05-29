@@ -21,12 +21,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class RepairIssueCheckServiceTest {
@@ -37,6 +40,8 @@ public class RepairIssueCheckServiceTest {
     private ArticleIssueCheckRepository articleIssueCheckRepository;
     @Mock
     private ArticleIssueRepository articleIssueRepository;
+    @Mock
+    private RedisTemplate<String, Object> redisTemplate;
     @InjectMocks
     private ArticleIssueCheckService articleIssueCheckService;
 
@@ -79,6 +84,7 @@ public class RepairIssueCheckServiceTest {
             given(repairArticleRepository.findById(repairArticle.getId())).willReturn(Optional.of(repairArticle));
             given(articleIssueRepository.findFirstByRepairArticleOrderByCreatedAtDesc(repairArticle))
                     .willReturn(Optional.of(articleIssue));
+            given(redisTemplate.opsForValue()).willReturn(mock(ValueOperations.class));
 
             // when
             ArticleIssueCheckResponseDto responseDto = articleIssueCheckService.repairIssueCheck(requestDto,
