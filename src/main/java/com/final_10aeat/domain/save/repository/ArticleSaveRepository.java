@@ -14,6 +14,8 @@ public interface ArticleSaveRepository extends JpaRepository<ArticleSave, Long> 
 
     boolean existsByRepairArticleAndMember(RepairArticle repairArticle, Member member);
 
+    boolean existsByRepairArticleIdAndMemberId(Long repairArticleId, Long memberId);
+
     Optional<ArticleSave> findByRepairArticleAndMember(RepairArticle repairArticle, Member member);
 
     @Query("SELECT a.repairArticle.id FROM ArticleSave a WHERE a.member.id = :memberId AND a.repairArticle.id IN :articleIds")

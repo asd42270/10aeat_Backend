@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ArticleViewRepository extends JpaRepository<ArticleView, Long> {
 
-    boolean existsByArticleIdAndUserId(Long articleId, Long userId);
+    boolean existsByArticleIdAndUserIdAndIsManager(Long articleId, Long userId, boolean isManager);
 }

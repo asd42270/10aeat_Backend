@@ -3,13 +3,16 @@ package com.final_10aeat.domain.repairArticle.service;
 import com.final_10aeat.common.dto.UserIdAndRole;
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
+import com.final_10aeat.common.exception.ArticleNotFoundException;
 import com.final_10aeat.common.service.AuthenticationService;
 import com.final_10aeat.domain.articleIssue.repository.ArticleIssueCheckRepository;
 import com.final_10aeat.domain.comment.repository.CommentRepository;
+import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleDetailDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleSummaryDto;
 import com.final_10aeat.domain.repairArticle.entity.ArticleView;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
+import com.final_10aeat.domain.repairArticle.entity.RepairArticleImage;
 import com.final_10aeat.domain.repairArticle.repository.ArticleViewRepository;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
 import com.final_10aeat.domain.save.repository.ArticleSaveRepository;
@@ -25,7 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class OwnerRepairArticleService {
 
@@ -36,6 +39,7 @@ public class OwnerRepairArticleService {
     private final ArticleViewRepository articleViewRepository;
     private final AuthenticationService authenticationService;
 
+    @Transactional(readOnly = true)
     public RepairArticleSummaryDto getRepairArticleSummary(Long officeId) {
         long total = repairArticleRepository.countByOfficeId(officeId);
         long inProgressAndPending = repairArticleRepository.countByOfficeIdAndProgressIn(officeId,
@@ -46,6 +50,7 @@ public class OwnerRepairArticleService {
         return new RepairArticleSummaryDto(total, inProgressAndPending, completed);
     }
 
+    @Transactional(readOnly = true)
     public List<RepairArticleResponseDto> getAllRepairArticles(UserIdAndRole userIdAndRole,
         List<Progress> progresses, ArticleCategory category) {
         Long officeId = authenticationService.getUserOfficeId();
@@ -116,13 +121,50 @@ public class OwnerRepairArticleService {
                 : article.getImages().iterator().next().getImageUrl()
         );
     }
+
+    @Transactional(readOnly = true)
+    public RepairArticleDetailDto getArticleDetails(Long articleId, Long userId,
+        boolean isManager) {
+        incrementViewCount(articleId, userId, isManager);
+
+        RepairArticle article = repairArticleRepository.findById(articleId)
+            .orElseThrow(ArticleNotFoundException::new);
+
+        boolean isSaved = articleSaveRepository.existsByRepairArticleIdAndMemberId(articleId,
+            userId);
+
+        List<String> imageUrls = article.getImages().stream()
+            .map(RepairArticleImage::getImageUrl)
+            .collect(Collectors.toList());
+
+        return new RepairArticleDetailDto(
+            article.getCategory().name(),
+            article.getProgress().name(),
+            isSaved,
+            article.getManager().getId(),
+            article.getManager().getName(),
+            article.getCreatedAt(),
+            article.getUpdatedAt(),
+            article.getTitle(),
+            article.getContent(),
+            imageUrls,
+            article.getStartConstruction(),
+            article.getEndConstruction(),
+            article.getCompany(),
+            article.getCompanyWebsite()
+        );
+    }
+
     @Transactional
-    public void incrementViewCount(Long articleId, Long userId) {
-        if (!articleViewRepository.existsByArticleIdAndUserId(articleId, userId)) {
+    public void incrementViewCount(Long articleId, Long userId, boolean isManager) {
+        if (!articleViewRepository.existsByArticleIdAndUserIdAndIsManager(articleId, userId,
+            isManager)) {
             ArticleView view = new ArticleView();
-            RepairArticle article = repairArticleRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("Invalid article ID"));
+            RepairArticle article = repairArticleRepository.findById(articleId)
+                .orElseThrow(ArticleNotFoundException::new);
             view.setArticle(article);
             view.setUserId(userId);
+            view.setManager(isManager);
             articleViewRepository.save(view);
 
             article.setViewCount(article.getViewCount() + 1);
