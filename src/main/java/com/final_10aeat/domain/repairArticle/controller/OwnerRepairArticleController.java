@@ -40,14 +40,13 @@ public class OwnerRepairArticleController {
     @GetMapping("/list")
     public ResponseEntity<ResponseDTO<List<RepairArticleResponseDto>>> getAllRepairArticles(
         @RequestParam(required = false) List<String> progress,
-        @RequestParam(required = false) String category) {
+        @RequestParam(required = false) ArticleCategory category) {
 
         List<Progress> progressList = determineProgressFilter(progress);
-        ArticleCategory categoryFilter = determineCategoryFilter(category);
         UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
 
         List<RepairArticleResponseDto> articles = ownerRepairArticleService.getAllRepairArticles(
-            userIdAndRole, progressList, categoryFilter);
+            userIdAndRole, progressList, category);
         return ResponseEntity.ok(ResponseDTO.okWithData(articles));
     }
 
@@ -77,12 +76,5 @@ public class OwnerRepairArticleController {
             .map(String::toUpperCase)
             .map(Progress::valueOf)
             .collect(Collectors.toList());
-    }
-
-    private ArticleCategory determineCategoryFilter(String category) {
-        if (category == null || category.isEmpty()) {
-            return null;
-        }
-        return ArticleCategory.valueOf(category.toUpperCase());
     }
 }

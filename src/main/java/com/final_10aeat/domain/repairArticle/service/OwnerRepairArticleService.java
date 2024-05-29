@@ -49,20 +49,24 @@ public class OwnerRepairArticleService {
         long completed = repairArticleRepository.countByOfficeIdAndProgress(officeId,
             Progress.COMPLETE);
 
-        boolean inProgressRedDot = repairArticleRepository.findByOfficeIdAndProgressIn(officeId,
-                List.of(Progress.INPROGRESS, Progress.PENDING)).stream()
+        List<RepairArticle> inProgressArticles = repairArticleRepository.findByOfficeIdAndProgressIn(officeId,
+            List.of(Progress.INPROGRESS, Progress.PENDING));
+        List<RepairArticle> completeArticles = repairArticleRepository.findByOfficeIdAndProgressIn(officeId,
+            List.of(Progress.COMPLETE));
+
+        boolean inProgressRedDot = inProgressArticles.stream()
             .anyMatch(this::hasRedDotIssue);
 
-        boolean completeRedDot = repairArticleRepository.findByOfficeIdAndProgressIn(officeId,
-                List.of(Progress.COMPLETE)).stream()
+        boolean completeRedDot = completeArticles.stream()
             .anyMatch(this::hasRedDotIssue);
 
         return new RepairArticleSummaryDto(total, inProgressAndPending, inProgressRedDot, completed, completeRedDot);
     }
 
     private boolean hasRedDotIssue(RepairArticle article) {
-        Long userId = authenticationService.getCurrentUserIdAndRole().id();
-        boolean isManager = authenticationService.getCurrentUserIdAndRole().isManager();
+        UserIdAndRole currentUser = authenticationService.getCurrentUserIdAndRole();
+        Long userId = currentUser.id();
+        boolean isManager = currentUser.isManager();
         Set<Long> checkedIssueIds = articleIssueCheckRepository.findCheckedIssueIdsByMember(userId);
         return !isManager && article.hasIssue() && !checkedIssueIds.contains(article.getIssue().getId());
     }
