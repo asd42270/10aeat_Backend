@@ -45,4 +45,18 @@ public class ArticleIssueCheckController {
                         memberPrincipal.getMember())
         );
     }
+
+    @GetMapping("/repair/{repair_article_id}")
+    public ResponseDTO<ArticleIssueCheckResponseDto> getRepairIssueDetail(
+            @PathVariable("repair_article_id") Long articleId
+    ) {
+        return ResponseDTO.okWithData(articleIssueCheckService.getRepairIssueDetail(articleId));
+    }
+
+    @GetMapping("/manage/{manage_article_id}")
+    public ResponseDTO<ArticleIssueCheckResponseDto> getManageIssueDetail(
+            @PathVariable("manage_article_id") Long articleId
+    ) {
+        return ResponseDTO.okWithData(articleIssueCheckService.getManageIssueDetail(articleId));
+    }
 }

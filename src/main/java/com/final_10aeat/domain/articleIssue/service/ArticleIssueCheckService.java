@@ -14,6 +14,7 @@ import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +27,9 @@ public class ArticleIssueCheckService {
     private final ArticleIssueCheckRepository articleIssueCheckRepository;
     private final ManageArticleRepository manageArticleRepository;
     private final RepairArticleRepository repairArticleRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    public ArticleIssueCheckResponseDto manageIssueCheck(ArticleIssueCheckRequestDto requestDto,
-                                                   Long manageArticleId, Member member) {
+    public ArticleIssueCheckResponseDto manageIssueCheck(ArticleIssueCheckRequestDto requestDto, Long manageArticleId, Member member) {
 
         //리팩토링 하면서 redis 캐시 설정하면 캐시에 article 정보 저장해 놨다가 불러오는 방법도 괜찮을 것 같아요!!
         ManageArticle manageArticle = manageArticleRepository.findById(manageArticleId)
@@ -37,7 +38,12 @@ public class ArticleIssueCheckService {
         ArticleIssue articleIssue = articleIssueRepository.findFirstByManageArticleOrderByCreatedAtDesc(manageArticle)
                 .orElseThrow(IssueNotFoundException::new);
 
-        return getArticleIssueCheckResponseDto(requestDto, member, articleIssue);
+        ArticleIssueCheckResponseDto responseDto = getArticleIssueCheckResponseDto(requestDto, member,
+                articleIssue);
+
+        saveManageIssueToRedis(responseDto, manageArticleId);
+
+        return responseDto;
     }
 
     public ArticleIssueCheckResponseDto repairIssueCheck(ArticleIssueCheckRequestDto requestDto,
@@ -50,10 +56,42 @@ public class ArticleIssueCheckService {
         ArticleIssue articleIssue = articleIssueRepository.findFirstByRepairArticleOrderByCreatedAtDesc(repairArticle)
                 .orElseThrow(IssueNotFoundException::new);
 
-        return getArticleIssueCheckResponseDto(requestDto, member, articleIssue);
+        ArticleIssueCheckResponseDto responseDto = getArticleIssueCheckResponseDto(requestDto, member,
+                articleIssue);
+
+        saveRepairIssueToRedis(responseDto, repairArticleId);
+
+        return responseDto;
     }
 
-    private ArticleIssueCheckResponseDto getArticleIssueCheckResponseDto(ArticleIssueCheckRequestDto requestDto, Member member, ArticleIssue articleIssue) {
+    public ArticleIssueCheckResponseDto getRepairIssueDetail(Long articleId) {
+
+        String key = "repair article" + articleId;
+
+        Object responseDto = redisTemplate.opsForValue().get(key);
+
+        if(responseDto==null) {
+            throw new IssueNotFoundException();
+        }
+
+        return (ArticleIssueCheckResponseDto) responseDto;
+    }
+
+    public ArticleIssueCheckResponseDto getManageIssueDetail(Long articleId) {
+
+        String key = "manage article" + articleId;
+
+        Object responseDto = redisTemplate.opsForValue().get(key);
+
+        if(responseDto==null) {
+            throw new IssueNotFoundException();
+        }
+
+        return (ArticleIssueCheckResponseDto) responseDto;
+    }
+
+    private ArticleIssueCheckResponseDto getArticleIssueCheckResponseDto(ArticleIssueCheckRequestDto requestDto, Member member,
+                                                                         ArticleIssue articleIssue) {
 
         ArticleIssueCheck issueCheck = ArticleIssueCheck.builder()
                 .articleIssue(articleIssue)
@@ -63,10 +101,28 @@ public class ArticleIssueCheckService {
 
         articleIssueCheckRepository.save(issueCheck);
 
-        return ArticleIssueCheckResponseDto.builder()
+        ArticleIssueCheckResponseDto responseDto = ArticleIssueCheckResponseDto.builder()
+                .id(articleIssue.getId())
                 .title(articleIssue.getTitle())
                 .content(articleIssue.getContent())
                 .check(issueCheck.isChecked())
-                .build();
+                .build();;
+
+        return responseDto;
     }
+
+    private void saveRepairIssueToRedis(ArticleIssueCheckResponseDto responseDto, Long articleId) {
+
+        String key = "repair article" + articleId;
+
+        redisTemplate.opsForValue().set(key, responseDto);
+    }
+
+    private void saveManageIssueToRedis(ArticleIssueCheckResponseDto responseDto, Long articleId) {
+
+        String key = "manage article" + articleId;
+
+        redisTemplate.opsForValue().set(key, responseDto);
+    }
+
 }
