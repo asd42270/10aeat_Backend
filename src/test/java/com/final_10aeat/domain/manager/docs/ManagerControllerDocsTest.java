@@ -24,7 +24,7 @@ import com.final_10aeat.domain.manager.dto.request.CreateManagerRequestDto;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.manager.repository.ManagerRepository;
 import com.final_10aeat.domain.manager.service.ManagerService;
-import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
+import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
 import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.office.repository.OfficeRepository;
 import com.final_10aeat.global.security.jwt.JwtTokenGenerator;
@@ -135,7 +135,7 @@ public class ManagerControllerDocsTest extends RestDocsSupport {
     @Test
     void testLoginManager() throws Exception {
         // Given
-        MemberLoginRequestDto loginRequest = new MemberLoginRequestDto(
+        LoginRequestDto loginRequest = new LoginRequestDto(
             "manager@example.com", "managerPassword"
         );
 

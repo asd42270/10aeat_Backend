@@ -1,6 +1,6 @@
 package com.final_10aeat.domain.member.controller;
 
-import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
+import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
 import com.final_10aeat.domain.member.service.MemberService;
@@ -26,7 +26,7 @@ public class MemberController {
         HttpServletResponse response,
         @RequestBody @Valid MemberRegisterRequestDto request
     ) {
-        MemberLoginRequestDto loginDto = memberService.register(request);
+        LoginRequestDto loginDto = memberService.register(request);
 
         String token = memberService.login(loginDto);
         response.setHeader("accessToken", token);
@@ -37,7 +37,7 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseDTO<Void> login(
         HttpServletResponse response,
-        @RequestBody @Valid MemberLoginRequestDto request) {
+        @RequestBody @Valid LoginRequestDto request) {
         String token = memberService.login(request);
         response.setHeader("accessToken", token);
         return ResponseDTO.ok();

@@ -1,7 +1,7 @@
 package com.final_10aeat.domain.member.service;
 
 import com.final_10aeat.domain.manager.exception.VerificationCodeExpiredException;
-import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
+import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
@@ -36,7 +36,7 @@ public class MemberService {
     private final BuildingInfoRepository buildingInfoRepository;
     private final RedisTemplate<String, String> redisTemplate;
 
-    public MemberLoginRequestDto register(MemberRegisterRequestDto request) {
+    public LoginRequestDto register(MemberRegisterRequestDto request) {
         validateEmail(request.email());
         ensureTermsAgreed(request.termAgreed());
 
@@ -46,7 +46,7 @@ public class MemberService {
         BuildingInfo savedBuildingInfo = saveBuildingInfo(request, officeId);
         saveMember(request, officeId, savedBuildingInfo);
 
-        return new MemberLoginRequestDto(request.email(), request.password());
+        return new LoginRequestDto(request.email(), request.password());
     }
 
     private void validateEmail(String email) {
@@ -112,7 +112,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public String login(MemberLoginRequestDto request) {
+    public String login(LoginRequestDto request) {
         Member member = memberRepository.findByEmailAndDeletedAtIsNull(request.email())
             .orElseThrow(UserNotExistException::new);
 
