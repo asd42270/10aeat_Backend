@@ -4,6 +4,7 @@ import com.final_10aeat.common.dto.UserIdAndRole;
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.common.service.AuthenticationService;
+import com.final_10aeat.domain.repairArticle.dto.response.CustomProgressResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleDetailDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleSummaryDto;
@@ -58,6 +59,14 @@ public class OwnerRepairArticleController {
             repairArticleId, userIdAndRole.id(), userIdAndRole.isManager());
 
         return ResponseEntity.ok(ResponseDTO.okWithData(articleDetails));
+    }
+
+    @GetMapping("/progress/{repairArticleId}")
+    public ResponseEntity<ResponseDTO<List<CustomProgressResponseDto>>> getCustomProgressList(
+        @PathVariable Long repairArticleId) {
+        List<CustomProgressResponseDto> customProgressList = ownerRepairArticleService.getCustomProgressList(
+            repairArticleId);
+        return ResponseEntity.ok(ResponseDTO.okWithData(customProgressList));
     }
 
     private List<Progress> determineProgressFilter(List<String> progress) {

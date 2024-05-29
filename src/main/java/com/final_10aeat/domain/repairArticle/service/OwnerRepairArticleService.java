@@ -7,10 +7,12 @@ import com.final_10aeat.common.exception.ArticleNotFoundException;
 import com.final_10aeat.common.service.AuthenticationService;
 import com.final_10aeat.domain.articleIssue.repository.ArticleIssueCheckRepository;
 import com.final_10aeat.domain.comment.repository.CommentRepository;
+import com.final_10aeat.domain.repairArticle.dto.response.CustomProgressResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleDetailDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleSummaryDto;
 import com.final_10aeat.domain.repairArticle.entity.ArticleView;
+import com.final_10aeat.domain.repairArticle.entity.CustomProgress;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticleImage;
 import com.final_10aeat.domain.repairArticle.repository.ArticleViewRepository;
@@ -170,5 +172,26 @@ public class OwnerRepairArticleService {
             article.setViewCount(article.getViewCount() + 1);
             repairArticleRepository.save(article);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<CustomProgressResponseDto> getCustomProgressList(Long articleId) {
+        RepairArticle article = repairArticleRepository.findById(articleId)
+            .orElseThrow(ArticleNotFoundException::new);
+
+        return article.getCustomProgressSet().stream()
+            .map(this::mapToCustomProgressDto)
+            .collect(Collectors.toList());
+    }
+
+    private CustomProgressResponseDto mapToCustomProgressDto(CustomProgress customProgress) {
+        return new CustomProgressResponseDto(
+            customProgress.getId(),
+            customProgress.getTitle(),
+            customProgress.getContent(),
+            customProgress.isInProgress(),
+            customProgress.getStartSchedule(),
+            customProgress.getEndSchedule()
+        );
     }
 }
