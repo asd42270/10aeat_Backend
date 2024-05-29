@@ -1,6 +1,8 @@
 package com.final_10aeat.common.service;
 
 import com.final_10aeat.common.dto.UserIdAndRole;
+import com.final_10aeat.domain.member.exception.UserNotExistException;
+import com.final_10aeat.domain.office.exception.OfficeNotFoundException;
 import com.final_10aeat.global.security.principal.ManagerPrincipal;
 import com.final_10aeat.global.security.principal.MemberPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +18,7 @@ public class AuthenticationService {
         } else if (principal instanceof ManagerPrincipal) {
             return new UserIdAndRole(((ManagerPrincipal) principal).getManager().getId(), true);
         }
-        throw new IllegalStateException("Current user is not recognized as Member or Manager");
+        throw new UserNotExistException();
     }
 
     public Long getUserOfficeId() {
@@ -26,6 +28,6 @@ public class AuthenticationService {
         } else if (principal instanceof ManagerPrincipal) {
             return ((ManagerPrincipal) principal).getManager().getOffice().getId();
         }
-        throw new IllegalStateException("Current user does not have an associated office");
+        throw new OfficeNotFoundException();
     }
 }
