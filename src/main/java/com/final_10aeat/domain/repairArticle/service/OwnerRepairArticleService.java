@@ -2,6 +2,7 @@ package com.final_10aeat.domain.repairArticle.service;
 
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
+import com.final_10aeat.domain.comment.repository.CommentRepository;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleSummaryDto;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OwnerRepairArticleService {
 
     private final RepairArticleRepository repairArticleRepository;
+    private final CommentRepository commentRepository;
 
 
     public RepairArticleSummaryDto getRepairArticleSummary(Long managerId) {
@@ -38,6 +40,9 @@ public class OwnerRepairArticleService {
             officeId, progresses, category);
         return articles.stream().map(article -> {
             boolean isNewArticle = article.getCreatedAt().plusDays(1).isAfter(LocalDateTime.now());
+            int commentCount = (int) commentRepository.countByRepairArticleIdAndDeletedAtIsNull(
+                article.getId());
+
             return new RepairArticleResponseDto(
                 article.getId(),
                 article.getCategory().name(),
@@ -46,7 +51,7 @@ public class OwnerRepairArticleService {
                 article.getTitle(),
                 article.getStartConstruction(),
                 article.getEndConstruction(),
-                10, // 더미 댓글 수
+                commentCount,
                 200, // 더미 조회수
                 false, // 더미 저장 여부
                 false, // 더미 이슈 확인 여부
