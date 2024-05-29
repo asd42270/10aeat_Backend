@@ -87,6 +87,10 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
     @OneToMany(mappedBy = "repairArticle", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CustomProgress> customProgressSet;
 
+    @Setter
+    @Column(name = "view_count", nullable = false)
+    private int viewCount = 0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "office_id")
     private Office office;
