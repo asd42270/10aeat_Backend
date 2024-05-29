@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.final_10aeat.common.util.manager.WithManager;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.articleIssue.controller.ArticleIssueController;
-import com.final_10aeat.domain.articleIssue.dto.ArticleIssuePublishRequestDto;
+import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssuePublishRequestDto;
 import com.final_10aeat.domain.articleIssue.service.ArticleIssueService;
 import com.final_10aeat.domain.manager.entity.Manager;
 import org.junit.jupiter.api.BeforeEach;
