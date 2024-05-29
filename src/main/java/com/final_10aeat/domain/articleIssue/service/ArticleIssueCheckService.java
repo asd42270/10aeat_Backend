@@ -39,7 +39,7 @@ public class ArticleIssueCheckService {
                 .orElseThrow(IssueNotFoundException::new);
 
         ArticleIssueCheckResponseDto responseDto = getArticleIssueCheckResponseDto(requestDto, member,
-                articleIssue, manageArticleId);
+                articleIssue);
 
         saveManageIssueToRedis(responseDto, manageArticleId);
 
@@ -57,7 +57,7 @@ public class ArticleIssueCheckService {
                 .orElseThrow(IssueNotFoundException::new);
 
         ArticleIssueCheckResponseDto responseDto = getArticleIssueCheckResponseDto(requestDto, member,
-                articleIssue, repairArticleId);
+                articleIssue);
 
         saveRepairIssueToRedis(responseDto, repairArticleId);
 
@@ -91,7 +91,7 @@ public class ArticleIssueCheckService {
     }
 
     private ArticleIssueCheckResponseDto getArticleIssueCheckResponseDto(ArticleIssueCheckRequestDto requestDto, Member member,
-                                                                         ArticleIssue articleIssue, Long articleId) {
+                                                                         ArticleIssue articleIssue) {
 
         ArticleIssueCheck issueCheck = ArticleIssueCheck.builder()
                 .articleIssue(articleIssue)
