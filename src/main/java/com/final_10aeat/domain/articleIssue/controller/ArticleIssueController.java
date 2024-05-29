@@ -41,5 +41,4 @@ public class ArticleIssueController {
         articleIssueService.repairIssuePublish(request, id, managerPrincipal.getManager());
         return ResponseDTO.ok();
     }
-
 }
