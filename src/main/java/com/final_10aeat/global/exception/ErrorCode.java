@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     // COMMON
-    UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "접근 권한이 없습니다."),
+    UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
+    UNEXPECTED_PRINCIPAL(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 Principal 타입입니다."),
 
     // MANAGER
     MANAGER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 관리자입니다"),
@@ -42,6 +43,11 @@ public enum ErrorCode {
 
     // ISSUE
     ISSUE_NOT_FOUND(HttpStatus.NOT_FOUND, "이슈를 찾을 수 없습니다."),
+  
+    // COMMENT
+    INVALID_COMMENT_DEPTH(HttpStatus.BAD_REQUEST, "대댓글은 1단만 작성할 수 있습니다."),
+    PARENT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "부모 댓글을 찾을 수 없습니다."),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND,"존재하지 않는 댓글입니다."),
 
     // 5xx
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 에러");
