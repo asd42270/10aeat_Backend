@@ -8,7 +8,9 @@ import com.final_10aeat.domain.articleIssue.repository.ArticleIssueCheckReposito
 import com.final_10aeat.domain.comment.repository.CommentRepository;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleSummaryDto;
+import com.final_10aeat.domain.repairArticle.entity.ArticleView;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
+import com.final_10aeat.domain.repairArticle.repository.ArticleViewRepository;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
 import com.final_10aeat.domain.save.repository.ArticleSaveRepository;
 import java.time.LocalDateTime;
@@ -31,6 +33,7 @@ public class OwnerRepairArticleService {
     private final CommentRepository commentRepository;
     private final ArticleSaveRepository articleSaveRepository;
     private final ArticleIssueCheckRepository articleIssueCheckRepository;
+    private final ArticleViewRepository articleViewRepository;
     private final AuthenticationService authenticationService;
 
     public RepairArticleSummaryDto getRepairArticleSummary(Long officeId) {
@@ -93,6 +96,7 @@ public class OwnerRepairArticleService {
         boolean isSaved = savedArticleIds.contains(article.getId());
         boolean hasIssue = !isManager && article.hasIssue() && !checkedIssueIds.contains(
             article.getIssue().getId());
+        int viewCount = article.getViewCount();
 
         return new RepairArticleResponseDto(
             article.getId(),
@@ -104,12 +108,25 @@ public class OwnerRepairArticleService {
             article.getEndConstruction(),
             article.getCreatedAt(),
             commentCount,
-            200,
+            viewCount,
             isSaved,
             hasIssue,
             isNewArticle,
             article.getImages().isEmpty() ? null
                 : article.getImages().iterator().next().getImageUrl()
         );
+    }
+    @Transactional
+    public void incrementViewCount(Long articleId, Long userId) {
+        if (!articleViewRepository.existsByArticleIdAndUserId(articleId, userId)) {
+            ArticleView view = new ArticleView();
+            RepairArticle article = repairArticleRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("Invalid article ID"));
+            view.setArticle(article);
+            view.setUserId(userId);
+            articleViewRepository.save(view);
+
+            article.setViewCount(article.getViewCount() + 1);
+            repairArticleRepository.save(article);
+        }
     }
 }
