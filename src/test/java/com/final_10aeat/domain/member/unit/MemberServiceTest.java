@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.common.enumclass.MemberRole;
+import com.final_10aeat.domain.member.exception.PasswordMissMatchException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.MemberRepository;
 import com.final_10aeat.domain.member.service.MemberService;
@@ -93,7 +94,7 @@ class MemberServiceTest {
                 .willReturn(Boolean.FALSE);
 
             // when & then
-            assertThrows(UserNotExistException.class,
+            assertThrows(PasswordMissMatchException.class,
                 () -> memberService.login(loginRequest));
         }
     }
