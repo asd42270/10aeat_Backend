@@ -10,10 +10,11 @@ public record RepairArticleResponseDto(
     String title,
     LocalDateTime startConstruction,
     LocalDateTime endConstruction,
+    LocalDateTime createdAt,
     int commentCount,
     int viewCount,
     boolean isSave,
-    boolean issueCheck,
+    boolean redDot,
     boolean isNewArticle,
     String imageUrl
 ) {

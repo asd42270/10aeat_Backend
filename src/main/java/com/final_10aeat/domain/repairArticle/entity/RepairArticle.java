@@ -2,6 +2,7 @@ package com.final_10aeat.domain.repairArticle.entity;
 
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
+import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.global.entity.SoftDeletableBaseTimeEntity;
@@ -17,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -91,5 +93,12 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
 
     public void delete(LocalDateTime currentTime) {
         super.delete(currentTime);
+    }
+
+    @OneToOne(mappedBy = "repairArticle", fetch = FetchType.LAZY)
+    private ArticleIssue issue;
+
+    public boolean hasIssue() {
+        return this.issue != null;
     }
 }
