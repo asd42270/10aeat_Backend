@@ -27,7 +27,7 @@ public class ArticleIssueCheckService {
     private final ArticleIssueCheckRepository articleIssueCheckRepository;
     private final ManageArticleRepository manageArticleRepository;
     private final RepairArticleRepository repairArticleRepository;
-    private final RedisTemplate<String, ArticleIssueCheckResponseDto> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     public ArticleIssueCheckResponseDto manageIssueCheck(ArticleIssueCheckRequestDto requestDto, Long manageArticleId, Member member) {
 
@@ -68,26 +68,26 @@ public class ArticleIssueCheckService {
 
         String key = "repair article" + articleId;
 
-        ArticleIssueCheckResponseDto responseDto = redisTemplate.opsForValue().get(key);
+        Object responseDto = redisTemplate.opsForValue().get(key);
 
         if(responseDto==null) {
             throw new IssueNotFoundException();
         }
 
-        return responseDto;
+        return (ArticleIssueCheckResponseDto) responseDto;
     }
 
     public ArticleIssueCheckResponseDto getManageIssueDetail(Long articleId) {
 
         String key = "manage article" + articleId;
 
-        ArticleIssueCheckResponseDto responseDto = redisTemplate.opsForValue().get(key);
+        Object responseDto = redisTemplate.opsForValue().get(key);
 
         if(responseDto==null) {
             throw new IssueNotFoundException();
         }
 
-        return responseDto;
+        return (ArticleIssueCheckResponseDto) responseDto;
     }
 
     private ArticleIssueCheckResponseDto getArticleIssueCheckResponseDto(ArticleIssueCheckRequestDto requestDto, Member member,
@@ -102,6 +102,7 @@ public class ArticleIssueCheckService {
         articleIssueCheckRepository.save(issueCheck);
 
         ArticleIssueCheckResponseDto responseDto = ArticleIssueCheckResponseDto.builder()
+                .id(articleIssue.getId())
                 .title(articleIssue.getTitle())
                 .content(articleIssue.getContent())
                 .check(issueCheck.isChecked())
