@@ -2,6 +2,7 @@ package com.final_10aeat.domain.manager.service;
 
 import com.final_10aeat.domain.manager.dto.request.CreateManagerRequestDto;
 import com.final_10aeat.domain.manager.entity.Manager;
+import com.final_10aeat.domain.member.exception.PasswordMissMatchException;
 import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.office.exception.OfficeNotFoundException;
 import com.final_10aeat.domain.manager.repository.ManagerRepository;
@@ -67,7 +68,7 @@ public class ManagerService {
             .orElseThrow(UserNotExistException::new);
 
         if (!passwordEncoder.matches(request.password(), manager.getPassword())) {
-            throw new UserNotExistException();
+            throw new PasswordMissMatchException();
         }
 
         return jwtTokenGenerator.createJwtToken(manager.getEmail(), manager.getRole());

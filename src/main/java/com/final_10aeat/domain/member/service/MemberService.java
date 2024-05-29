@@ -8,7 +8,7 @@ import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.DisagreementException;
 import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
-import com.final_10aeat.domain.member.exception.MemberMissMatchException;
+import com.final_10aeat.domain.member.exception.PasswordMissMatchException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;
 import com.final_10aeat.domain.member.repository.MemberRepository;
@@ -76,7 +76,7 @@ public class MemberService {
         JsonObject userInfo = fetchUserInfoFromRedis(request.email());
         if (!userInfo.get("dong").getAsString().equals(request.dong()) ||
             !userInfo.get("ho").getAsString().equals(request.ho())) {
-            throw new MemberMissMatchException("관리자가 입력한 동, 호수와 일치하지 않습니다.");
+            throw new PasswordMissMatchException("관리자가 입력한 동, 호수와 일치하지 않습니다.");
         }
     }
 
@@ -117,7 +117,7 @@ public class MemberService {
             .orElseThrow(UserNotExistException::new);
 
         if (!passwordMatcher(request.password(), member)) {
-            throw new UserNotExistException();
+            throw new PasswordMissMatchException();
         }
 
         return jwtTokenGenerator.createJwtToken(request.email(), member.getRole());
@@ -128,7 +128,7 @@ public class MemberService {
             .orElseThrow(UserNotExistException::new);
 
         if (!passwordMatcher(request.password(), member)) {
-            throw new MemberMissMatchException();
+            throw new PasswordMissMatchException();
         }
 
         member.delete(LocalDateTime.now());

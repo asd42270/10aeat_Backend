@@ -5,6 +5,7 @@ import com.final_10aeat.domain.admin.dto.CreateAdminRequestDto;
 import com.final_10aeat.domain.admin.entity.Admin;
 import com.final_10aeat.domain.admin.repository.AdminRepository;
 import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
+import com.final_10aeat.domain.member.exception.PasswordMissMatchException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.global.security.jwt.JwtTokenGenerator;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class AdminService {
             .orElseThrow(UserNotExistException::new);
 
         if (!passwordEncoder.matches(request.password(), admin.getPassword())) {
-            throw new UserNotExistException();
+            throw new PasswordMissMatchException();
         }
         return jwtTokenGenerator.createJwtToken(admin.getEmail(), admin.getRole());
     }
