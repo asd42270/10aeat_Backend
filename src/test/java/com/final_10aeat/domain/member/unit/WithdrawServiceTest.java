@@ -10,7 +10,7 @@ import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
-import com.final_10aeat.domain.member.exception.MemberMissMatchException;
+import com.final_10aeat.domain.member.exception.PasswordMissMatchException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;
 import com.final_10aeat.domain.member.repository.MemberRepository;
@@ -105,7 +105,7 @@ public class WithdrawServiceTest {
             MemberWithdrawRequestDto memberRequest = new MemberWithdrawRequestDto(email,
                 wrongPassword);
 
-            Assertions.assertThrows(MemberMissMatchException.class,
+            Assertions.assertThrows(PasswordMissMatchException.class,
                 () -> memberService.withdraw(memberRequest));
         }
 

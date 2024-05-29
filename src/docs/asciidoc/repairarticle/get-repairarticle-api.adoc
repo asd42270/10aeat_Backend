@@ -1,0 +1,73 @@
+= Get Repair Article REST API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+=== link:../index.html[시작 페이지로 돌아가기]
+
+[[Get-Repair-Article-Summary]]
+== 유지보수 게시글 요약 조회
+
+유지보수 게시글을 요약 조회하는 API 입니다.
+
+* RedDot이 true이면 확인 안한 이슈 존재
+
+=== HttpRequest
+
+include::{snippets}/get-repair-article-summary/http-request.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/get-repair-article-summary/http-response.adoc[]
+include::{snippets}/get-repair-article-summary/response-fields.adoc[]
+
+[[Get-Repair-Article-List]]
+== 유지보수 게시글 전체 조회
+
+유지보수 게시글을 전체 조회하는 API 입니다.
+
+* 정렬 기준 : isNewArticle -> redDot -> 그 외 게시물 최신순 정렬
+* isNewArticle = true 이면 24시간 내에 생성된 게시물입니다.
+* progress, category 파라미터거 없는 경우 전체 게시물이 조회됩니다.
+
+=== HttpRequest
+
+include::{snippets}/get-repair-article-list/http-request.adoc[]
+include::{snippets}/get-repair-article-list/query-parameters.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/get-repair-article-list/http-response.adoc[]
+include::{snippets}/get-repair-article-list/response-fields.adoc[]
+
+[[Get-Repair-Article-Detail]]
+== 유지보수 게시글 상세 조회
+
+유지보수 게시글을 상세 조회하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/get-repair-article-detail/http-request.adoc[]
+include::{snippets}/get-repair-article-detail/path-parameters.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/get-repair-article-detail/http-response.adoc[]
+include::{snippets}/get-repair-article-detail/response-fields.adoc[]
+
+[[Get-Custom-Progress-List]]
+== 안건진행사항 전체 조회
+
+안건진행사항을 전체 조회하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/get-custom-progress-list/http-request.adoc[]
+include::{snippets}/get-custom-progress-list/path-parameters.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/get-custom-progress-list/http-response.adoc[]
+include::{snippets}/get-custom-progress-list/response-fields.adoc[]

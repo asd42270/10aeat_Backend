@@ -1,4 +1,4 @@
-package com.final_10aeat.domain.comment.dto.request;
+package com.final_10aeat.common.dto;
 
 public record UserIdAndRole(
     Long id,

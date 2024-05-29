@@ -4,9 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
-import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
+import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.common.enumclass.MemberRole;
+import com.final_10aeat.domain.member.exception.PasswordMissMatchException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.MemberRepository;
 import com.final_10aeat.domain.member.service.MemberService;
@@ -34,7 +35,7 @@ class MemberServiceTest {
 
     private final String email = "test@test.com";
     private final String password = "password";
-    private final MemberLoginRequestDto loginRequest = new MemberLoginRequestDto(email, password);
+    private final LoginRequestDto loginRequest = new LoginRequestDto(email, password);
     private final Member member = Member.builder()
         .email(email)
         .password(password)
@@ -93,7 +94,7 @@ class MemberServiceTest {
                 .willReturn(Boolean.FALSE);
 
             // when & then
-            assertThrows(UserNotExistException.class,
+            assertThrows(PasswordMissMatchException.class,
                 () -> memberService.login(loginRequest));
         }
     }

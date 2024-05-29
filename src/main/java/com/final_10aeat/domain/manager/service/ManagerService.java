@@ -2,11 +2,12 @@ package com.final_10aeat.domain.manager.service;
 
 import com.final_10aeat.domain.manager.dto.request.CreateManagerRequestDto;
 import com.final_10aeat.domain.manager.entity.Manager;
+import com.final_10aeat.domain.member.exception.PasswordMissMatchException;
 import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.office.exception.OfficeNotFoundException;
 import com.final_10aeat.domain.manager.repository.ManagerRepository;
 import com.final_10aeat.domain.office.repository.OfficeRepository;
-import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
+import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
 import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
@@ -62,12 +63,12 @@ public class ManagerService {
     }
 
     @Transactional(readOnly = true)
-    public String login(MemberLoginRequestDto request) {
+    public String login(LoginRequestDto request) {
         Manager manager = managerRepository.findByEmail(request.email())
             .orElseThrow(UserNotExistException::new);
 
         if (!passwordEncoder.matches(request.password(), manager.getPassword())) {
-            throw new UserNotExistException();
+            throw new PasswordMissMatchException();
         }
 
         return jwtTokenGenerator.createJwtToken(manager.getEmail(), manager.getRole());

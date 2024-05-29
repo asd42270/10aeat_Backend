@@ -1,14 +1,14 @@
 package com.final_10aeat.domain.member.service;
 
 import com.final_10aeat.domain.manager.exception.VerificationCodeExpiredException;
-import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
+import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.DisagreementException;
 import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
-import com.final_10aeat.domain.member.exception.MemberMissMatchException;
+import com.final_10aeat.domain.member.exception.PasswordMissMatchException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;
 import com.final_10aeat.domain.member.repository.MemberRepository;
@@ -36,7 +36,7 @@ public class MemberService {
     private final BuildingInfoRepository buildingInfoRepository;
     private final RedisTemplate<String, String> redisTemplate;
 
-    public MemberLoginRequestDto register(MemberRegisterRequestDto request) {
+    public LoginRequestDto register(MemberRegisterRequestDto request) {
         validateEmail(request.email());
         ensureTermsAgreed(request.termAgreed());
 
@@ -46,7 +46,7 @@ public class MemberService {
         BuildingInfo savedBuildingInfo = saveBuildingInfo(request, officeId);
         saveMember(request, officeId, savedBuildingInfo);
 
-        return new MemberLoginRequestDto(request.email(), request.password());
+        return new LoginRequestDto(request.email(), request.password());
     }
 
     private void validateEmail(String email) {
@@ -76,7 +76,7 @@ public class MemberService {
         JsonObject userInfo = fetchUserInfoFromRedis(request.email());
         if (!userInfo.get("dong").getAsString().equals(request.dong()) ||
             !userInfo.get("ho").getAsString().equals(request.ho())) {
-            throw new MemberMissMatchException("관리자가 입력한 동, 호수와 일치하지 않습니다.");
+            throw new PasswordMissMatchException("관리자가 입력한 동, 호수와 일치하지 않습니다.");
         }
     }
 
@@ -112,12 +112,12 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public String login(MemberLoginRequestDto request) {
+    public String login(LoginRequestDto request) {
         Member member = memberRepository.findByEmailAndDeletedAtIsNull(request.email())
             .orElseThrow(UserNotExistException::new);
 
         if (!passwordMatcher(request.password(), member)) {
-            throw new UserNotExistException();
+            throw new PasswordMissMatchException();
         }
 
         return jwtTokenGenerator.createJwtToken(request.email(), member.getRole());
@@ -128,7 +128,7 @@ public class MemberService {
             .orElseThrow(UserNotExistException::new);
 
         if (!passwordMatcher(request.password(), member)) {
-            throw new MemberMissMatchException();
+            throw new PasswordMissMatchException();
         }
 
         member.delete(LocalDateTime.now());
