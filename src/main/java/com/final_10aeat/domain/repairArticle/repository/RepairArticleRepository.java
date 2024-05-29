@@ -29,4 +29,10 @@ public interface RepairArticleRepository extends JpaRepository<RepairArticle, Lo
         @Param("officeId") Long officeId,
         @Param("progresses") List<Progress> progresses,
         @Param("category") ArticleCategory category);
+
+    @Query("SELECT ra FROM RepairArticle ra WHERE ra.office.id = :officeId " +
+        "AND ra.progress IN :progresses")
+    List<RepairArticle> findByOfficeIdAndProgressIn(
+        @Param("officeId") Long officeId,
+        @Param("progresses") List<Progress> progresses);
 }

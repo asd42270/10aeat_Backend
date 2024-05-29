@@ -49,7 +49,22 @@ public class OwnerRepairArticleService {
         long completed = repairArticleRepository.countByOfficeIdAndProgress(officeId,
             Progress.COMPLETE);
 
-        return new RepairArticleSummaryDto(total, inProgressAndPending, completed);
+        boolean inProgressRedDot = repairArticleRepository.findByOfficeIdAndProgressIn(officeId,
+                List.of(Progress.INPROGRESS, Progress.PENDING)).stream()
+            .anyMatch(this::hasRedDotIssue);
+
+        boolean completeRedDot = repairArticleRepository.findByOfficeIdAndProgressIn(officeId,
+                List.of(Progress.COMPLETE)).stream()
+            .anyMatch(this::hasRedDotIssue);
+
+        return new RepairArticleSummaryDto(total, inProgressAndPending, inProgressRedDot, completed, completeRedDot);
+    }
+
+    private boolean hasRedDotIssue(RepairArticle article) {
+        Long userId = authenticationService.getCurrentUserIdAndRole().id();
+        boolean isManager = authenticationService.getCurrentUserIdAndRole().isManager();
+        Set<Long> checkedIssueIds = articleIssueCheckRepository.findCheckedIssueIdsByMember(userId);
+        return !isManager && article.hasIssue() && !checkedIssueIds.contains(article.getIssue().getId());
     }
 
     @Transactional(readOnly = true)
