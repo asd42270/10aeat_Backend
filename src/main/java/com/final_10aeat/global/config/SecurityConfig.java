@@ -31,22 +31,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        auth -> auth
-                                .requestMatchers(HttpMethod.POST,"/admin/login").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/members", "/members/login", "/members/email/verification").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/managers", "/managers/login").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/health/**").permitAll()
-                                .requestMatchers("/docs/**").permitAll()
-                                .anyRequest().authenticated()
-                )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(
-                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .csrf(AbstractHttpConfigurer::disable)
+            .httpBasic(AbstractHttpConfigurer::disable)
+            .cors(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(
+                auth -> auth
+                    .requestMatchers(HttpMethod.POST, "/admin", "/admin/login").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/members", "/members/login",
+                        "/members/email/verification").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/managers", "/managers/login").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/health/**").permitAll()
+                    .requestMatchers("/docs/**").permitAll()
+                    .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .sessionManagement(
+                session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-                ).build();
+            ).build();
     }
 }

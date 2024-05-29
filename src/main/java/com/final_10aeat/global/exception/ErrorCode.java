@@ -33,7 +33,7 @@ public enum ErrorCode {
     // MEMBER
     TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "토큰을 찾을 수 없습니다."),
     DUPLICATED_EMAIL(HttpStatus.CONFLICT, "중복된 이메일입니다."),
-    MEMBER_MISMATCH(HttpStatus.CONFLICT, "일치하지 않는 사용자입니다."),
+    PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "아이디 비밀번호가 일치하지 않습니다."),
     DISAGREE_TERM(HttpStatus.CONFLICT, "약관에 동의해야 합니다."),
 
     // ARTICLE

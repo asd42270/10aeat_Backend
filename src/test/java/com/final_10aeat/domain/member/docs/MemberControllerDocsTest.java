@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.member.controller.MemberController;
-import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
+import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
 import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
 import com.final_10aeat.common.enumclass.MemberRole;
@@ -54,7 +54,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
     @Test
     void testLogin() throws Exception {
         //given
-        MemberLoginRequestDto loginRequest = new MemberLoginRequestDto(
+        LoginRequestDto loginRequest = new LoginRequestDto(
             "test@example.com", "password"
         );
 
@@ -93,7 +93,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
             "102동", "2212호", MemberRole.TENANT, true
         );
 
-        MemberLoginRequestDto loginRequest = new MemberLoginRequestDto(
+        LoginRequestDto loginRequest = new LoginRequestDto(
             "test@example.com", "password"
         );
 

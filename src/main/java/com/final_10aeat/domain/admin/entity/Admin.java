@@ -1,5 +1,6 @@
 package com.final_10aeat.domain.admin.entity;
 
+import com.final_10aeat.common.enumclass.MemberRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,4 +21,8 @@ public class Admin {
 
     @Column
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MemberRole role;
 }
