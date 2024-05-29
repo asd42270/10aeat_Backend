@@ -77,11 +77,11 @@ public class OwnerRepairArticleDocsTest extends RestDocsSupport {
                     fieldWithPath("data.inProgressAndPending").type(JsonFieldType.NUMBER)
                         .description("진행/대기 게시글 수"),
                     fieldWithPath("data.inProgressAndPendingRedDot").type(JsonFieldType.BOOLEAN)
-                        .description("진행/대기 게시글에 새로운 이슈가 있는지 여부"),
+                        .description("진행/대기 게시글 이슈 여부"),
                     fieldWithPath("data.complete").type(JsonFieldType.NUMBER)
                         .description("완료 게시글 수"),
                     fieldWithPath("data.completeRedDot").type(JsonFieldType.BOOLEAN)
-                        .description("완료 게시글에 새로운 이슈가 있는지 여부")
+                        .description("완료 게시글 이슈 여부")
                 )
             ));
     }
