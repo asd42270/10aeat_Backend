@@ -13,4 +13,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findSoftDeletedBefore(@Param("cutoffDate") LocalDateTime cutoffDate);
 
     List<Comment> findByRepairArticleIdAndDeletedAtIsNull(Long repairArticleId);
+
+    @Query("SELECT COUNT(c) FROM Comment c WHERE c.repairArticle.id = :repairArticleId AND c.deletedAt IS NULL")
+    long countByRepairArticleIdAndDeletedAtIsNull(@Param("repairArticleId") Long repairArticleId);
 }
