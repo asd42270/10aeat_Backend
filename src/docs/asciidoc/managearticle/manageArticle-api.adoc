@@ -1,0 +1,59 @@
+= Manage Article REST API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+=== link:../index.html[시작 페이지로 돌아가기]
+
+[[Create-Manage-Article]]
+== 유지관리 게시글 생성
+
+유지관리 게시글을 생성하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/create-manage-article/http-request.adoc[]
+include::{snippets}/create-manage-article/request-fields.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/create-manage-article/http-response.adoc[]
+include::{snippets}/create-manage-article/response-fields.adoc[]
+
+[[Update-Repair-Article]]
+== 유지관리 게시글 수정
+
+유지관리 게시글을 수정하는 API 입니다.
+
+* PATCH 요청이므로, request body의 일부만 제공되어도 수정이 가능합니다.
+* 수정을 원하지 않는 값은 null로 보내주시면 됩니다.
+
+=== HttpRequest
+
+include::{snippets}/update-manage-article/http-request.adoc[]
+include::{snippets}/update-manage-article/path-parameters.adoc[]
+include::{snippets}/update-manage-article/request-fields.adoc[]
+
+
+=== HttpResponse
+
+include::{snippets}/update-manage-article/http-response.adoc[]
+include::{snippets}/update-manage-article/response-fields.adoc[]
+
+[[Delete-Repair-Article]]
+== 유지관리 게시글 삭제
+
+유지관리 게시글을 삭제하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/delete-repair-article/http-request.adoc[]
+include::{snippets}/delete-repair-article/path-parameters.adoc[]
+
+
+=== HttpResponse
+
+include::{snippets}/delete-repair-article/http-response.adoc[]
+include::{snippets}/delete-repair-article/response-fields.adoc[]
