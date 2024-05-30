@@ -1,5 +1,7 @@
 package com.final_10aeat.domain.manageArticle.service;
 
+import static java.util.Optional.ofNullable;
+
 import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.manageArticle.dto.request.CreateManageArticleRequestDto;
@@ -37,7 +39,7 @@ public class ManagerManageArticleService {
         ManageArticle article = manageArticleRepository.findById(manageArticleId)
             .orElseThrow(ArticleNotFoundException::new);
 
-        if(article.isDeleted()){
+        if (article.isDeleted()) {
             throw new ArticleAlreadyDeletedException();
         }
 
@@ -49,27 +51,13 @@ public class ManagerManageArticleService {
     }
 
     private void updateArticle(UpdateManageArticleRequestDto request, ManageArticle article) {
-        if (request.period() != null) {
-            article.setPeriod(request.period());
-        }
-        if (request.periodCount() != null) {
-            article.setPeriodCount(request.periodCount());
-        }
-        if (request.title() != null) {
-            article.setTitle(request.title());
-        }
-        if (request.legalBasis() != null) {
-            article.setLegalBasis(request.legalBasis());
-        }
-        if (request.target() != null) {
-            article.setTarget(request.target());
-        }
-        if (request.responsibility() != null) {
-            article.setResponsibility(request.responsibility());
-        }
-        if (request.note() != null) {
-            article.setNote(request.note());
-        }
+        ofNullable(request.period()).ifPresent(article::setPeriod);
+        ofNullable(request.periodCount()).ifPresent(article::setPeriodCount);
+        ofNullable(request.title()).ifPresent(article::setTitle);
+        ofNullable(request.legalBasis()).ifPresent(article::setLegalBasis);
+        ofNullable(request.target()).ifPresent(article::setTarget);
+        ofNullable(request.responsibility()).ifPresent(article::setResponsibility);
+        ofNullable(request.note()).ifPresent(article::setNote);
     }
 
     private ManageArticle createArticle(CreateManageArticleRequestDto request, Office office) {
@@ -90,7 +78,7 @@ public class ManagerManageArticleService {
         ManageArticle article = manageArticleRepository.findById(manageArticleId)
             .orElseThrow(ArticleNotFoundException::new);
 
-        if(article.isDeleted()){
+        if (article.isDeleted()) {
             throw new ArticleAlreadyDeletedException();
         }
 
