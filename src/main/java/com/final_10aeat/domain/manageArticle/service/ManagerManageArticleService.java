@@ -10,12 +10,12 @@ import com.final_10aeat.domain.manageArticle.dto.request.UpdateManageArticleRequ
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.entity.ManageSchedule;
 import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
-import com.final_10aeat.domain.manageArticle.repository.ManageScheduleRepository;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.repairArticle.exception.ArticleAlreadyDeletedException;
 import com.final_10aeat.domain.repairArticle.exception.ArticleNotFoundException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,15 +27,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class ManagerManageArticleService {
 
     private final ManageArticleRepository manageArticleRepository;
-    private final ManageScheduleRepository manageScheduleRepository;
 
     public void create(CreateManageArticleRequestDto request, Manager manager) {
         ManageArticle article = createArticle(request, manager.getOffice());
 
-        manageArticleRepository.save(article);
-
-        List<ManageSchedule> list = request.schedule().stream()
+        List<ManageSchedule> scheduleList = request.schedule().stream()
             .map(this::createSchedule).toList();
+
+        article.addSchedules(scheduleList);
+
+        manageArticleRepository.save(article);
     }
 
     public void update(
@@ -78,6 +79,7 @@ public class ManagerManageArticleService {
             .responsibility(request.responsibility())
             .note(request.note())
             .office(office)
+            .schedules(new ArrayList<>())
             .build();
     }
 
