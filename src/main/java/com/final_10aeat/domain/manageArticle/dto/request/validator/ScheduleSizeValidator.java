@@ -8,10 +8,6 @@ public class ScheduleSizeValidator implements
     ConstraintValidator<ScheduleSizeMustBiggerThanZero, List<?>> {
 
     @Override
-    public void initialize(ScheduleSizeMustBiggerThanZero constraintAnnotation) {
-    }
-
-    @Override
     public boolean isValid(List<?> list, ConstraintValidatorContext context) {
         return list != null && !list.isEmpty();
     }
