@@ -1,7 +1,11 @@
 package com.final_10aeat.domain.manageArticle.repository;
 
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ManageArticleRepository extends JpaRepository<ManageArticle, Long> {
+
+    List<ManageArticle> findAllByDeletedAtBeforeAndDeletedAtNotNull(LocalDateTime createdAt);
 }
