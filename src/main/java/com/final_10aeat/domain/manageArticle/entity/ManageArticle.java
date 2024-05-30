@@ -53,7 +53,7 @@ public class ManageArticle extends SoftDeletableBaseTimeEntity {
     private Integer periodCount;
 
     @Setter
-    @Column
+    @Column(nullable = false)
     private String title;
 
     @Setter
