@@ -5,26 +5,30 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.manager.controller.ManagerController;
 import com.final_10aeat.domain.manager.dto.request.CreateManagerRequestDto;
 import com.final_10aeat.domain.manager.entity.Manager;
-import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.manager.repository.ManagerRepository;
-import com.final_10aeat.domain.office.repository.OfficeRepository;
 import com.final_10aeat.domain.manager.service.ManagerService;
-import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
+import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
+import com.final_10aeat.domain.office.entity.Office;
+import com.final_10aeat.domain.office.repository.OfficeRepository;
 import com.final_10aeat.global.security.jwt.JwtTokenGenerator;
-import com.final_10aeat.common.enumclass.MemberRole;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,8 +38,6 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.Optional;
 
 public class ManagerControllerDocsTest extends RestDocsSupport {
 
@@ -75,6 +77,7 @@ public class ManagerControllerDocsTest extends RestDocsSupport {
         when(officeRepository.findById(1L)).thenReturn(Optional.of(office));
 
         Manager manager = Manager.builder()
+            .id(1L)
             .email("manager@example.com")
             .password("managerPassword")
             .name("김관리")
@@ -87,6 +90,8 @@ public class ManagerControllerDocsTest extends RestDocsSupport {
             .role(MemberRole.MANAGER)
             .build();
         when(managerRepository.findByEmail("manager@example.com")).thenReturn(Optional.of(manager));
+        when(managerRepository.findById(1L)).thenReturn(
+            Optional.of(manager));
         when(passwordEncoder.matches("managerPassword", "managerPassword")).thenReturn(true);
     }
 
@@ -130,7 +135,7 @@ public class ManagerControllerDocsTest extends RestDocsSupport {
     @Test
     void testLoginManager() throws Exception {
         // Given
-        MemberLoginRequestDto loginRequest = new MemberLoginRequestDto(
+        LoginRequestDto loginRequest = new LoginRequestDto(
             "manager@example.com", "managerPassword"
         );
 
@@ -155,6 +160,32 @@ public class ManagerControllerDocsTest extends RestDocsSupport {
                 ),
                 responseFields(
                     fieldWithPath("code").description("응답 상태 코드")
+                )
+            ));
+    }
+
+    @DisplayName("매니저 정보 조회 API 문서화")
+    @Test
+    void testGetManagerProfile() throws Exception {
+        Long managerId = 1L;
+
+        mockMvc.perform(get("/managers/profile/{managerId}", managerId))
+            .andExpect(status().isOk())
+            .andDo(document("manager-profile",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                pathParameters(
+                    parameterWithName("managerId").description("관리자 ID")
+                ),
+                responseFields(
+                    fieldWithPath("code").description("응답 상태 코드"),
+                    fieldWithPath("data.email").description("이메일"),
+                    fieldWithPath("data.name").description("이름"),
+                    fieldWithPath("data.phoneNumber").description("전화번호"),
+                    fieldWithPath("data.lunchBreakStart").optional().description("점심시간 시작"),
+                    fieldWithPath("data.lunchBreakEnd").optional().description("점심시간 끝"),
+                    fieldWithPath("data.managerOffice").description("관리 사무소 위치"),
+                    fieldWithPath("data.affiliation").description("소속 정보")
                 )
             ));
     }

@@ -1,6 +1,6 @@
 package com.final_10aeat.domain.articleIssue.controller;
 
-import com.final_10aeat.domain.articleIssue.dto.ArticleIssuePublishRequestDto;
+import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssuePublishRequestDto;
 import com.final_10aeat.domain.articleIssue.service.ArticleIssueService;
 import com.final_10aeat.global.security.principal.ManagerPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;
@@ -41,5 +41,4 @@ public class ArticleIssueController {
         articleIssueService.repairIssuePublish(request, id, managerPrincipal.getManager());
         return ResponseDTO.ok();
     }
-
 }

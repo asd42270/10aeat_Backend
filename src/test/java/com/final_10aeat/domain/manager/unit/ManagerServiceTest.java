@@ -10,12 +10,13 @@ import static org.mockito.Mockito.when;
 
 import com.final_10aeat.domain.manager.dto.request.CreateManagerRequestDto;
 import com.final_10aeat.domain.manager.entity.Manager;
+import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
+import com.final_10aeat.domain.member.exception.PasswordMissMatchException;
 import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.office.exception.OfficeNotFoundException;
 import com.final_10aeat.domain.manager.repository.ManagerRepository;
 import com.final_10aeat.domain.office.repository.OfficeRepository;
 import com.final_10aeat.domain.manager.service.ManagerService;
-import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
 import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
@@ -146,7 +147,7 @@ public class ManagerServiceTest {
         @Test
         @DisplayName("성공적으로 로그인을 수행한다.")
         void _willSuccess() {
-            MemberLoginRequestDto loginRequestDto = new MemberLoginRequestDto("manager@example.com",
+            LoginRequestDto loginRequestDto = new LoginRequestDto("manager@example.com",
                 "securePassword");
 
             Manager manager = Manager.builder()
@@ -168,7 +169,7 @@ public class ManagerServiceTest {
         @Test
         @DisplayName("존재하지 않는 이메일로 로그인을 시도하면 실패한다.")
         void NotFound_willFail() {
-            MemberLoginRequestDto loginRequestDto = new MemberLoginRequestDto("manager@example.com",
+            LoginRequestDto loginRequestDto = new LoginRequestDto("manager@example.com",
                 "securePassword");
 
             when(managerRepository.findByEmail(anyString())).thenReturn(Optional.empty());
@@ -181,7 +182,7 @@ public class ManagerServiceTest {
         @Test
         @DisplayName("잘못된 비밀번호로 로그인을 시도하면 실패한다.")
         void NotMatch_willFail() {
-            MemberLoginRequestDto loginRequestDto = new MemberLoginRequestDto("manager@example.com",
+            LoginRequestDto loginRequestDto = new LoginRequestDto("manager@example.com",
                 "securePassword");
 
             Manager manager = Manager.builder()
@@ -193,7 +194,7 @@ public class ManagerServiceTest {
             when(managerRepository.findByEmail(anyString())).thenReturn(Optional.of(manager));
             when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
 
-            assertThrows(UserNotExistException.class, () -> {
+            assertThrows(PasswordMissMatchException.class, () -> {
                 managerService.login(loginRequestDto);
             });
         }

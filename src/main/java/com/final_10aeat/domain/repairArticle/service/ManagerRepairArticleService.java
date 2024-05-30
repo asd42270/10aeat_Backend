@@ -18,6 +18,7 @@ import com.final_10aeat.domain.repairArticle.repository.CustomProgressRepository
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,7 @@ public class ManagerRepairArticleService {
             .company(request.repairCompany())
             .companyWebsite(request.repairCompanyWebsite())
             .manager(manager)
+            .office(manager.getOffice())
             .build();
     }
 
@@ -99,35 +101,21 @@ public class ManagerRepairArticleService {
     }
 
     private void updateFields(UpdateRepairArticleRequestDto request, RepairArticle repairArticle) {
-        if (request.category() != null) {
-            repairArticle.setCategory(request.category());
-        }
-        if (request.progress() != null) {
-            repairArticle.setProgress(request.progress());
-        }
-        if (request.title() != null) {
-            repairArticle.setTitle(request.title());
-        }
-        if (request.content() != null) {
-            repairArticle.setContent(request.content());
-        }
-        if (request.constructionStart() != null) {
-            repairArticle.setStartConstruction(request.constructionStart());
-        }
-        if (request.constructionEnd() != null) {
-            repairArticle.setEndConstruction(request.constructionEnd());
-        }
-        if (request.repairCompany() != null) {
-            repairArticle.setCompany(request.repairCompany());
-        }
-        if (request.repairCompanyWebsite() != null) {
-            repairArticle.setCompanyWebsite(request.repairCompanyWebsite());
-        }
-        if (request.images() != null) {
+        Optional.ofNullable(request.category()).ifPresent(repairArticle::setCategory);
+        Optional.ofNullable(request.progress()).ifPresent(repairArticle::setProgress);
+        Optional.ofNullable(request.title()).ifPresent(repairArticle::setTitle);
+        Optional.ofNullable(request.content()).ifPresent(repairArticle::setContent);
+        Optional.ofNullable(request.constructionStart())
+            .ifPresent(repairArticle::setStartConstruction);
+        Optional.ofNullable(request.constructionEnd()).ifPresent(repairArticle::setEndConstruction);
+        Optional.ofNullable(request.repairCompany()).ifPresent(repairArticle::setCompany);
+        Optional.ofNullable(request.repairCompanyWebsite())
+            .ifPresent(repairArticle::setCompanyWebsite);
+        Optional.ofNullable(request.images()).ifPresent(images -> {
             repairArticle.getImages().clear();
-            Set<RepairArticleImage> images = createImageEntities(request.images(), repairArticle);
-            repairArticle.getImages().addAll(images);
-        }
+            Set<RepairArticleImage> newImages = createImageEntities(images, repairArticle);
+            repairArticle.getImages().addAll(newImages);
+        });
     }
 
     public void createCustomProgress(Long repairArticleId, Long managerId,
@@ -159,28 +147,20 @@ public class ManagerRepairArticleService {
         RepairArticle repairArticle = customProgress.getRepairArticle();
         verifyManager(repairArticle, managerId);
 
-        if (request.startSchedule() != null) {
-            customProgress.setStartSchedule(request.startSchedule());
-        }
-        if (request.endSchedule() != null) {
-            customProgress.setEndSchedule(request.endSchedule());
-        }
-        if (request.title() != null) {
-            customProgress.setTitle(request.title());
-        }
-        if (request.content() != null) {
-            customProgress.setContent(request.content());
-        }
-        if (request.inProgress() != null) {
-            if (request.inProgress()) {
-                customProgress.getRepairArticle().getCustomProgressSet().forEach(cp -> {
+        Optional.ofNullable(request.startSchedule()).ifPresent(customProgress::setStartSchedule);
+        Optional.ofNullable(request.endSchedule()).ifPresent(customProgress::setEndSchedule);
+        Optional.ofNullable(request.title()).ifPresent(customProgress::setTitle);
+        Optional.ofNullable(request.content()).ifPresent(customProgress::setContent);
+        Optional.ofNullable(request.inProgress()).ifPresent(inProgress -> {
+            if (inProgress) {
+                repairArticle.getCustomProgressSet().forEach(cp -> {
                     if (!cp.equals(customProgress)) {
                         cp.setInProgress(false);
                     }
                 });
             }
-            customProgress.setInProgress(request.inProgress());
-        }
+            customProgress.setInProgress(inProgress);
+        });
         customProgressRepository.save(customProgress);
     }
 }

@@ -1,14 +1,16 @@
 package com.final_10aeat.domain.member.unit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import com.final_10aeat.domain.member.dto.request.MemberLoginRequestDto;
+import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
-import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.member.exception.DisagreementException;
 import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;
@@ -23,50 +25,57 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class RegisterServiceTest {
 
-    @Mock
-    private MemberRepository memberRepository;
-    @Mock
-    private PasswordEncoder passwordEncoder;
-    @Mock
-    private BuildingInfoRepository buildingInfoRepository;
     @InjectMocks
     private MemberService memberService;
 
-    private final String email = "test@test.com";
-    private final String password = "password";
-    private final String name = "spring";
-    private final String dong = "102동";
-    private final String ho = "2212호";
-    private final MemberRole role = MemberRole.TENANT;
+    @Mock
+    private MemberRepository memberRepository;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
-    private final MemberRegisterRequestDto request = new MemberRegisterRequestDto(email, password,
-        name, dong, ho, role, true);
+    @Mock
+    private BuildingInfoRepository buildingInfoRepository;
+
+    @Mock
+    private RedisTemplate<String, String> redisTemplate;
+
+    @Mock
+    private ValueOperations<String, String> valueOperations;
+
+    private final MemberRegisterRequestDto request = new MemberRegisterRequestDto(
+        "test@test.com", "password", "spring", "102동", "2212호", MemberRole.TENANT, true);
+
     private final BuildingInfo buildingInfo = BuildingInfo.builder()
-        .dong(dong)
-        .ho(ho)
+        .dong("102동")
+        .ho("2212호")
         .office(null)
         .build();
+
     private final Member member = Member.builder()
         .id(1L)
-        .email(email)
-        .password(password)
-        .name(name)
-        .role(role)
-        .buildingInfos(Set.of(BuildingInfo.builder()
-            .dong(dong)
-            .ho(ho)
-            .office(null)
-            .build()))
+        .email("test@test.com")
+        .password("encodedPassword")
+        .name("spring")
+        .role(MemberRole.TENANT)
+        .buildingInfos(Set.of(buildingInfo))
         .build();
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        when(redisTemplate.opsForValue()).thenReturn(valueOperations);
+        when(valueOperations.get(anyString())).thenReturn(
+            "{\"officeId\":1,\"dong\":\"102동\",\"ho\":\"2212호\"}");
+        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+        when(buildingInfoRepository.save(any(BuildingInfo.class))).thenReturn(buildingInfo);
+        when(memberRepository.save(any(Member.class))).thenReturn(member);
     }
 
     @Nested
@@ -76,46 +85,43 @@ public class RegisterServiceTest {
         @Test
         @DisplayName("회원가입에 성공한다.")
         void _willSuccess() {
-            //given
-            given(buildingInfoRepository.save(any(BuildingInfo.class))).willReturn(buildingInfo);
-            given(passwordEncoder.matches(password, member.getPassword())).willReturn(true);
-            given(memberRepository.save(any(Member.class))).willReturn(member);
+            // Given
+            given(memberRepository.existsByEmailAndDeletedAtIsNull(request.email())).willReturn(
+                false);
 
-            //when
-            MemberLoginRequestDto loginRequest = memberService.register(request);
+            // When
+            memberService.register(request);
 
-            //then
-            assertEquals(new MemberLoginRequestDto(email, password), loginRequest);
+            // Then
+            verify(memberRepository).save(any(Member.class));
+            verify(redisTemplate.opsForValue(), times(2)).get(
+                anyString());
         }
 
         @Test
-        @DisplayName("이메일이 중복된 회원의 가입을 시도하여 실패한다.")
+        @DisplayName("이메일이 중복되어 회원 가입에 실패한다.")
         void _willDuplicatedEmail() {
-            //given
-            given(buildingInfoRepository.save(any(BuildingInfo.class))).willReturn(buildingInfo);
-            given(passwordEncoder.matches(password, member.getPassword())).willReturn(true);
-            given(memberRepository.save(any(Member.class))).willReturn(member);
-            given(memberRepository.existsByEmailAndDeletedAtIsNull(email)).willReturn(true);
+            // Given
+            given(memberRepository.existsByEmailAndDeletedAtIsNull(request.email())).willReturn(
+                true);
 
-            //then
-            Assertions.assertThrows(EmailDuplicatedException.class,
-                () -> memberService.register(request));
+            // When & Then
+            Assertions.assertThrows(EmailDuplicatedException.class, () -> {
+                memberService.register(request);
+            });
         }
 
         @Test
         @DisplayName("약관에 동의하지 않아 가입에 실패한다.")
         void _willDisagreeTerm() {
-            //given
-            given(buildingInfoRepository.save(any(BuildingInfo.class))).willReturn(buildingInfo);
-            given(passwordEncoder.matches(password, member.getPassword())).willReturn(true);
-            given(memberRepository.save(any(Member.class))).willReturn(member);
-            given(memberRepository.existsByEmailAndDeletedAtIsNull(email)).willReturn(false);
-            MemberRegisterRequestDto disagreeRequest = new MemberRegisterRequestDto(email, password,
-                name, dong, ho, role, false);
+            // Given
+            MemberRegisterRequestDto disagreeRequest = new MemberRegisterRequestDto(
+                "test@test.com", "password", "spring", "102동", "2212호", MemberRole.TENANT, false);
 
-            //then
-            Assertions.assertThrows(DisagreementException.class,
-                () -> memberService.register(disagreeRequest));
+            // When & Then
+            Assertions.assertThrows(DisagreementException.class, () -> {
+                memberService.register(disagreeRequest);
+            });
         }
     }
 }

@@ -1,0 +1,37 @@
+= Aricle Save REST API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+=== link:../index.html[시작 페이지로 돌아가기]
+
+[[Article-Save]]
+== 게시글 저장
+게시글을 저장하는 API입니다.
+
+=== HttpRequest
+
+include::{snippets}/save-article/http-request.adoc[]
+include::{snippets}/save-article/path-parameters.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/save-article/http-response.adoc[]
+include::{snippets}/save-article/response-fields.adoc[]
+
+[[Article-Unsave]]
+== 게시글 저장 취소
+
+게시글 저장을 취소하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/unsave-article/http-request.adoc[]
+include::{snippets}/unsave-article/path-parameters.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/unsave-article/http-response.adoc[]
+include::{snippets}/unsave-article/response-fields.adoc[]

@@ -2,7 +2,7 @@ package com.final_10aeat.domain.issue.unit;
 
 import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.common.exception.ArticleNotFoundException;
-import com.final_10aeat.domain.articleIssue.dto.ArticleIssuePublishRequestDto;
+import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssuePublishRequestDto;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
 import com.final_10aeat.domain.articleIssue.repository.ArticleIssueRepository;
 import com.final_10aeat.domain.articleIssue.service.ArticleIssueService;

@@ -37,4 +37,8 @@ public class Office {
 
     @Column(name = "map_y")
     private Double mapY;
+
+    public Office(Long id) {
+        this.id = id;
+    }
 }

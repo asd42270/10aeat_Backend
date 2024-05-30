@@ -1,0 +1,73 @@
+= Comment REST API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+=== link:../index.html[시작 페이지로 돌아가기]
+
+[[Create-Comment]]
+== 댓글 생성
+댓글을 생성하는 API입니다.
+
+* 최상단 댓글일 경우 parentCommentId = null
+
+=== HttpRequest
+
+include::{snippets}/create-comment/http-request.adoc[]
+include::{snippets}/create-comment/path-parameters.adoc[]
+include::{snippets}/create-comment/request-fields.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/create-comment/http-response.adoc[]
+include::{snippets}/create-comment/response-fields.adoc[]
+
+[[Delete-Comment]]
+== 댓글 삭제
+
+댓글을 삭제하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/delete-comment/http-request.adoc[]
+include::{snippets}/delete-comment/path-parameters.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/delete-comment/http-response.adoc[]
+include::{snippets}/delete-comment/response-fields.adoc[]
+
+[[Update-Comment]]
+== 댓글 수정
+댓글을 수정하는 API입니다.
+
+=== HttpRequest
+
+include::{snippets}/update-comment/http-request.adoc[]
+include::{snippets}/update-comment/path-parameters.adoc[]
+include::{snippets}/update-comment/request-fields.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/update-comment/http-response.adoc[]
+include::{snippets}/update-comment/response-fields.adoc[]
+
+[[Get-Comment]]
+== 댓글 조회
+
+댓글을 조회하는 API 입니다.
+
+* parentCommentId = null 일 경우 반환하지 않습니다.
+* 관리자 댓글일 경우 isManager = true 로 반환됩니다.
+
+=== HttpRequest
+
+include::{snippets}/get-comments-by-article-id/http-request.adoc[]
+include::{snippets}/get-comments-by-article-id/path-parameters.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/get-comments-by-article-id/http-response.adoc[]
+include::{snippets}/get-comments-by-article-id/response-fields.adoc[]

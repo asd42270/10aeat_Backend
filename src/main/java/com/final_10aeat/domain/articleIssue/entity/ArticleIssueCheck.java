@@ -16,8 +16,8 @@ public class ArticleIssueCheck {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "ischeck")
-    private boolean isCheck;
+    @Column(name = "checked")
+    private boolean checked;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_issue_id")
