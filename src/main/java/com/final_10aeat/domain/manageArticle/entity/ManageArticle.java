@@ -18,7 +18,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -81,5 +83,14 @@ public class ManageArticle extends SoftDeletableBaseTimeEntity {
 
     public void delete(LocalDateTime currentTime) {
         super.delete(currentTime);
+    }
+
+    public void addSchedules(List<ManageSchedule> newSchedules) {
+        Set<ManageSchedule> uniqueSchedules = new HashSet<>(schedules);
+        for (ManageSchedule newSchedule : newSchedules) {
+            if (!uniqueSchedules.contains(newSchedule)) {
+                schedules.add(newSchedule);
+            }
+        }
     }
 }
