@@ -1,6 +1,5 @@
 package com.final_10aeat.domain.manageArticle.entity;
 
-import com.final_10aeat.global.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -44,7 +43,7 @@ public class ManageSchedule {
     @JoinColumn(name = "manage_article_id")
     private ManageArticle manageArticle;
 
-    public void complete(){
+    public void complete() {
         complete = !complete;
     }
 }
