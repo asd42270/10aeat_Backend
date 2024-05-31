@@ -5,8 +5,8 @@ import static java.util.Optional.ofNullable;
 import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.manageArticle.dto.request.CreateManageArticleRequestDto;
-import com.final_10aeat.domain.manageArticle.dto.request.ScheduleRequestDto;
 import com.final_10aeat.domain.manageArticle.dto.request.UpdateManageArticleRequestDto;
+import com.final_10aeat.domain.manageArticle.dto.request.util.ScheduleConverter;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.entity.ManageSchedule;
 import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
@@ -32,7 +32,7 @@ public class ManagerManageArticleService {
         ManageArticle article = createArticle(request, manager.getOffice());
 
         List<ManageSchedule> scheduleList = request.schedule().stream()
-            .map(this::createSchedule).toList();
+            .map(ScheduleConverter::toSchedule).toList();
 
         article.addSchedules(scheduleList);
 
@@ -96,13 +96,5 @@ public class ManagerManageArticleService {
         }
 
         article.delete(LocalDateTime.now());
-    }
-
-    private ManageSchedule createSchedule(ScheduleRequestDto request) {
-        return ManageSchedule.builder()
-            .complete(false)
-            .scheduleStart(request.scheduleStart())
-            .scheduleEnd(request.scheduleEnd())
-            .build();
     }
 }
