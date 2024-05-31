@@ -43,4 +43,8 @@ public class ManageSchedule {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manage_article_id")
     private ManageArticle manageArticle;
+
+    public void complete(){
+        complete = !complete;
+    }
 }
