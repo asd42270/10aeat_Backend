@@ -14,12 +14,14 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Builder
+@EqualsAndHashCode
 @Table(name = "manage_schedule")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,11 +31,14 @@ public class ManageSchedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "iscomplete")
-    private boolean isComplete;
+    @Column(name = "complete")
+    private boolean complete;
 
-    @Column
-    private LocalDateTime schedule;
+    @Column(name = "schedule_start", nullable = false)
+    private LocalDateTime scheduleStart;
+
+    @Column(name = "schedule_end")
+    private LocalDateTime scheduleEnd;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manage_article_id")

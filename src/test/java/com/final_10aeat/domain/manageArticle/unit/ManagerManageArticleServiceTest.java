@@ -1,7 +1,7 @@
 package com.final_10aeat.domain.manageArticle.unit;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
@@ -12,6 +12,7 @@ import com.final_10aeat.common.enumclass.ManagePeriod;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.common.util.EntityUtil;
 import com.final_10aeat.domain.manageArticle.dto.request.CreateManageArticleRequestDto;
+import com.final_10aeat.domain.manageArticle.dto.request.ScheduleRequestDto;
 import com.final_10aeat.domain.manageArticle.dto.request.UpdateManageArticleRequestDto;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
@@ -21,6 +22,7 @@ import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.repairArticle.exception.ArticleAlreadyDeletedException;
 import com.final_10aeat.domain.repairArticle.exception.ArticleNotFoundException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -68,6 +70,11 @@ class ManagerManageArticleServiceTest {
     @DisplayName("create()에 성공한다")
     void create_WillSuccess() {
         // given
+        ScheduleRequestDto schedule1 = new ScheduleRequestDto(
+            LocalDateTime.of(2024, 6, 1, 0, 0),
+            LocalDateTime.of(2024, 6, 14, 0, 0)
+        );
+
         CreateManageArticleRequestDto request = new CreateManageArticleRequestDto(
             ManagePeriod.WEEK,
             1,
@@ -75,7 +82,8 @@ class ManagerManageArticleServiceTest {
             "법적 근거",
             "관리 대상",
             "담당자/수리업체",
-            "비고"
+            "비고",
+            List.of(schedule1)
         );
 
         // when

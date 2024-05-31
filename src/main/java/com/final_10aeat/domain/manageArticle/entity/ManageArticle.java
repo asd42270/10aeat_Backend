@@ -82,4 +82,8 @@ public class ManageArticle extends SoftDeletableBaseTimeEntity {
     public void delete(LocalDateTime currentTime) {
         super.delete(currentTime);
     }
+
+    public void addSchedules(List<ManageSchedule> newSchedules) {
+        schedules.addAll(newSchedules);
+    }
 }
