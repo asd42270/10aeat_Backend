@@ -7,6 +7,8 @@ import java.util.List;
 @Builder
 public record BuildingInfoResponseDto(
         String officeName,
-        List<BuildingInfoDto> infos
+        Long buildingInfoId,
+        String dong,
+        String ho
 ) {
 }
