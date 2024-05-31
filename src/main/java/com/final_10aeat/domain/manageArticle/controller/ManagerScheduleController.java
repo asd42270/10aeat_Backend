@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,8 +61,23 @@ public class ManagerScheduleController {
         ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
 
-        manageScheduleService.update(manageArticleId, manageScheduleId, request,
-            principal.getManager());
+        manageScheduleService.update(
+            manageArticleId, manageScheduleId,
+            request, principal.getManager()
+        );
+
+        return ResponseDTO.ok();
+    }
+
+    @DeleteMapping("/{manageArticleId}}/{manageScheduleId}")
+    public ResponseDTO<Void> delete(
+        @PathVariable Long manageArticleId,
+        @PathVariable Long manageScheduleId
+    ) {
+        ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+
+        manageScheduleService.delete(manageArticleId, manageScheduleId, principal.getManager());
 
         return ResponseDTO.ok();
     }

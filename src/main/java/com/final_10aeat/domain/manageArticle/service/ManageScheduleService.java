@@ -5,6 +5,7 @@ import com.final_10aeat.domain.manageArticle.dto.request.ScheduleRequestDto;
 import com.final_10aeat.domain.manageArticle.dto.request.util.ScheduleConverter;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.entity.ManageSchedule;
+import com.final_10aeat.domain.manageArticle.exception.ScheduleMustHaveOneException;
 import com.final_10aeat.domain.manageArticle.exception.ScheduleNotFoundException;
 import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
 import com.final_10aeat.domain.manageArticle.repository.ManageScheduleRepository;
@@ -84,5 +85,24 @@ public class ManageScheduleService {
     private void updateSchedule(ManageSchedule manageSchedule, ScheduleRequestDto request) {
         manageSchedule.setScheduleStart(request.scheduleStart());
         manageSchedule.setScheduleEnd(request.scheduleEnd());
+    }
+
+    public void delete(Long manageArticleId, Long manageScheduleId, Manager manager) {
+        ManageArticle article = manageArticleRepository.findById(manageArticleId)
+            .orElseThrow(ArticleNotFoundException::new);
+
+        if (article.isDeleted()) {
+            throw new ArticleAlreadyDeletedException();
+        }
+
+        if (!article.getOffice().getId().equals(manager.getOffice().getId())) {
+            throw new UnauthorizedAccessException();
+        }
+
+        if(article.getSchedules().size()==1){
+            throw new ScheduleMustHaveOneException();
+        }
+
+        manageScheduleRepository.deleteById(manageScheduleId);
     }
 }

@@ -43,6 +43,7 @@ public enum ErrorCode {
 
     // SCHEDULE
     SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 일정입니다."),
+    SCHEDULE_MUST_HAVE_ONE(HttpStatus.BAD_REQUEST, "일정은 1개 이상 존재해야 합니다."),
 
     // ISSUE
     ISSUE_NOT_FOUND(HttpStatus.NOT_FOUND, "이슈를 찾을 수 없습니다."),
