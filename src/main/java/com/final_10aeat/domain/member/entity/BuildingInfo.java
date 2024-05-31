@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 @Entity
 @Getter
@@ -22,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "member_building_info")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BuildingInfo {
+public class BuildingInfo implements Comparable<BuildingInfo> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,4 +39,8 @@ public class BuildingInfo {
     @JoinColumn(name = "office_id")
     private Office office;
 
+    @Override
+    public int compareTo(@NotNull BuildingInfo o) {
+        return this.getOffice().getOfficeName().compareTo(o.getOffice().getOfficeName());
+    }
 }
