@@ -5,14 +5,18 @@ import static java.util.Optional.ofNullable;
 import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.manageArticle.dto.request.CreateManageArticleRequestDto;
+import com.final_10aeat.domain.manageArticle.dto.request.ScheduleRequestDto;
 import com.final_10aeat.domain.manageArticle.dto.request.UpdateManageArticleRequestDto;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
+import com.final_10aeat.domain.manageArticle.entity.ManageSchedule;
 import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.repairArticle.exception.ArticleAlreadyDeletedException;
 import com.final_10aeat.domain.repairArticle.exception.ArticleNotFoundException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,9 +28,13 @@ public class ManagerManageArticleService {
 
     private final ManageArticleRepository manageArticleRepository;
 
-
     public void create(CreateManageArticleRequestDto request, Manager manager) {
         ManageArticle article = createArticle(request, manager.getOffice());
+
+        List<ManageSchedule> scheduleList = request.schedule().stream()
+            .map(this::createSchedule).toList();
+
+        article.addSchedules(scheduleList);
 
         manageArticleRepository.save(article);
     }
@@ -71,6 +79,7 @@ public class ManagerManageArticleService {
             .responsibility(request.responsibility())
             .note(request.note())
             .office(office)
+            .schedules(new ArrayList<>())
             .build();
     }
 
@@ -87,5 +96,13 @@ public class ManagerManageArticleService {
         }
 
         article.delete(LocalDateTime.now());
+    }
+
+    private ManageSchedule createSchedule(ScheduleRequestDto request) {
+        return ManageSchedule.builder()
+            .complete(false)
+            .scheduleStart(request.scheduleStart())
+            .scheduleEnd(request.scheduleEnd())
+            .build();
     }
 }

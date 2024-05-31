@@ -1,7 +1,7 @@
 package com.final_10aeat.domain.manageArticle.docs;
 
+import static org.mockito.Mockito.mock;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -12,41 +12,28 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.final_10aeat.common.enumclass.ManagePeriod;
 import com.final_10aeat.common.util.manager.WithManager;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.manageArticle.controller.ManagerManageArticleController;
 import com.final_10aeat.domain.manageArticle.dto.request.CreateManageArticleRequestDto;
+import com.final_10aeat.domain.manageArticle.dto.request.ScheduleRequestDto;
 import com.final_10aeat.domain.manageArticle.dto.request.UpdateManageArticleRequestDto;
 import com.final_10aeat.domain.manageArticle.service.ManagerManageArticleService;
-import org.junit.jupiter.api.BeforeEach;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 public class ManagerManageArticleControllerDocsTest extends RestDocsSupport {
 
-    private ManagerManageArticleService managerManageArticleService;
-    private ObjectMapper objectMapper;
-
     @Override
     public Object initController() {
-        managerManageArticleService = Mockito.mock(ManagerManageArticleService.class);
-        objectMapper = new ObjectMapper();
+        ManagerManageArticleService managerManageArticleService =
+            mock(ManagerManageArticleService.class);
         return new ManagerManageArticleController(managerManageArticleService);
-    }
-
-    @BeforeEach
-    public void setUp(RestDocumentationContextProvider restDocumentation) {
-        mockMvc = MockMvcBuilders
-            .standaloneSetup(initController())
-            .apply(documentationConfiguration(restDocumentation))
-            .build();
     }
 
     @DisplayName("Manager Article 생성 API 문서화")
@@ -54,6 +41,10 @@ public class ManagerManageArticleControllerDocsTest extends RestDocsSupport {
     @WithManager
     void testCreate() throws Exception {
         // given
+        ScheduleRequestDto schedule1 = new ScheduleRequestDto(
+            LocalDateTime.of(2024, 6, 1, 0, 0),
+            LocalDateTime.of(2024, 6, 14, 0, 0)
+        );
         CreateManageArticleRequestDto request = new CreateManageArticleRequestDto(
             ManagePeriod.WEEK,
             1,
@@ -61,7 +52,8 @@ public class ManagerManageArticleControllerDocsTest extends RestDocsSupport {
             "법적 근거",
             "관리 대상",
             "담당자/수리업체",
-            "비고"
+            "비고",
+            List.of(schedule1)
         );
 
         // when & then
@@ -81,7 +73,11 @@ public class ManagerManageArticleControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("legalBasis").description("법적 근거").optional(),
                     fieldWithPath("target").description("관리 대상").optional(),
                     fieldWithPath("responsibility").description("담당 업체").optional(),
-                    fieldWithPath("note").description("비고").optional()
+                    fieldWithPath("note").description("비고").optional(),
+                    fieldWithPath("schedule[].scheduleStart").description("유지관리 시작 일시.")
+                        .type("LocalDateTime"),
+                    fieldWithPath("schedule[].scheduleEnd").description("유지관리 종료 일시 (선택 사항).")
+                        .type("LocalDateTime").optional()
                 ),
                 responseFields(
                     fieldWithPath("code").description("응답 상태 코드")
