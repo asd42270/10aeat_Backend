@@ -41,9 +41,13 @@ public class ManageScheduleService {
         );
     }
 
-    public void complete(Long manageArticleId, Long manageScheduleId, Manager manager) {
-        ManageArticle article = manageArticleRepository.findById(manageArticleId)
-            .orElseThrow(ArticleNotFoundException::new);
+    public void complete(Long manageScheduleId, Manager manager) {
+        ManageSchedule manageSchedule = manageScheduleRepository.
+            findAndPessimisticLockById(manageScheduleId)
+            .orElseThrow(ScheduleNotFoundException::new);
+
+        ManageArticle article = manageSchedule.getManageArticle();
+        //Todo article이 null일 수 있는지 확인
 
         if (article.isDeleted()) {
             throw new ArticleAlreadyDeletedException();
@@ -52,20 +56,19 @@ public class ManageScheduleService {
         if (!article.getOffice().getId().equals(manager.getOffice().getId())) {
             throw new UnauthorizedAccessException();
         }
-
-        ManageSchedule manageSchedule = manageScheduleRepository.
-            findAndPessimisticLockById(manageScheduleId)
-            .orElseThrow(ScheduleNotFoundException::new);
 
         manageSchedule.complete();
     }
 
     public void update(
-        Long manageArticleId, Long manageScheduleId,
-        ScheduleRequestDto request, Manager manager
+        Long manageScheduleId, ScheduleRequestDto request, Manager manager
     ) {
-        ManageArticle article = manageArticleRepository.findById(manageArticleId)
-            .orElseThrow(ArticleNotFoundException::new);
+        ManageSchedule manageSchedule = manageScheduleRepository.
+            findAndPessimisticLockById(manageScheduleId)
+            .orElseThrow(ScheduleNotFoundException::new);
+
+        ManageArticle article = manageSchedule.getManageArticle();
+        //Todo article이 null일 수 있는지 확인
 
         if (article.isDeleted()) {
             throw new ArticleAlreadyDeletedException();
@@ -75,9 +78,13 @@ public class ManageScheduleService {
             throw new UnauthorizedAccessException();
         }
 
-        ManageSchedule manageSchedule = manageScheduleRepository.
-            findAndPessimisticLockById(manageScheduleId)
-            .orElseThrow(ScheduleNotFoundException::new);
+        if (article.isDeleted()) {
+            throw new ArticleAlreadyDeletedException();
+        }
+
+        if (!article.getOffice().getId().equals(manager.getOffice().getId())) {
+            throw new UnauthorizedAccessException();
+        }
 
         updateSchedule(manageSchedule, request);
     }
@@ -87,9 +94,13 @@ public class ManageScheduleService {
         manageSchedule.setScheduleEnd(request.scheduleEnd());
     }
 
-    public void delete(Long manageArticleId, Long manageScheduleId, Manager manager) {
-        ManageArticle article = manageArticleRepository.findById(manageArticleId)
-            .orElseThrow(ArticleNotFoundException::new);
+    public void delete(Long manageScheduleId, Manager manager) {
+        ManageSchedule manageSchedule = manageScheduleRepository.
+            findAndPessimisticLockById(manageScheduleId)
+            .orElseThrow(ScheduleNotFoundException::new);
+
+        ManageArticle article = manageSchedule.getManageArticle();
+        //Todo article이 null일 수 있는지 확인
 
         if (article.isDeleted()) {
             throw new ArticleAlreadyDeletedException();
@@ -103,6 +114,6 @@ public class ManageScheduleService {
             throw new ScheduleMustHaveOneException();
         }
 
-        manageScheduleRepository.deleteById(manageScheduleId);
+        manageScheduleRepository.delete(manageSchedule);
     }
 }
