@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,6 +46,22 @@ public class ManagerScheduleController {
             .getAuthentication().getPrincipal();
 
         manageScheduleService.complete(manageArticleId, manageScheduleId, principal.getManager());
+
+        return ResponseDTO.ok();
+    }
+
+    @PatchMapping("/{manageArticleId}}/{manageScheduleId}")
+    // TODO 기존 값을 대체하는 메소드이므로 PUT로 변경 고려
+    public ResponseDTO<Void> update(
+        @PathVariable Long manageArticleId,
+        @PathVariable Long manageScheduleId,
+        @RequestBody @Valid ScheduleRequestDto request
+    ) {
+        ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+
+        manageScheduleService.update(manageArticleId, manageScheduleId, request,
+            principal.getManager());
 
         return ResponseDTO.ok();
     }

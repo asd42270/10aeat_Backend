@@ -16,6 +16,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -33,9 +34,11 @@ public class ManageSchedule {
     @Column(name = "complete")
     private boolean complete;
 
+    @Setter
     @Column(name = "schedule_start", nullable = false)
     private LocalDateTime scheduleStart;
 
+    @Setter
     @Column(name = "schedule_end")
     private LocalDateTime scheduleEnd;
 
