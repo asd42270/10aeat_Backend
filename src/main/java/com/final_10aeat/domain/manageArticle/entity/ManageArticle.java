@@ -86,4 +86,8 @@ public class ManageArticle extends SoftDeletableBaseTimeEntity {
     public void addSchedules(List<ManageSchedule> newSchedules) {
         schedules.addAll(newSchedules);
     }
+
+    public void addSchedule(ManageSchedule newSchedule) {
+        schedules.add(newSchedule);
+    }
 }
