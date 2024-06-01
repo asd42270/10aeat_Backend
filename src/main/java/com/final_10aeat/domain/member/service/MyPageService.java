@@ -1,8 +1,11 @@
 package com.final_10aeat.domain.member.service;
 
+import com.final_10aeat.domain.comment.repository.CommentRepository;
 import com.final_10aeat.domain.member.dto.request.BuildingInfoRequestDto;
 import com.final_10aeat.domain.member.dto.response.MyBuildingInfoResponseDto;
+import com.final_10aeat.domain.member.dto.response.MyCommentsResponseDto;
 import com.final_10aeat.domain.member.dto.response.MyInfoResponseDto;
+import com.final_10aeat.domain.member.dto.response.MySaveResponseDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.BuildingInfoNotAssociatedException;
@@ -15,6 +18,7 @@ import com.final_10aeat.domain.member.repository.MemberRepository;
 import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.office.exception.OfficeNotFoundException;
 import com.final_10aeat.domain.office.repository.OfficeRepository;
+import com.final_10aeat.domain.save.repository.ArticleSaveRepository;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +35,8 @@ public class MyPageService {
     private final MemberRepository memberRepository;
     private final OfficeRepository officeRepository;
     private final BuildingInfoRepository buildingInfoRepository;
+    private final CommentRepository commentRepository;
+    private final ArticleSaveRepository articleSaveRepository;
 
     public List<MyBuildingInfoResponseDto> getBuildingInfo(Member member) {
         Member loadedMember = findMemberByIdWithBuildingInfos(member.getId());
@@ -65,7 +71,7 @@ public class MyPageService {
         Office office = officeRepository.findById(defaultOfficeId)
             .orElseThrow(OfficeNotFoundException::new);
 
-        Member managedMember = findMemberById(member.getId());
+        Member managedMember = findMemberByIdWithBuildingInfos(member.getId());
 
         Set<BuildingInfo> buildingInfos = managedMember.getBuildingInfos();
         if (buildingInfos.stream().anyMatch(
@@ -90,7 +96,7 @@ public class MyPageService {
 
     @Transactional
     public void removeBuildingInfo(Member member, Long buildingInfoId) {
-        Member managedMember = findMemberById(member.getId());
+        Member managedMember = findMemberByIdWithBuildingInfos(member.getId());
 
         Set<BuildingInfo> buildingInfos = managedMember.getBuildingInfos();
         if (buildingInfos.size() <= 1) {
@@ -109,9 +115,32 @@ public class MyPageService {
         memberRepository.save(managedMember);
     }
 
-    private Member findMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
-            .orElseThrow(UserNotExistException::new);
+    public List<MyCommentsResponseDto> getMyComments(Member member) {
+        return commentRepository.findByMemberAndRepairArticleOfficeId(member,
+                member.getDefaultOffice())
+            .stream()
+            .map(comment -> new MyCommentsResponseDto(
+                comment.getRepairArticle().getId(),
+                comment.getContent(),
+                comment.getCreatedAt(),
+                comment.getMember().getName()
+            ))
+            .collect(Collectors.toList());
+    }
+
+    public List<MySaveResponseDto> getMySavedArticles(Long memberId) {
+        Member member = findMemberByIdWithBuildingInfos(memberId);
+        Long defaultOfficeId = member.getDefaultOffice();
+
+        return articleSaveRepository.findByMemberAndOffice(member, defaultOfficeId)
+            .stream()
+            .map(articleSave -> new MySaveResponseDto(
+                articleSave.getRepairArticle().getId(),
+                articleSave.getRepairArticle().getTitle(),
+                articleSave.getRepairArticle().getCreatedAt(),
+                articleSave.getRepairArticle().getManager().getName()
+            ))
+            .collect(Collectors.toList());
     }
 
     private Member findMemberByIdWithBuildingInfos(Long memberId) {

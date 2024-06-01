@@ -1,12 +1,14 @@
-package com.final_10aeat.domain.save.unit;
+package com.final_10aeat.domain.member.unit;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.final_10aeat.common.enumclass.MemberRole;
+import com.final_10aeat.domain.comment.repository.CommentRepository;
 import com.final_10aeat.domain.member.dto.request.BuildingInfoRequestDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
@@ -21,6 +23,7 @@ import com.final_10aeat.domain.member.service.MyPageService;
 import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.office.exception.OfficeNotFoundException;
 import com.final_10aeat.domain.office.repository.OfficeRepository;
+import com.final_10aeat.domain.save.repository.ArticleSaveRepository;
 import java.util.HashSet;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +42,10 @@ class MyPageServiceTest {
     private OfficeRepository officeRepository;
     @Mock
     private BuildingInfoRepository buildingInfoRepository;
+    @Mock
+    private CommentRepository commentRepository;
+    @Mock
+    private ArticleSaveRepository articleSaveRepository;
 
     @InjectMocks
     private MyPageService myPageService;
@@ -139,32 +146,34 @@ class MyPageServiceTest {
         @Test
         @DisplayName("성공적으로 건물 정보를 추가한다.")
         void _willSuccess() {
-            when(officeRepository.findById(anyLong())).thenReturn(Optional.of(office));
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
+            doReturn(Optional.of(office)).when(officeRepository).findById(anyLong());
+            doReturn(Optional.of(member)).when(memberRepository)
+                .findMemberByIdWithBuildingInfos(anyLong());
 
             assertDoesNotThrow(() -> myPageService.addBuildingInfo(member, buildingInfoRequestDto));
             verify(officeRepository).findById(anyLong());
-            verify(memberRepository).findById(anyLong());
+            verify(memberRepository).findMemberByIdWithBuildingInfos(anyLong());
         }
 
         @Test
         @DisplayName("중복된 건물 정보를 추가하려는 경우 예외를 발생시킨다.")
         void Conflict_willFail() {
-            BuildingInfo buildingInfo = BuildingInfo.builder()
-                .dong("101동")
-                .ho("202호")
+            BuildingInfo existingBuildingInfo = BuildingInfo.builder()
+                .dong(buildingInfoRequestDto.dong())
+                .ho(buildingInfoRequestDto.ho())
                 .office(office)
                 .build();
 
-            member.getBuildingInfos().add(buildingInfo);
+            member.getBuildingInfos().add(existingBuildingInfo);
 
-            when(officeRepository.findById(anyLong())).thenReturn(Optional.of(office));
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
+            doReturn(Optional.of(office)).when(officeRepository).findById(anyLong());
+            doReturn(Optional.of(member)).when(memberRepository)
+                .findMemberByIdWithBuildingInfos(anyLong());
 
             assertThrows(DuplicateBuildingInfoException.class,
                 () -> myPageService.addBuildingInfo(member, buildingInfoRequestDto));
             verify(officeRepository).findById(anyLong());
-            verify(memberRepository).findById(anyLong());
+            verify(memberRepository).findMemberByIdWithBuildingInfos(anyLong());
         }
 
         @Test
@@ -193,23 +202,26 @@ class MyPageServiceTest {
                 .build();
 
             member.getBuildingInfos().add(buildingInfo);
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
-            when(buildingInfoRepository.findById(anyLong())).thenReturn(Optional.of(buildingInfo));
 
-            assertDoesNotThrow(() -> myPageService.removeBuildingInfo(member, 2L));
-            verify(memberRepository).findById(anyLong());
+            doReturn(Optional.of(member)).when(memberRepository)
+                .findMemberByIdWithBuildingInfos(anyLong());
+            doReturn(Optional.of(buildingInfo)).when(buildingInfoRepository).findById(anyLong());
+
+            assertDoesNotThrow(() -> myPageService.removeBuildingInfo(member, buildingInfoId));
+            verify(memberRepository).findMemberByIdWithBuildingInfos(anyLong());
             verify(buildingInfoRepository).findById(anyLong());
         }
 
         @Test
         @DisplayName("삭제할 건물 정보가 존재하지 않는 경우 예외를 발생시킨다.")
         void NotFound_willFail() {
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
-            when(buildingInfoRepository.findById(anyLong())).thenReturn(Optional.empty());
+            doReturn(Optional.of(member)).when(memberRepository)
+                .findMemberByIdWithBuildingInfos(anyLong());
+            doReturn(Optional.empty()).when(buildingInfoRepository).findById(anyLong());
 
             assertThrows(BuildingInfoNotFound.class,
                 () -> myPageService.removeBuildingInfo(member, buildingInfoId));
-            verify(memberRepository).findById(anyLong());
+            verify(memberRepository).findMemberByIdWithBuildingInfos(anyLong());
             verify(buildingInfoRepository).findById(anyLong());
         }
 
@@ -226,12 +238,12 @@ class MyPageServiceTest {
             member.getBuildingInfos().clear();
             member.getBuildingInfos().add(buildingInfo1);
 
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
-            when(buildingInfoRepository.findById(anyLong())).thenReturn(Optional.of(buildingInfo1));
+            doReturn(Optional.of(member)).when(memberRepository)
+                .findMemberByIdWithBuildingInfos(anyLong());
 
             assertThrows(MinBuildingInfoRequiredException.class,
                 () -> myPageService.removeBuildingInfo(member, buildingInfo1.getId()));
-            verify(memberRepository).findById(anyLong());
+            verify(memberRepository).findMemberByIdWithBuildingInfos(anyLong());
         }
 
         @Test
@@ -244,12 +256,13 @@ class MyPageServiceTest {
                 .office(office)
                 .build();
 
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
-            when(buildingInfoRepository.findById(anyLong())).thenReturn(Optional.of(buildingInfo));
+            doReturn(Optional.of(member)).when(memberRepository)
+                .findMemberByIdWithBuildingInfos(anyLong());
+            doReturn(Optional.of(buildingInfo)).when(buildingInfoRepository).findById(anyLong());
 
             assertThrows(BuildingInfoNotAssociatedException.class,
                 () -> myPageService.removeBuildingInfo(member, buildingInfo.getId()));
-            verify(memberRepository).findById(anyLong());
+            verify(memberRepository).findMemberByIdWithBuildingInfos(anyLong());
             verify(buildingInfoRepository).findById(anyLong());
         }
     }

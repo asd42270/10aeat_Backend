@@ -2,13 +2,16 @@ package com.final_10aeat.domain.member.controller;
 
 import com.final_10aeat.domain.member.dto.request.BuildingInfoRequestDto;
 import com.final_10aeat.domain.member.dto.response.MyBuildingInfoResponseDto;
+import com.final_10aeat.domain.member.dto.response.MyCommentsResponseDto;
 import com.final_10aeat.domain.member.dto.response.MyInfoResponseDto;
+import com.final_10aeat.domain.member.dto.response.MySaveResponseDto;
 import com.final_10aeat.domain.member.service.MyPageService;
 import com.final_10aeat.global.security.principal.MemberPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,33 +31,52 @@ public class MyPageController {
     private final MyPageService myPageService;
 
     @GetMapping("/building/units")
-    public ResponseDTO<List<MyBuildingInfoResponseDto>> getBuildingInfo() {
+    public ResponseEntity<ResponseDTO<List<MyBuildingInfoResponseDto>>> getBuildingInfo() {
         MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
-        return ResponseDTO.okWithData(myPageService.getBuildingInfo(principal.getMember()));
+        return ResponseEntity.ok(
+            ResponseDTO.okWithData(myPageService.getBuildingInfo(principal.getMember())));
     }
 
     @GetMapping("/info")
-    public ResponseDTO<MyInfoResponseDto> getMyInfo() {
+    public ResponseEntity<ResponseDTO<MyInfoResponseDto>> getMyInfo() {
         MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
         MyInfoResponseDto myInfo = myPageService.getMyInfo(principal.getMember());
-        return ResponseDTO.okWithData(myInfo);
+        return ResponseEntity.ok(ResponseDTO.okWithData(myInfo));
     }
 
     @PostMapping("/building/units")
-    public ResponseDTO<Void> addBuildingInfo(@RequestBody @Valid BuildingInfoRequestDto requestDto) {
+    public ResponseEntity<ResponseDTO<Void>> addBuildingInfo(
+        @RequestBody @Valid BuildingInfoRequestDto requestDto) {
         MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
         myPageService.addBuildingInfo(principal.getMember(), requestDto);
-        return ResponseDTO.ok();
+        return ResponseEntity.ok(ResponseDTO.ok());
     }
 
     @DeleteMapping("/building/units/{buildingInfoId}")
-    public ResponseDTO<Void> removeBuildingInfo(@PathVariable Long buildingInfoId) {
+    public ResponseEntity<ResponseDTO<Void>> removeBuildingInfo(@PathVariable Long buildingInfoId) {
         MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
         myPageService.removeBuildingInfo(principal.getMember(), buildingInfoId);
-        return ResponseDTO.ok();
+        return ResponseEntity.ok(ResponseDTO.ok());
+    }
+
+    @GetMapping("/comments")
+    public ResponseEntity<ResponseDTO<List<MyCommentsResponseDto>>> getMyComments() {
+        MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+        List<MyCommentsResponseDto> comments = myPageService.getMyComments(principal.getMember());
+        return ResponseEntity.ok(ResponseDTO.okWithData(comments));
+    }
+
+    @GetMapping("/saved-articles")
+    public ResponseEntity<ResponseDTO<List<MySaveResponseDto>>> getMySavedArticles() {
+        MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+        List<MySaveResponseDto> savedArticles = myPageService.getMySavedArticles(
+            principal.getMember().getId());
+        return ResponseEntity.ok(ResponseDTO.okWithData(savedArticles));
     }
 }

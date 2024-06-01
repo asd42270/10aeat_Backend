@@ -1,6 +1,7 @@
 package com.final_10aeat.domain.save.service;
 
 import com.final_10aeat.common.exception.ArticleNotFoundException;
+import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.MemberRepository;
@@ -11,6 +12,7 @@ import com.final_10aeat.domain.save.exception.ArticleAlreadyLikedException;
 import com.final_10aeat.domain.save.exception.ArticleNotLikedException;
 import com.final_10aeat.domain.save.repository.ArticleSaveRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,10 @@ public class ArticleSaveService {
     public void saveArticle(Long repairArticleId, Long memberId) {
         RepairArticle repairArticle = getRepairArticle(repairArticleId);
         Member member = getMember(memberId);
+
+        if (!repairArticle.getOffice().getId().equals(member.getDefaultOffice())) {
+            throw new UnauthorizedAccessException();
+        }
 
         if (articleSaveRepository.existsByRepairArticleAndMember(repairArticle, member)) {
             throw new ArticleAlreadyLikedException();

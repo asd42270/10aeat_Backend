@@ -21,4 +21,8 @@ public interface ArticleSaveRepository extends JpaRepository<ArticleSave, Long> 
     @Query("SELECT a.repairArticle.id FROM ArticleSave a WHERE a.member.id = :memberId AND a.repairArticle.id IN :articleIds")
     Set<Long> findSavedArticleIdsByMember(@Param("memberId") Long memberId,
         @Param("articleIds") List<Long> articleIds);
+
+    @Query("SELECT a FROM ArticleSave a WHERE a.member = :member AND a.repairArticle.office.id = :officeId")
+    List<ArticleSave> findByMemberAndOffice(@Param("member") Member member,
+        @Param("officeId") Long officeId);
 }
