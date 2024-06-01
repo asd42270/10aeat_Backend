@@ -28,10 +28,8 @@ public class MyPageController {
 
     @GetMapping("/building/units")
     public ResponseDTO<List<MyBuildingInfoResponseDto>> getBuildingInfo() {
-
         MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
-
         return ResponseDTO.okWithData(myPageService.getBuildingInfo(principal.getMember()));
     }
 
