@@ -1,4 +1,4 @@
-package com.final_10aeat.domain.save.unit;
+package com.final_10aeat.domain.member.unit;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
