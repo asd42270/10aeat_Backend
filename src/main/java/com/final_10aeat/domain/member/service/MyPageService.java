@@ -32,8 +32,7 @@ public class MyPageService {
     private final BuildingInfoRepository buildingInfoRepository;
 
     public List<MyBuildingInfoResponseDto> getBuildingInfo(Member member) {
-        Member loadedMember = memberRepository.findMemberByIdWithBuildingInfos(member.getId())
-            .orElseThrow(UserNotExistException::new);
+        Member loadedMember = findMemberByIdWithBuildingInfos(member.getId());
         Set<BuildingInfo> buildingInfos = loadedMember.getBuildingInfos();
 
         return buildingInfos.stream()
@@ -43,24 +42,14 @@ public class MyPageService {
             .toList();
     }
 
-    private MyBuildingInfoResponseDto toInfoDto(BuildingInfo buildingInfo) {
-        return MyBuildingInfoResponseDto.builder()
-            .officeName(buildingInfo.getOffice().getOfficeName())
-            .buildingInfoId(buildingInfo.getId())
-            .dong(buildingInfo.getDong())
-            .ho(buildingInfo.getHo())
-            .build();
-    }
-
     public MyInfoResponseDto getMyInfo(Member member) {
-        String officeName = officeRepository.findById(member.getDefaultOffice())
-            .map(Office::getOfficeName)
-            .orElse("Unknown Office");
+        Office office = officeRepository.findById(member.getDefaultOffice())
+            .orElseThrow(OfficeNotFoundException::new);
 
         return new MyInfoResponseDto(
             member.getName(),
             member.getRole().name(),
-            officeName
+            office.getOfficeName()
         );
     }
 
@@ -74,8 +63,7 @@ public class MyPageService {
         Office office = officeRepository.findById(defaultOfficeId)
             .orElseThrow(OfficeNotFoundException::new);
 
-        Member managedMember = memberRepository.findById(member.getId())
-            .orElseThrow(UserNotExistException::new);
+        Member managedMember = findMemberById(member.getId());
 
         Set<BuildingInfo> buildingInfos = managedMember.getBuildingInfos();
         if (buildingInfos.stream().anyMatch(
@@ -100,8 +88,7 @@ public class MyPageService {
 
     @Transactional
     public void removeBuildingInfo(Member member, Long buildingInfoId) {
-        Member managedMember = memberRepository.findById(member.getId())
-            .orElseThrow(UserNotExistException::new);
+        Member managedMember = findMemberById(member.getId());
 
         Set<BuildingInfo> buildingInfos = managedMember.getBuildingInfos();
         if (buildingInfos.size() <= 1) {
@@ -118,5 +105,24 @@ public class MyPageService {
         buildingInfos.remove(buildingInfoToRemove);
         managedMember.setBuildingInfos(buildingInfos);
         memberRepository.save(managedMember);
+    }
+
+    private Member findMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+            .orElseThrow(UserNotExistException::new);
+    }
+
+    private Member findMemberByIdWithBuildingInfos(Long memberId) {
+        return memberRepository.findMemberByIdWithBuildingInfos(memberId)
+            .orElseThrow(UserNotExistException::new);
+    }
+
+    private MyBuildingInfoResponseDto toInfoDto(BuildingInfo buildingInfo) {
+        return MyBuildingInfoResponseDto.builder()
+            .officeName(buildingInfo.getOffice().getOfficeName())
+            .buildingInfoId(buildingInfo.getId())
+            .dong(buildingInfo.getDong())
+            .ho(buildingInfo.getHo())
+            .build();
     }
 }
