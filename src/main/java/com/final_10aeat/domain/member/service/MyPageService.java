@@ -1,7 +1,9 @@
 package com.final_10aeat.domain.member.service;
 
+import com.final_10aeat.domain.comment.repository.CommentRepository;
 import com.final_10aeat.domain.member.dto.request.BuildingInfoRequestDto;
 import com.final_10aeat.domain.member.dto.response.MyBuildingInfoResponseDto;
+import com.final_10aeat.domain.member.dto.response.MyCommentsResponseDto;
 import com.final_10aeat.domain.member.dto.response.MyInfoResponseDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
@@ -31,6 +33,7 @@ public class MyPageService {
     private final MemberRepository memberRepository;
     private final OfficeRepository officeRepository;
     private final BuildingInfoRepository buildingInfoRepository;
+    private final CommentRepository commentRepository;
 
     public List<MyBuildingInfoResponseDto> getBuildingInfo(Member member) {
         Member loadedMember = findMemberByIdWithBuildingInfos(member.getId());
@@ -107,6 +110,19 @@ public class MyPageService {
         buildingInfos.remove(buildingInfoToRemove);
         managedMember.setBuildingInfos(buildingInfos);
         memberRepository.save(managedMember);
+    }
+
+    public List<MyCommentsResponseDto> getMyComments(Member member) {
+        return commentRepository.findByMemberAndRepairArticleOfficeId(member,
+                member.getDefaultOffice())
+            .stream()
+            .map(comment -> new MyCommentsResponseDto(
+                comment.getRepairArticle().getId(),
+                comment.getContent(),
+                comment.getUpdatedAt(),
+                comment.getMember().getName()
+            ))
+            .collect(Collectors.toList());
     }
 
     private Member findMemberById(Long memberId) {

@@ -2,6 +2,7 @@ package com.final_10aeat.domain.member.controller;
 
 import com.final_10aeat.domain.member.dto.request.BuildingInfoRequestDto;
 import com.final_10aeat.domain.member.dto.response.MyBuildingInfoResponseDto;
+import com.final_10aeat.domain.member.dto.response.MyCommentsResponseDto;
 import com.final_10aeat.domain.member.dto.response.MyInfoResponseDto;
 import com.final_10aeat.domain.member.service.MyPageService;
 import com.final_10aeat.global.security.principal.MemberPrincipal;
@@ -43,7 +44,8 @@ public class MyPageController {
     }
 
     @PostMapping("/building/units")
-    public ResponseDTO<Void> addBuildingInfo(@RequestBody @Valid BuildingInfoRequestDto requestDto) {
+    public ResponseDTO<Void> addBuildingInfo(
+        @RequestBody @Valid BuildingInfoRequestDto requestDto) {
         MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
         myPageService.addBuildingInfo(principal.getMember(), requestDto);
@@ -56,5 +58,13 @@ public class MyPageController {
             .getAuthentication().getPrincipal();
         myPageService.removeBuildingInfo(principal.getMember(), buildingInfoId);
         return ResponseDTO.ok();
+    }
+
+    @GetMapping("/comments")
+    public ResponseDTO<List<MyCommentsResponseDto>> getMyComments() {
+        MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+        List<MyCommentsResponseDto> comments = myPageService.getMyComments(principal.getMember());
+        return ResponseDTO.okWithData(comments);
     }
 }
