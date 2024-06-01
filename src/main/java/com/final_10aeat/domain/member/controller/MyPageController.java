@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/members/building-info")
+@RequestMapping("/my")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('USER')")
 public class MyPageController {
 
     private final MyPageService buildingInfoService;
 
-    @GetMapping()
+    @GetMapping("/building/units")
     public ResponseDTO<List<MyBuildingInfoResponseDto>> getBuildingInfo() {
 
         MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
