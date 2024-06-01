@@ -6,6 +6,7 @@ import com.final_10aeat.domain.member.dto.response.MyInfoResponseDto;
 import com.final_10aeat.domain.member.service.MyPageService;
 import com.final_10aeat.global.security.principal.MemberPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,7 +43,7 @@ public class MyPageController {
     }
 
     @PostMapping("/building/units")
-    public ResponseDTO<Void> addBuildingInfo(@RequestBody BuildingInfoRequestDto requestDto) {
+    public ResponseDTO<Void> addBuildingInfo(@RequestBody @Valid BuildingInfoRequestDto requestDto) {
         MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
         myPageService.addBuildingInfo(principal.getMember(), requestDto);
