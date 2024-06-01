@@ -49,10 +49,16 @@ public class CommentService {
             Manager manager = managerRepository.findById(userId)
                 .orElseThrow(ManagerNotFoundException::new);
             commentBuilder.manager(manager);
+            if (!repairArticle.getOffice().getId().equals(manager.getOffice().getId())) {
+                throw new UnauthorizedAccessException();
+            }
         } else {
             Member member = memberRepository.findById(userId)
                 .orElseThrow(UserNotExistException::new);
             commentBuilder.member(member);
+            if (!repairArticle.getOffice().getId().equals(member.getDefaultOffice())) {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         Comment parentComment = getParentComment(request.parentCommentId());
@@ -116,7 +122,7 @@ public class CommentService {
             .map(comment -> new CommentResponseDto(
                 comment.getId(),
                 comment.getContent(),
-                comment.getUpdatedAt(),
+                comment.getCreatedAt(),
                 comment.getParentComment(),
                 comment.getManager() != null,
                 comment.getManager() != null ? comment.getManager().getName()
