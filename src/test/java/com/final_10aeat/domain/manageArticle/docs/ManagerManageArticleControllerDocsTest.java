@@ -48,7 +48,7 @@ public class ManagerManageArticleControllerDocsTest extends RestDocsSupport {
         CreateManageArticleRequestDto request = new CreateManageArticleRequestDto(
             ManagePeriod.WEEK,
             1,
-            "유지관리 게시글 제목",
+            "법정점검 게시글 제목",
             "법적 근거",
             "관리 대상",
             "담당자/수리업체",
@@ -69,14 +69,14 @@ public class ManagerManageArticleControllerDocsTest extends RestDocsSupport {
                         .description(
                             "WEEK, MONTH, HALF_YEAR, YEAR, TWO_YEAR, THREE_YEA FOUR_YEAR, FIVE_YEAR, ETC"),
                     fieldWithPath("periodCount").description("횟수"),
-                    fieldWithPath("title").description("유지관리 제목"),
+                    fieldWithPath("title").description("법정점검 게시글 제목"),
                     fieldWithPath("legalBasis").description("법적 근거").optional(),
                     fieldWithPath("target").description("관리 대상").optional(),
                     fieldWithPath("responsibility").description("담당 업체").optional(),
                     fieldWithPath("note").description("비고").optional(),
-                    fieldWithPath("schedule[].scheduleStart").description("유지관리 시작 일시.")
+                    fieldWithPath("schedule[].scheduleStart").description("법정점검 시작 일시.")
                         .type("LocalDateTime"),
-                    fieldWithPath("schedule[].scheduleEnd").description("유지관리 종료 일시 (선택 사항).")
+                    fieldWithPath("schedule[].scheduleEnd").description("법정점검 종료 일시 (선택 사항).")
                         .type("LocalDateTime").optional()
                 ),
                 responseFields(
@@ -93,7 +93,7 @@ public class ManagerManageArticleControllerDocsTest extends RestDocsSupport {
         UpdateManageArticleRequestDto request = new UpdateManageArticleRequestDto(
             ManagePeriod.WEEK,
             1,
-            "유지관리 게시글 제목",
+            "법정점검 게시글 제목",
             "법적 근거",
             "관리 대상",
             "담당자/수리업체",
@@ -115,14 +115,14 @@ public class ManagerManageArticleControllerDocsTest extends RestDocsSupport {
                             "WEEK, MONTH, HALF_YEAR, YEAR, TWO_YEAR, THREE_YEA FOUR_YEAR, FIVE_YEAR, ETC")
                         .optional(),
                     fieldWithPath("periodCount").description("횟수").optional(),
-                    fieldWithPath("title").description("유지관리 제목").optional(),
+                    fieldWithPath("title").description("법정점검 제목").optional(),
                     fieldWithPath("legalBasis").description("법적 근거").optional(),
                     fieldWithPath("target").description("관리 대상").optional(),
                     fieldWithPath("responsibility").description("담당 업체").optional(),
                     fieldWithPath("note").description("비고").optional()
                 ),
                 pathParameters(
-                    parameterWithName("manageArticleId").description("유지관리 게시글 ID")
+                    parameterWithName("manageArticleId").description("법정점검 게시글 ID")
                 ),
                 responseFields(
                     fieldWithPath("code").description("응답 상태 코드")

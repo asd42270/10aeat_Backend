@@ -8,9 +8,9 @@
 === link:../index.html[시작 페이지로 돌아가기]
 
 [[Create-Manage-Article]]
-== 유지관리 게시글 생성
+== 법정점검 게시글 생성
 
-유지관리 게시글을 생성하는 API 입니다.
+법정점검 게시글을 생성하는 API 입니다.
 
 === HttpRequest
 
@@ -22,10 +22,10 @@ include::{snippets}/create-manage-article/request-fields.adoc[]
 include::{snippets}/create-manage-article/http-response.adoc[]
 include::{snippets}/create-manage-article/response-fields.adoc[]
 
-[[Update-Repair-Article]]
-== 유지관리 게시글 수정
+[[Update-Manage-Article]]
+== 법정점검 게시글 수정
 
-유지관리 게시글을 수정하는 API 입니다.
+법정점검 게시글을 수정하는 API 입니다.
 
 * PATCH 요청이므로, request body의 일부만 제공되어도 수정이 가능합니다.
 * 수정을 원하지 않는 값은 null로 보내주시면 됩니다.
@@ -42,10 +42,10 @@ include::{snippets}/update-manage-article/request-fields.adoc[]
 include::{snippets}/update-manage-article/http-response.adoc[]
 include::{snippets}/update-manage-article/response-fields.adoc[]
 
-[[Delete-Repair-Article]]
-== 유지관리 게시글 삭제
+[[Delete-Manage-Article]]
+== 법정점검 게시글 삭제
 
-유지관리 게시글을 삭제하는 API 입니다.
+법정점검 게시글을 삭제하는 API 입니다.
 
 === HttpRequest
 
