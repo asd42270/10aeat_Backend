@@ -1,0 +1,72 @@
+= Manage Schedule REST API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+=== link:../index.html[시작 페이지로 돌아가기]
+
+[[Create-Schedule]]
+== 법정점검 일정 생성
+
+유지관리 게시글을 생성하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/create-schedule/http-request.adoc[]
+include::{snippets}/create-schedule/request-fields.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/create-schedule/http-response.adoc[]
+include::{snippets}/create-schedule/response-fields.adoc[]
+
+[[Complete-Schedule]]
+== 법정점검 일정 완료 처리
+
+법정점검 일정을 완료 처리하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/complete-schedule/http-request.adoc[]
+include::{snippets}/complete-schedule/path-parameters.adoc[]
+
+
+=== HttpResponse
+
+include::{snippets}/complete-schedule/http-response.adoc[]
+include::{snippets}/complete-schedule/response-fields.adoc[]
+
+[[Update-Schedule]]
+== 법정점검 일정 변경
+
+법정점검 일정을 변경하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/update-schedule/http-request.adoc[]
+include::{snippets}/update-schedule/path-parameters.adoc[]
+include::{snippets}/update-schedule/request-fields.adoc[]
+
+
+=== HttpResponse
+
+include::{snippets}/update-manage-article/http-response.adoc[]
+include::{snippets}/update-manage-article/response-fields.adoc[]
+
+[[Delete-Repair-Article]]
+== 유지관리 게시글 삭제
+
+유지관리 게시글을 삭제하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/delete-schedule/http-request.adoc[]
+include::{snippets}/delete-schedule/path-parameters.adoc[]
+
+
+=== HttpResponse
+
+include::{snippets}/delete-schedule/http-response.adoc[]
+include::{snippets}/delete-schedule/response-fields.adoc[]
