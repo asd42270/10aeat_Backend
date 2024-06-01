@@ -7,6 +7,7 @@ import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.BuildingInfoNotAssociatedException;
 import com.final_10aeat.domain.member.exception.BuildingInfoNotFound;
+import com.final_10aeat.domain.member.exception.DuplicateBuildingInfoException;
 import com.final_10aeat.domain.member.exception.MinBuildingInfoRequiredException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;
@@ -15,7 +16,6 @@ import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.office.exception.OfficeNotFoundException;
 import com.final_10aeat.domain.office.repository.OfficeRepository;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -74,6 +74,16 @@ public class MyPageService {
         Office office = officeRepository.findById(defaultOfficeId)
             .orElseThrow(OfficeNotFoundException::new);
 
+        Member managedMember = memberRepository.findById(member.getId())
+            .orElseThrow(UserNotExistException::new);
+
+        Set<BuildingInfo> buildingInfos = managedMember.getBuildingInfos();
+        if (buildingInfos.stream().anyMatch(
+            info -> info.getDong().equals(requestDto.dong()) && info.getHo()
+                .equals(requestDto.ho()))) {
+            throw new DuplicateBuildingInfoException();
+        }
+
         BuildingInfo buildingInfo = BuildingInfo.builder()
             .dong(requestDto.dong())
             .ho(requestDto.ho())
@@ -82,13 +92,6 @@ public class MyPageService {
 
         buildingInfoRepository.save(buildingInfo);
 
-        Member managedMember = memberRepository.findById(member.getId())
-            .orElseThrow(UserNotExistException::new);
-
-        Set<BuildingInfo> buildingInfos = managedMember.getBuildingInfos();
-        if (buildingInfos == null) {
-            buildingInfos = new HashSet<>();
-        }
         buildingInfos.add(buildingInfo);
 
         managedMember.setBuildingInfos(buildingInfos);
