@@ -32,7 +32,7 @@ public class ManagerManageArticleService {
         ManageArticle article = createArticle(request, manager.getOffice());
 
         List<ManageSchedule> scheduleList = request.schedule().stream()
-            .map(ScheduleConverter::toSchedule).toList();
+            .map(requestDto -> ScheduleConverter.toSchedule(requestDto, article)).toList();
 
         article.addSchedules(scheduleList);
 
