@@ -86,11 +86,11 @@ class MyPageServiceTest {
 
     @Nested
     @DisplayName("getBuildingInfo()는")
-    class GetBuildingInfo {
+    class Context_GetBuildingInfo {
 
         @Test
         @DisplayName("성공적으로 건물 정보를 조회한다.")
-        void willSuccess() {
+        void _willSuccess() {
             when(memberRepository.findMemberByIdWithBuildingInfos(anyLong())).thenReturn(
                 Optional.of(member));
 
@@ -111,11 +111,11 @@ class MyPageServiceTest {
 
     @Nested
     @DisplayName("getMyInfo()는")
-    class GetMyInfo {
+    class Context_GetMyInfo {
 
         @Test
         @DisplayName("성공적으로 사용자의 정보를 조회한다.")
-        void willSuccess() {
+        void _willSuccess() {
             when(officeRepository.findById(anyLong())).thenReturn(Optional.of(office));
 
             assertDoesNotThrow(() -> myPageService.getMyInfo(member));
@@ -124,7 +124,7 @@ class MyPageServiceTest {
 
         @Test
         @DisplayName("사무소가 존재하지 않는 경우 예외를 발생시킨다.")
-        void OfficeNotFound_willFail() {
+        void NotFound_willFail() {
             when(officeRepository.findById(anyLong())).thenReturn(Optional.empty());
 
             assertThrows(OfficeNotFoundException.class, () -> myPageService.getMyInfo(member));
@@ -134,11 +134,11 @@ class MyPageServiceTest {
 
     @Nested
     @DisplayName("addBuildingInfo()는")
-    class AddBuildingInfo {
+    class Context_AddBuildingInfo {
 
         @Test
         @DisplayName("성공적으로 건물 정보를 추가한다.")
-        void willSuccess() {
+        void _willSuccess() {
             when(officeRepository.findById(anyLong())).thenReturn(Optional.of(office));
             when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
 
@@ -149,7 +149,7 @@ class MyPageServiceTest {
 
         @Test
         @DisplayName("중복된 건물 정보를 추가하려는 경우 예외를 발생시킨다.")
-        void DuplicateBuildingInfo_willFail() {
+        void Conflict_willFail() {
             BuildingInfo buildingInfo = BuildingInfo.builder()
                 .dong("101동")
                 .ho("202호")
@@ -180,11 +180,11 @@ class MyPageServiceTest {
 
     @Nested
     @DisplayName("removeBuildingInfo()는")
-    class RemoveBuildingInfo {
+    class Context_RemoveBuildingInfo {
 
         @Test
         @DisplayName("성공적으로 건물 정보를 삭제한다.")
-        void willSuccess() {
+        void _willSuccess() {
             BuildingInfo buildingInfo = BuildingInfo.builder()
                 .id(buildingInfoId)
                 .dong("101동")
@@ -215,7 +215,7 @@ class MyPageServiceTest {
 
         @Test
         @DisplayName("사용자가 적어도 하나의 건물 정보를 가지고 있어야 하는 경우 예외를 발생시킨다.")
-        void MinBuildingInfoRequired_willFail() {
+        void MinBadRequest_willFail() {
             BuildingInfo buildingInfo1 = BuildingInfo.builder()
                 .id(1L)
                 .dong("101동")
@@ -236,7 +236,7 @@ class MyPageServiceTest {
 
         @Test
         @DisplayName("삭제할 건물 정보가 사용자의 건물 정보에 포함되지 않는 경우 예외를 발생시킨다.")
-        void BuildingInfoNotAssociated_willFail() {
+        void BadRequest_willFail() {
             BuildingInfo buildingInfo = BuildingInfo.builder()
                 .id(1L)
                 .dong("101동")
