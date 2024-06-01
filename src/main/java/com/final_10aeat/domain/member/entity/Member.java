@@ -38,7 +38,12 @@ public class Member extends SoftDeletableBaseTimeEntity {
     @Column(name = "term_agreed")
     private Boolean termAgreed;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(
+        name = "member_building",
+        joinColumns = @JoinColumn(name = "member_id"),
+        inverseJoinColumns = @JoinColumn(name = "building_info_id")
+    )
     private Set<BuildingInfo> buildingInfos;
 
     @ManyToMany
