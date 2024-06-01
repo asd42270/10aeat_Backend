@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public record MyCommentsResponseDto(
     Long articleId,
     String content,
-    LocalDateTime updatedAt,
+    LocalDateTime createdAt,
     String writer
 ) {
 

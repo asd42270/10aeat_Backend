@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public record CommentResponseDto(
     Long id,
     String content,
-    LocalDateTime updatedAt,
+    LocalDateTime createdAt,
     Long parentCommentId,
     boolean isManager,
     String writer

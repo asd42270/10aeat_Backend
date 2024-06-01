@@ -119,7 +119,7 @@ public class MyPageService {
             .map(comment -> new MyCommentsResponseDto(
                 comment.getRepairArticle().getId(),
                 comment.getContent(),
-                comment.getUpdatedAt(),
+                comment.getCreatedAt(),
                 comment.getMember().getName()
             ))
             .collect(Collectors.toList());
