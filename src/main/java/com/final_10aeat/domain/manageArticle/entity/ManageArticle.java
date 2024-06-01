@@ -94,4 +94,40 @@ public class ManageArticle extends SoftDeletableBaseTimeEntity {
     public void deleteSchedule(ManageSchedule manageSchedule) {
         schedules.remove(manageSchedule);
     }
+
+    public void checkSchedules() {
+        if (schedules.stream().allMatch(ManageSchedule::isComplete)) {
+            progress = Progress.COMPLETE;
+        } else if (schedules.stream().noneMatch(ManageSchedule::isComplete)) {
+            progress = Progress.PENDING;
+        } else {
+            progress = Progress.INPROGRESS;
+        }
+/*
+        //성능은 좋아지나 가독성이 나빠 주석 처리
+        boolean allComplete = true;
+        boolean anyComplete = false;
+
+        for (ManageSchedule schedule : schedules) {
+            if (schedule.isComplete()) {
+                anyComplete = true;
+            } else {
+                allComplete = false;
+            }
+
+            if (anyComplete && !allComplete) {
+                progress = Progress.INPROGRESS;
+                return;
+            }
+        }
+
+        // 전체 스케줄 검사 후 상태 결정
+        if (allComplete) {
+            progress = Progress.COMPLETE;
+        }
+        if (!anyComplete) {
+            progress = Progress.PENDING;
+        }
+ */
+    }
 }

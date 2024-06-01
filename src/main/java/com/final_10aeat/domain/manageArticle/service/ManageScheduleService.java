@@ -12,6 +12,7 @@ import com.final_10aeat.domain.manageArticle.repository.ManageScheduleRepository
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.repairArticle.exception.ArticleAlreadyDeletedException;
 import com.final_10aeat.domain.repairArticle.exception.ArticleNotFoundException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,8 @@ public class ManageScheduleService {
         article.addSchedule(
             ScheduleConverter.toSchedule(request, article)
         );
+
+        article.checkSchedules();
     }
 
     public void complete(Long manageScheduleId, Manager manager) {
@@ -46,8 +49,8 @@ public class ManageScheduleService {
             findById(manageScheduleId)
             .orElseThrow(ScheduleNotFoundException::new);
 
-        ManageArticle article = manageSchedule.getManageArticle();
-        //Todo article이 null일 수 있는지 확인
+        ManageArticle article = Optional.ofNullable(manageSchedule.getManageArticle())
+            .orElseThrow(ArticleNotFoundException::new);
 
         if (article.isDeleted()) {
             throw new ArticleAlreadyDeletedException();
@@ -58,17 +61,20 @@ public class ManageScheduleService {
         }
 
         manageSchedule.complete();
+
+        article.checkSchedules();
     }
 
     public void update(
         Long manageScheduleId, ScheduleRequestDto request, Manager manager
     ) {
+
         ManageSchedule manageSchedule = manageScheduleRepository.
             findById(manageScheduleId)
             .orElseThrow(ScheduleNotFoundException::new);
 
-        ManageArticle article = manageSchedule.getManageArticle();
-        //Todo article이 null일 수 있는지 확인
+        ManageArticle article = Optional.ofNullable(manageSchedule.getManageArticle())
+            .orElseThrow(ArticleNotFoundException::new);
 
         if (article.isDeleted()) {
             throw new ArticleAlreadyDeletedException();
@@ -87,6 +93,8 @@ public class ManageScheduleService {
         }
 
         updateSchedule(manageSchedule, request);
+
+        article.checkSchedules();
     }
 
     private void updateSchedule(ManageSchedule manageSchedule, ScheduleRequestDto request) {
@@ -109,12 +117,14 @@ public class ManageScheduleService {
             throw new UnauthorizedAccessException();
         }
 
-        if(article.getSchedules().size()==1){
+        if (article.getSchedules().size() == 1) {
             throw new ScheduleMustHaveOneException();
         }
 
         article.deleteSchedule(manageSchedule);
 
         manageScheduleRepository.deleteById(manageSchedule.getId());
+
+        article.checkSchedules();
     }
 }
