@@ -1,8 +1,8 @@
 package com.final_10aeat.domain.member.controller;
 
 
-import com.final_10aeat.domain.member.dto.response.BuildingInfoResponseDto;
-import com.final_10aeat.domain.member.service.BuildingInfoService;
+import com.final_10aeat.domain.member.dto.response.MyBuildingInfoResponseDto;
+import com.final_10aeat.domain.member.service.MyPageService;
 import com.final_10aeat.global.security.principal.MemberPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +18,12 @@ import java.util.List;
 @RequestMapping("/members/building-info")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('USER')")
-public class BuildingInfoController {
+public class MyPageController {
 
-    private final BuildingInfoService buildingInfoService;
+    private final MyPageService buildingInfoService;
 
     @GetMapping()
-    public ResponseDTO<List<BuildingInfoResponseDto>> getBuildingInfo() {
+    public ResponseDTO<List<MyBuildingInfoResponseDto>> getBuildingInfo() {
 
         MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();

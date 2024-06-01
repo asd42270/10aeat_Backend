@@ -1,6 +1,6 @@
 package com.final_10aeat.domain.member.service;
 
-import com.final_10aeat.domain.member.dto.response.BuildingInfoResponseDto;
+import com.final_10aeat.domain.member.dto.response.MyBuildingInfoResponseDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
@@ -15,13 +15,13 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class BuildingInfoService {
+public class MyPageService {
 
 
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
-    public List<BuildingInfoResponseDto> getBuildingInfo(Member member) {
+    public List<MyBuildingInfoResponseDto> getBuildingInfo(Member member) {
 
         Member loadedMember = memberRepository.findByIdWithBuildingInfos(member.getId())
                 .orElseThrow(UserNotExistException::new);
@@ -34,8 +34,8 @@ public class BuildingInfoService {
                 .toList();
     }
 
-    private BuildingInfoResponseDto toInfoDto(BuildingInfo buildingInfo) {
-        return BuildingInfoResponseDto.builder()
+    private MyBuildingInfoResponseDto toInfoDto(BuildingInfo buildingInfo) {
+        return MyBuildingInfoResponseDto.builder()
                 .officeName(buildingInfo.getOffice().getOfficeName())
                 .buildingInfoId(buildingInfo.getId())
                 .dong(buildingInfo.getDong())
