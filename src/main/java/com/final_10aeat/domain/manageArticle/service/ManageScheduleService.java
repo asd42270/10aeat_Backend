@@ -37,7 +37,7 @@ public class ManageScheduleService {
         }
 
         article.addSchedule(
-            ScheduleConverter.toSchedule(request)
+            ScheduleConverter.toSchedule(request, article)
         );
     }
 
@@ -100,7 +100,6 @@ public class ManageScheduleService {
             .orElseThrow(ScheduleNotFoundException::new);
 
         ManageArticle article = manageSchedule.getManageArticle();
-        //Todo article이 null일 수 있는지 확인
 
         if (article.isDeleted()) {
             throw new ArticleAlreadyDeletedException();
@@ -114,6 +113,8 @@ public class ManageScheduleService {
             throw new ScheduleMustHaveOneException();
         }
 
-        manageScheduleRepository.delete(manageSchedule);
+        article.deleteSchedule(manageSchedule);
+
+        manageScheduleRepository.deleteById(manageSchedule.getId());
     }
 }
