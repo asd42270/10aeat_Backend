@@ -27,6 +27,11 @@ public enum ErrorCode {
     // OFFICE
     OFFICE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 건물입니다."),
 
+    // BUILDING_INFO
+    BUILDING_INFO_MINIMUM_ONE_REQUIRED(HttpStatus.BAD_REQUEST, "회원은 최소 하나 이상의 건물 정보를 가져야 합니다."),
+    BUILDING_INFO_NOT_FOUND(HttpStatus.NOT_FOUND, "건물 정보를 찾을 수 없습니다."),
+    BUILDING_INFO_NOT_ASSOCIATED_WITH_MEMBER(HttpStatus.BAD_REQUEST, "건물 정보가 회원과 연관되어 있지 않습니다."),
+
     // USER
     USER_NOT_EXIST(HttpStatus.BAD_REQUEST, "존재하지 않는 사용자입니다."),
 

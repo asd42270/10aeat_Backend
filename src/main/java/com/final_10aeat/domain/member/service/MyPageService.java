@@ -5,6 +5,9 @@ import com.final_10aeat.domain.member.dto.response.MyBuildingInfoResponseDto;
 import com.final_10aeat.domain.member.dto.response.MyInfoResponseDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
+import com.final_10aeat.domain.member.exception.BuildingInfoNotAssociatedException;
+import com.final_10aeat.domain.member.exception.BuildingInfoNotFound;
+import com.final_10aeat.domain.member.exception.MinBuildingInfoRequiredException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;
 import com.final_10aeat.domain.member.repository.MemberRepository;
@@ -88,6 +91,28 @@ public class MyPageService {
         }
         buildingInfos.add(buildingInfo);
 
+        managedMember.setBuildingInfos(buildingInfos);
+        memberRepository.save(managedMember);
+    }
+
+    @Transactional
+    public void removeBuildingInfo(Member member, Long buildingInfoId) {
+        Member managedMember = memberRepository.findById(member.getId())
+            .orElseThrow(UserNotExistException::new);
+
+        Set<BuildingInfo> buildingInfos = managedMember.getBuildingInfos();
+        if (buildingInfos.size() <= 1) {
+            throw new MinBuildingInfoRequiredException();
+        }
+
+        BuildingInfo buildingInfoToRemove = buildingInfoRepository.findById(buildingInfoId)
+            .orElseThrow(BuildingInfoNotFound::new);
+
+        if (!buildingInfos.contains(buildingInfoToRemove)) {
+            throw new BuildingInfoNotAssociatedException();
+        }
+
+        buildingInfos.remove(buildingInfoToRemove);
         managedMember.setBuildingInfos(buildingInfos);
         memberRepository.save(managedMember);
     }
