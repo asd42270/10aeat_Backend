@@ -1,5 +1,6 @@
 package com.final_10aeat.domain.member.controller;
 
+import com.final_10aeat.domain.member.dto.request.BuildingInfoRequestDto;
 import com.final_10aeat.domain.member.dto.response.MyBuildingInfoResponseDto;
 import com.final_10aeat.domain.member.dto.response.MyInfoResponseDto;
 import com.final_10aeat.domain.member.service.MyPageService;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,5 +39,13 @@ public class MyPageController {
             .getAuthentication().getPrincipal();
         MyInfoResponseDto myInfo = myPageService.getMyInfo(principal.getMember());
         return ResponseDTO.okWithData(myInfo);
+    }
+
+    @PostMapping("/building/units")
+    public ResponseDTO<Void> addBuildingInfo(@RequestBody BuildingInfoRequestDto requestDto) {
+        MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+        myPageService.addBuildingInfo(principal.getMember(), requestDto);
+        return ResponseDTO.ok();
     }
 }

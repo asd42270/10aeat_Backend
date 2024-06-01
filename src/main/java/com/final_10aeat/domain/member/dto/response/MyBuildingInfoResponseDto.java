@@ -4,9 +4,10 @@ import lombok.Builder;
 
 @Builder
 public record MyBuildingInfoResponseDto(
-        String officeName,
-        Long buildingInfoId,
-        String dong,
-        String ho
+    Long buildingInfoId,
+    String officeName,
+    String dong,
+    String ho
 ) {
+
 }
