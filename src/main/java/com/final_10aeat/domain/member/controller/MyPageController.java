@@ -1,10 +1,11 @@
 package com.final_10aeat.domain.member.controller;
 
-
 import com.final_10aeat.domain.member.dto.response.MyBuildingInfoResponseDto;
+import com.final_10aeat.domain.member.dto.response.MyInfoResponseDto;
 import com.final_10aeat.domain.member.service.MyPageService;
 import com.final_10aeat.global.security.principal.MemberPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,22 +13,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/my")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('USER')")
 public class MyPageController {
 
-    private final MyPageService buildingInfoService;
+    private final MyPageService myPageService;
 
     @GetMapping("/building/units")
     public ResponseDTO<List<MyBuildingInfoResponseDto>> getBuildingInfo() {
 
         MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+            .getAuthentication().getPrincipal();
 
-        return ResponseDTO.okWithData(buildingInfoService.getBuildingInfo(principal.getMember()));
+        return ResponseDTO.okWithData(myPageService.getBuildingInfo(principal.getMember()));
+    }
+
+    @GetMapping("/info")
+    public ResponseDTO<MyInfoResponseDto> getMyInfo() {
+        MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+        MyInfoResponseDto myInfo = myPageService.getMyInfo(principal.getMember());
+        return ResponseDTO.okWithData(myInfo);
     }
 }

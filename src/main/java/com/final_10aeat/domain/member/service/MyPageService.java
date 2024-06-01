@@ -1,45 +1,58 @@
 package com.final_10aeat.domain.member.service;
 
 import com.final_10aeat.domain.member.dto.response.MyBuildingInfoResponseDto;
+import com.final_10aeat.domain.member.dto.response.MyInfoResponseDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.MemberRepository;
+import com.final_10aeat.domain.office.entity.Office;
+import com.final_10aeat.domain.office.repository.OfficeRepository;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Set;
-
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class MyPageService {
 
-
     private final MemberRepository memberRepository;
+    private final OfficeRepository officeRepository;
 
-    @Transactional(readOnly = true)
     public List<MyBuildingInfoResponseDto> getBuildingInfo(Member member) {
-
-        Member loadedMember = memberRepository.findByIdWithBuildingInfos(member.getId())
-                .orElseThrow(UserNotExistException::new);
-
+        Member loadedMember = memberRepository.findMemberByIdWithBuildingInfos(member.getId())
+            .orElseThrow(UserNotExistException::new);
         Set<BuildingInfo> buildingInfos = loadedMember.getBuildingInfos();
 
         return buildingInfos.stream()
-                .sorted()
-                .map(this::toInfoDto)
-                .toList();
+            .filter(bi -> bi.getOffice() != null && bi.getOffice().getOfficeName() != null)
+            .sorted(Comparator.comparing(bi -> bi.getOffice().getOfficeName()))
+            .map(this::toInfoDto)
+            .toList();
     }
 
     private MyBuildingInfoResponseDto toInfoDto(BuildingInfo buildingInfo) {
         return MyBuildingInfoResponseDto.builder()
-                .officeName(buildingInfo.getOffice().getOfficeName())
-                .buildingInfoId(buildingInfo.getId())
-                .dong(buildingInfo.getDong())
-                .ho(buildingInfo.getHo())
-                .build();
+            .officeName(buildingInfo.getOffice().getOfficeName())
+            .buildingInfoId(buildingInfo.getId())
+            .dong(buildingInfo.getDong())
+            .ho(buildingInfo.getHo())
+            .build();
+    }
+
+    public MyInfoResponseDto getMyInfo(Member member) {
+        String officeName = officeRepository.findById(member.getDefaultOffice())
+            .map(Office::getOfficeName)
+            .orElse("Unknown Office");
+
+        return new MyInfoResponseDto(
+            member.getName(),
+            member.getRole().name(),
+            officeName
+        );
     }
 }
