@@ -96,15 +96,6 @@ public class ManageArticle extends SoftDeletableBaseTimeEntity {
     }
 
     public void checkSchedules() {
-        if (schedules.stream().allMatch(ManageSchedule::isComplete)) {
-            progress = Progress.COMPLETE;
-        } else if (schedules.stream().noneMatch(ManageSchedule::isComplete)) {
-            progress = Progress.PENDING;
-        } else {
-            progress = Progress.INPROGRESS;
-        }
-/*
-        //성능은 좋아지나 가독성이 나빠 주석 처리
         boolean allComplete = true;
         boolean anyComplete = false;
 
@@ -115,6 +106,7 @@ public class ManageArticle extends SoftDeletableBaseTimeEntity {
                 allComplete = false;
             }
 
+            // 모든 완료는 아니지만 한개라도 완료 된 경우 불필요한 반복을 종료
             if (anyComplete && !allComplete) {
                 progress = Progress.INPROGRESS;
                 return;
@@ -128,6 +120,5 @@ public class ManageArticle extends SoftDeletableBaseTimeEntity {
         if (!anyComplete) {
             progress = Progress.PENDING;
         }
- */
     }
 }
