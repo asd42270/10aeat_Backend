@@ -18,6 +18,7 @@ import com.final_10aeat.domain.office.repository.OfficeRepository;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,12 +35,13 @@ public class MyPageService {
     public List<MyBuildingInfoResponseDto> getBuildingInfo(Member member) {
         Member loadedMember = findMemberByIdWithBuildingInfos(member.getId());
         Set<BuildingInfo> buildingInfos = loadedMember.getBuildingInfos();
+        Long defaultOfficeId = member.getDefaultOffice();
 
         return buildingInfos.stream()
-            .filter(bi -> bi.getOffice() != null && bi.getOffice().getOfficeName() != null)
+            .filter(bi -> bi.getOffice() != null && bi.getOffice().getId().equals(defaultOfficeId))
             .sorted(Comparator.comparing(bi -> bi.getOffice().getOfficeName()))
             .map(this::toInfoDto)
-            .toList();
+            .collect(Collectors.toList());
     }
 
     public MyInfoResponseDto getMyInfo(Member member) {
