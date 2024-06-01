@@ -43,7 +43,7 @@ public class ManageScheduleService {
 
     public void complete(Long manageScheduleId, Manager manager) {
         ManageSchedule manageSchedule = manageScheduleRepository.
-            findAndPessimisticLockById(manageScheduleId)
+            findById(manageScheduleId)
             .orElseThrow(ScheduleNotFoundException::new);
 
         ManageArticle article = manageSchedule.getManageArticle();
@@ -64,7 +64,7 @@ public class ManageScheduleService {
         Long manageScheduleId, ScheduleRequestDto request, Manager manager
     ) {
         ManageSchedule manageSchedule = manageScheduleRepository.
-            findAndPessimisticLockById(manageScheduleId)
+            findById(manageScheduleId)
             .orElseThrow(ScheduleNotFoundException::new);
 
         ManageArticle article = manageSchedule.getManageArticle();
@@ -96,7 +96,7 @@ public class ManageScheduleService {
 
     public void delete(Long manageScheduleId, Manager manager) {
         ManageSchedule manageSchedule = manageScheduleRepository.
-            findAndPessimisticLockById(manageScheduleId)
+            findById(manageScheduleId)
             .orElseThrow(ScheduleNotFoundException::new);
 
         ManageArticle article = manageSchedule.getManageArticle();
