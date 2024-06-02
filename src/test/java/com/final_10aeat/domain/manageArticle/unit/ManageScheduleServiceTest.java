@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.common.util.EntityUtil;
 import com.final_10aeat.domain.manageArticle.dto.request.ScheduleRequestDto;
-import com.final_10aeat.domain.manageArticle.dto.request.util.ScheduleConverter;
+import com.final_10aeat.domain.manageArticle.dto.util.ScheduleConverter;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.entity.ManageSchedule;
 import com.final_10aeat.domain.manageArticle.exception.ScheduleMustHaveOneException;

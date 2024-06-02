@@ -6,7 +6,7 @@ import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.manageArticle.dto.request.CreateManageArticleRequestDto;
 import com.final_10aeat.domain.manageArticle.dto.request.UpdateManageArticleRequestDto;
-import com.final_10aeat.domain.manageArticle.dto.request.util.ScheduleConverter;
+import com.final_10aeat.domain.manageArticle.dto.util.ScheduleConverter;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.entity.ManageSchedule;
 import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
