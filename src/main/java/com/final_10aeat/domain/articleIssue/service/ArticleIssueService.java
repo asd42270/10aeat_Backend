@@ -33,6 +33,8 @@ public class ArticleIssueService {
         ArticleIssue articleIssue = new ArticleIssue(request.title(), request.content(),
                 manageArticle, LocalDateTime.now(), manager);
 
+        manageArticle.setIssue(articleIssue);
+
         articleIssueRepository.save(articleIssue);
     }
 
