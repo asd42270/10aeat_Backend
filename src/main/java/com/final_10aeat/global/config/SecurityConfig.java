@@ -1,6 +1,7 @@
 package com.final_10aeat.global.config;
 
 import com.final_10aeat.global.security.jwt.JwtAuthenticationFilter;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @EnableWebSecurity
 @Configuration
@@ -22,6 +25,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    CorsConfigurationSource corsConfigurerSource() {
+        return request -> {
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedHeaders(Collections.singletonList("*"));
+            config.setAllowedMethods(Collections.singletonList("*"));
+            config.setAllowedOriginPatterns(Collections.singletonList("*"));
+            config.setExposedHeaders(Collections.singletonList("*"));
+            config.setAllowCredentials(true);
+            return config;
+        };
+    }
 
     @Bean
     public PasswordEncoder encoder() {
@@ -33,7 +48,7 @@ public class SecurityConfig {
         return http
             .csrf(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
-            .cors(AbstractHttpConfigurer::disable)
+            .cors(c -> c.configurationSource(corsConfigurerSource()))
             .authorizeHttpRequests(
                 auth -> auth
                     .requestMatchers(HttpMethod.POST, "/admin", "/admin/login").permitAll()
