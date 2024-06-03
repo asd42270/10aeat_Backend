@@ -22,9 +22,11 @@ public class ArticleIssue extends SoftDeletableBaseTimeEntity {
     private Long id;
 
     @Column
+    @Setter
     private String title;
 
     @Column(columnDefinition = "TEXT")
+    @Setter
     private String content;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -60,4 +62,6 @@ public class ArticleIssue extends SoftDeletableBaseTimeEntity {
     public void delete(LocalDateTime currentTime) {
         super.delete(currentTime);
     }
+
+    public void setUpdatedAt(LocalDateTime currentTime) {this.updatedAt = currentTime;}
 }
