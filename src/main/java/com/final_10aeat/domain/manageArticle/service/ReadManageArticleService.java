@@ -14,7 +14,9 @@ import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.entity.ManageSchedule;
 import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -111,5 +113,63 @@ public class ReadManageArticleService {
                 .map(ArticleIssue::getId).orElse(0L)
             )
             .build();
+    }
+
+    public Set<Integer> monthlySummary(Integer year, Long officeId) {
+        Set<Integer> monthly = new HashSet<>();
+        List<ManageArticle> articles = manageArticleRepository
+            .findAllByOfficeIdAndDeletedAtNull(officeId);
+
+        // TODO 깊이가 깊어졌지만 메소드로 빼는것보단 읽기 좋아보임
+        articles.forEach(
+            article -> article.getSchedules()
+                .stream().filter(
+                    manageSchedule -> manageSchedule.getYear().equals(year)
+                ).forEach(
+                schedule -> monthly.add(schedule.getMonth())
+            )
+        );
+        return monthly;
+    }
+
+    public List<ListManageArticleResponse> monthlyListArticle(
+        Long userOfficeId, Integer year, Integer month
+    ) {
+        List<ManageArticle> articles = manageArticleRepository
+            .findAllByOfficeIdAndDeletedAtNull(userOfficeId);
+
+        if(ofNullable(month).isPresent()){
+            return listArticleMonthlyNullFrom(articles, year);
+        }
+
+        return listArticleMonthlyFrom(articles,year,month);
+    }
+
+    private List<ListManageArticleResponse> listArticleMonthlyFrom(
+        List<ManageArticle> articles,
+        Integer year, Integer month
+    ) {
+        return articles.stream()
+            .filter(
+                article -> article.getSchedules().stream()
+                    .anyMatch(schedule ->
+                        schedule.getYear().equals(year) && schedule.getMonth().equals(month)
+                    )
+            )
+            .map(this::listArticleFrom)
+            .toList();
+    }
+
+    private List<ListManageArticleResponse> listArticleMonthlyNullFrom(
+        List<ManageArticle> articles,
+        Integer year
+    ) {
+        return articles.stream()
+            .filter(
+                article -> article.getSchedules().stream()
+                .anyMatch(schedule -> schedule.getYear().equals(year))
+            )
+            .map(this::listArticleFrom)
+            .toList();
     }
 }
