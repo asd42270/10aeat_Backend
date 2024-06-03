@@ -6,7 +6,7 @@ import lombok.Builder;
 @Builder
 public record ManageScheduleResponse(
     Long manageScheduleId,
-    Boolean isComplete,
+    boolean isComplete,
     LocalDateTime scheduleStart,
     LocalDateTime scheduleEnd
 ) {
