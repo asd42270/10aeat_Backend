@@ -91,11 +91,18 @@ public class ReadManageArticleService {
             .build();
     }
 
-    public List<ListManageArticleResponse> listArticle(Long userOfficeId) {
+    public List<ListManageArticleResponse> listArticle(Integer year, Long userOfficeId) {
         List<ManageArticle> articles = manageArticleRepository
             .findAllByOfficeIdAndDeletedAtNull(userOfficeId);
 
-        return articles.stream().map(this::listArticleFrom).toList();
+        return articles.stream()
+            .filter(
+                article -> article.getSchedules().stream()
+                    .anyMatch(
+                        schedule -> schedule.getYear().equals(year)
+                    )
+            )
+            .map(this::listArticleFrom).toList();
     }
 
     private ListManageArticleResponse listArticleFrom(ManageArticle article) {
@@ -119,14 +126,14 @@ public class ReadManageArticleService {
         Set<Integer> monthly = new HashSet<>();
         List<ManageArticle> articles = manageArticleRepository
             .findAllByOfficeIdAndDeletedAtNull(officeId);
-        
+
         articles.forEach(
             article -> article.getSchedules()
                 .stream().filter(
                     manageSchedule -> manageSchedule.getYear().equals(year)
                 ).forEach(
-                schedule -> monthly.add(schedule.getMonth())
-            )
+                    schedule -> monthly.add(schedule.getMonth())
+                )
         );
         return monthly;
     }
@@ -137,11 +144,11 @@ public class ReadManageArticleService {
         List<ManageArticle> articles = manageArticleRepository
             .findAllByOfficeIdAndDeletedAtNull(userOfficeId);
 
-        if(ofNullable(month).isPresent()){
+        if (ofNullable(month).isPresent()) {
             return listArticleMonthlyNullFrom(articles, year);
         }
 
-        return listArticleMonthlyFrom(articles,year,month);
+        return listArticleMonthlyFrom(articles, year, month);
     }
 
     private List<ListManageArticleResponse> listArticleMonthlyFrom(
@@ -166,7 +173,7 @@ public class ReadManageArticleService {
         return articles.stream()
             .filter(
                 article -> article.getSchedules().stream()
-                .anyMatch(schedule -> schedule.getYear().equals(year))
+                    .anyMatch(schedule -> schedule.getYear().equals(year))
             )
             .map(this::listArticleFrom)
             .toList();

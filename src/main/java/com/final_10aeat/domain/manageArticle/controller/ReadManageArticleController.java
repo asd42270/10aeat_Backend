@@ -48,11 +48,16 @@ public class ReadManageArticleController {
     }
 
     @GetMapping("/list")
-    public ResponseDTO<List<ListManageArticleResponse>> listArticle() {
+    public ResponseDTO<List<ListManageArticleResponse>> listArticle(
+        @RequestParam(required = false) Integer year
+    ) {
         Long userOfficeId = authenticationService.getUserOfficeId();
 
         return ResponseDTO.okWithData(
-            readManageArticleService.listArticle(userOfficeId)
+            readManageArticleService.listArticle(
+                ofNullable(year).orElseGet(() -> LocalDate.now().getYear()),
+                userOfficeId
+            )
         );
     }
 
