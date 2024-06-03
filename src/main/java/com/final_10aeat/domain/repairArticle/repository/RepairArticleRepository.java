@@ -24,8 +24,9 @@ public interface RepairArticleRepository extends JpaRepository<RepairArticle, Lo
 
     @Query("SELECT ra FROM RepairArticle ra WHERE ra.office.id = :officeId " +
         "AND (:progresses IS NULL OR ra.progress IN :progresses) " +
-        "AND (:category IS NULL OR ra.category = :category)")
-    List<RepairArticle> findByOfficeIdAndProgressInAndCategory(
+        "AND (:category IS NULL OR ra.category = :category)" +
+        "ORDER BY ra.id DESC")
+    List<RepairArticle> findByOfficeIdAndProgressInAndCategoryOrderByCreatedAtDesc(
         @Param("officeId") Long officeId,
         @Param("progresses") List<Progress> progresses,
         @Param("category") ArticleCategory category);
