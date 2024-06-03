@@ -10,6 +10,8 @@ public class ScheduleConverter {
     public static ManageSchedule toSchedule(ScheduleRequestDto request, ManageArticle article) {
         return ManageSchedule.builder()
             .complete(false)
+            .year(request.scheduleStart().getYear())
+            .month(request.scheduleStart().getMonthValue())
             .scheduleStart(request.scheduleStart())
             .scheduleEnd(request.scheduleEnd())
             .manageArticle(article)
