@@ -1,6 +1,7 @@
 package com.final_10aeat.domain.issue.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.final_10aeat.common.service.AuthenticationService;
 import com.final_10aeat.common.util.manager.WithManager;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.articleIssue.controller.ArticleIssueController;
@@ -30,13 +31,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ArticleIssueControllerDocsTest extends RestDocsSupport {
 
     private ArticleIssueService articleIssueService;
+    private AuthenticationService authenticationService;
     private ObjectMapper objectMapper;
 
     @Override
     public Object initController() {
         articleIssueService = Mockito.mock(ArticleIssueService.class);
+        authenticationService = Mockito.mock(AuthenticationService.class);
+
         objectMapper = new ObjectMapper();
-        return new ArticleIssueController(articleIssueService);
+        return new ArticleIssueController(articleIssueService, authenticationService);
     }
 
     @BeforeEach

@@ -1,5 +1,6 @@
 package com.final_10aeat.domain.articleIssue.service;
 
+import com.final_10aeat.common.dto.UserIdAndRole;
 import com.final_10aeat.common.exception.ArticleNotFoundException;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssuePublishRequestDto;
@@ -50,15 +51,25 @@ public class ArticleIssueService {
         articleIssueRepository.save(articleIssue);
     }
 
-    public void deleteIssue(Long issueId, Manager manager) {
+    //TODO:OneToOne 관계로 인해 물리삭제로 구현, 이후 연관관계 변경 및 리팩토링 진행 시 논리삭제로 다시 변경 예정
+    public void deleteIssue(Long issueId, UserIdAndRole userIdAndRole) {
+//        ArticleIssue articleIssue = articleIssueRepository.findByIdAndDeletedAtIsNull(issueId)
+//                .orElseThrow(IssueNotFoundException::new);
 
-        ArticleIssue articleIssue = articleIssueRepository.findByIdAndDeletedAtIsNull(issueId)
+        ArticleIssue articleIssue = articleIssueRepository.findById(issueId)
                 .orElseThrow(IssueNotFoundException::new);
 
-        if (!articleIssue.getManager().getEmail().equals(manager.getEmail())) {
+        if (!userIdAndRole.isManager()) {
             throw new UnauthorizedAccessException();
         }
 
-        articleIssue.delete(LocalDateTime.now());
+        if (!articleIssue.getManager().getId().equals(userIdAndRole.id())) {
+            throw new UnauthorizedAccessException();
+        }
+
+//        articleIssue.delete(LocalDateTime.now());
+
+        articleIssueRepository.deleteById(issueId);
     }
+
 }

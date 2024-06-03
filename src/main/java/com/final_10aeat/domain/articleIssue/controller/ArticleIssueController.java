@@ -1,5 +1,7 @@
 package com.final_10aeat.domain.articleIssue.controller;
 
+import com.final_10aeat.common.dto.UserIdAndRole;
+import com.final_10aeat.common.service.AuthenticationService;
 import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssuePublishRequestDto;
 import com.final_10aeat.domain.articleIssue.service.ArticleIssueService;
 import com.final_10aeat.global.security.principal.ManagerPrincipal;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleIssueController {
 
     private final ArticleIssueService articleIssueService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/manage/issue/{manage_article_id}")
     public ResponseDTO<Void> managePublish(
@@ -46,10 +49,10 @@ public class ArticleIssueController {
     public ResponseDTO<Void> deleteIssue(
             @PathVariable("issue_id") Long id
     ) {
-        ManagerPrincipal managerPrincipal = (ManagerPrincipal) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
 
-        articleIssueService.deleteIssue(id, managerPrincipal.getManager());
+        UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
+
+        articleIssueService.deleteIssue(id, userIdAndRole);
         return ResponseDTO.ok();
     }
 }
