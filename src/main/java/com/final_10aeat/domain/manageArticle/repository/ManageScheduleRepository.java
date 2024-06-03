@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ManageScheduleRepository extends JpaRepository<ManageSchedule, Long> {
 
-    // TODO 리팩토링 예정
+    // TODO 리팩토링 기간 중 변경 예정
 //        @Query("""
 //            UPDATE ManageSchedule s
 //            SET s.complete = NOT s.complete

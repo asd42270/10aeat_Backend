@@ -34,6 +34,12 @@ public class ManageSchedule {
     @Column(name = "complete")
     private boolean complete;
 
+    @Column(nullable = false)
+    private Integer year;
+
+    @Column(nullable = false)
+    private Integer month;
+
     @Setter
     @Column(name = "schedule_start", nullable = false)
     private LocalDateTime scheduleStart;
