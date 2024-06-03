@@ -119,8 +119,7 @@ public class ReadManageArticleService {
         Set<Integer> monthly = new HashSet<>();
         List<ManageArticle> articles = manageArticleRepository
             .findAllByOfficeIdAndDeletedAtNull(officeId);
-
-        // TODO 깊이가 깊어졌지만 메소드로 빼는것보단 읽기 좋아보임
+        
         articles.forEach(
             article -> article.getSchedules()
                 .stream().filter(
