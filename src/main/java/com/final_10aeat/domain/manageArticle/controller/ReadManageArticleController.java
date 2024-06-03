@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('USER')")
 @RequestMapping("/manage/articles")
-public class ManageArticleReadController {
+public class ReadManageArticleController {
 
     private final ReadManageArticleService readManageArticleService;
     private final AuthenticationService authenticationService;
