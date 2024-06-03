@@ -1,9 +1,7 @@
 package com.final_10aeat.domain.repairArticle.controller;
 
-import com.final_10aeat.common.dto.UserIdAndRole;
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
-import com.final_10aeat.common.service.AuthenticationService;
 import com.final_10aeat.domain.repairArticle.dto.response.CustomProgressResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleDetailDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleSummaryDto;
@@ -25,14 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/repair/articles")
 public class GetRepairArticleController {
 
-    private final AuthenticationService authenticationService;
     private final GetRepairArticleFacade getRepairArticleFacade;
 
     @GetMapping("/summary")
     public ResponseEntity<ResponseDTO<RepairArticleSummaryDto>> getRepairArticleSummary() {
-        Long officeId = authenticationService.getUserOfficeId();
-        RepairArticleSummaryDto summary = getRepairArticleFacade.getRepairArticleSummary(
-            officeId);
+        RepairArticleSummaryDto summary = getRepairArticleFacade.getRepairArticleSummary();
         return ResponseEntity.ok(ResponseDTO.okWithData(summary));
     }
 
@@ -42,19 +37,16 @@ public class GetRepairArticleController {
         @RequestParam(required = false) ArticleCategory category) {
 
         List<Progress> progressList = determineProgressFilter(progress);
-        UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
 
-        List<?> articles = getRepairArticleFacade.getAllRepairArticles(
-            userIdAndRole, progressList, category);
+        List<?> articles = getRepairArticleFacade.getAllRepairArticles(progressList, category);
         return ResponseEntity.ok(ResponseDTO.okWithData(articles));
     }
 
     @GetMapping("/{repairArticleId}")
     public ResponseEntity<ResponseDTO<RepairArticleDetailDto>> getRepairArticleDetail(
         @PathVariable Long repairArticleId) {
-        UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
         RepairArticleDetailDto articleDetails = getRepairArticleFacade.getArticleDetails(
-            repairArticleId, userIdAndRole.id(), userIdAndRole.isManager());
+            repairArticleId);
 
         return ResponseEntity.ok(ResponseDTO.okWithData(articleDetails));
     }

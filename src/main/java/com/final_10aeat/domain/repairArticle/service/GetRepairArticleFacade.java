@@ -20,26 +20,27 @@ public class GetRepairArticleFacade {
     private final GetRepairArticleService getRepairArticleService;
     private final AuthenticationService authenticationService;
 
-    public List<?> getAllRepairArticles(UserIdAndRole userIdAndRole, List<Progress> progresses,
-        ArticleCategory category) {
+    public List<?> getAllRepairArticles(List<Progress> progresses, ArticleCategory category) {
+        UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
         Long officeId = authenticationService.getUserOfficeId();
         if (userIdAndRole.isManager()) {
-            return managerArticleListService.getAllRepairArticles(officeId, progresses,
-                category);
+            return managerArticleListService.getAllRepairArticles(officeId, progresses, category);
         } else {
             return ownerArticleListService.getAllRepairArticles(officeId, userIdAndRole.id(),
                 progresses, category);
         }
     }
 
-    public RepairArticleSummaryDto getRepairArticleSummary(Long officeId) {
+    public RepairArticleSummaryDto getRepairArticleSummary() {
+        Long officeId = authenticationService.getUserOfficeId();
         UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
         return getRepairArticleService.getRepairArticleSummary(officeId, userIdAndRole);
     }
 
-    public RepairArticleDetailDto getArticleDetails(Long articleId, Long userId,
-        boolean isManager) {
-        return getRepairArticleService.getArticleDetails(articleId, userId, isManager);
+    public RepairArticleDetailDto getArticleDetails(Long articleId) {
+        UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
+        return getRepairArticleService.getArticleDetails(articleId, userIdAndRole.id(),
+            userIdAndRole.isManager());
     }
 
     public List<CustomProgressResponseDto> getCustomProgressList(Long articleId) {
