@@ -54,7 +54,7 @@ public class ArticleIssueService {
         articleIssueRepository.save(articleIssue);
     }
 
-    public void update(IssueUpdateRequestDto request, Long issueId,
+    public void updateIssue(IssueUpdateRequestDto request, Long issueId,
                        UserIdAndRole userIdAndRole) {
 
         ArticleIssue articleIssue = articleIssueRepository.findById(issueId)
@@ -62,7 +62,7 @@ public class ArticleIssueService {
 
         validateManager(userIdAndRole, articleIssue);
 
-        updateIssue(request, articleIssue);
+        update(request, articleIssue);
 
     }
 
@@ -91,7 +91,7 @@ public class ArticleIssueService {
             throw new UnauthorizedAccessException();
         }
     }
-    private void updateIssue(IssueUpdateRequestDto request, ArticleIssue articleIssue) {
+    private void update(IssueUpdateRequestDto request, ArticleIssue articleIssue) {
 
         ofNullable(request.title()).ifPresent(articleIssue::setTitle);
         ofNullable(request.content()).ifPresent(articleIssue::setContent);
