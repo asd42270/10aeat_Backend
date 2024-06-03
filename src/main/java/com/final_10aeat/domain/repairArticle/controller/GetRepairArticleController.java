@@ -1,14 +1,11 @@
 package com.final_10aeat.domain.repairArticle.controller;
 
-import com.final_10aeat.common.dto.UserIdAndRole;
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
-import com.final_10aeat.common.service.AuthenticationService;
 import com.final_10aeat.domain.repairArticle.dto.response.CustomProgressResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleDetailDto;
-import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleSummaryDto;
-import com.final_10aeat.domain.repairArticle.service.OwnerRepairArticleService;
+import com.final_10aeat.domain.repairArticle.service.GetRepairArticleFacade;
 import com.final_10aeat.global.util.ResponseDTO;
 import java.util.Arrays;
 import java.util.List;
@@ -24,38 +21,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/repair/articles")
-public class OwnerRepairArticleController {
+public class GetRepairArticleController {
 
-    private final OwnerRepairArticleService ownerRepairArticleService;
-    private final AuthenticationService authenticationService;
+    private final GetRepairArticleFacade getRepairArticleFacade;
 
     @GetMapping("/summary")
     public ResponseEntity<ResponseDTO<RepairArticleSummaryDto>> getRepairArticleSummary() {
-        Long officeId = authenticationService.getUserOfficeId();
-        RepairArticleSummaryDto summary = ownerRepairArticleService.getRepairArticleSummary(
-            officeId);
+        RepairArticleSummaryDto summary = getRepairArticleFacade.getRepairArticleSummary();
         return ResponseEntity.ok(ResponseDTO.okWithData(summary));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<ResponseDTO<List<RepairArticleResponseDto>>> getAllRepairArticles(
+    public ResponseEntity<ResponseDTO<List<?>>> getAllRepairArticles(
         @RequestParam(required = false) List<String> progress,
         @RequestParam(required = false) ArticleCategory category) {
 
         List<Progress> progressList = determineProgressFilter(progress);
-        UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
 
-        List<RepairArticleResponseDto> articles = ownerRepairArticleService.getAllRepairArticles(
-            userIdAndRole, progressList, category);
+        List<?> articles = getRepairArticleFacade.getAllRepairArticles(progressList, category);
         return ResponseEntity.ok(ResponseDTO.okWithData(articles));
     }
 
     @GetMapping("/{repairArticleId}")
     public ResponseEntity<ResponseDTO<RepairArticleDetailDto>> getRepairArticleDetail(
         @PathVariable Long repairArticleId) {
-        UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
-        RepairArticleDetailDto articleDetails = ownerRepairArticleService.getArticleDetails(
-            repairArticleId, userIdAndRole.id(), userIdAndRole.isManager());
+        RepairArticleDetailDto articleDetails = getRepairArticleFacade.getArticleDetails(
+            repairArticleId);
 
         return ResponseEntity.ok(ResponseDTO.okWithData(articleDetails));
     }
@@ -63,7 +54,7 @@ public class OwnerRepairArticleController {
     @GetMapping("/progress/{repairArticleId}")
     public ResponseEntity<ResponseDTO<List<CustomProgressResponseDto>>> getCustomProgressList(
         @PathVariable Long repairArticleId) {
-        List<CustomProgressResponseDto> customProgressList = ownerRepairArticleService.getCustomProgressList(
+        List<CustomProgressResponseDto> customProgressList = getRepairArticleFacade.getCustomProgressList(
             repairArticleId);
         return ResponseEntity.ok(ResponseDTO.okWithData(customProgressList));
     }

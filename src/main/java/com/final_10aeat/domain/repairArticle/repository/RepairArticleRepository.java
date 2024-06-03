@@ -11,7 +11,12 @@ import org.springframework.data.repository.query.Param;
 
 public interface RepairArticleRepository extends JpaRepository<RepairArticle, Long> {
 
-    @Query("SELECT r FROM RepairArticle r WHERE r.deletedAt IS NOT NULL AND r.deletedAt < :cutoffDate")
+    @Query("""
+           SELECT r
+           FROM RepairArticle r
+           WHERE r.deletedAt IS NOT NULL
+           AND r.deletedAt < :cutoffDate
+           """)
     List<RepairArticle> findSoftDeletedBefore(LocalDateTime cutoffDate);
 
     long countByOfficeIdAndProgressIn(@Param("officeId") Long officeId,
@@ -22,16 +27,25 @@ public interface RepairArticleRepository extends JpaRepository<RepairArticle, Lo
 
     long countByOfficeId(@Param("officeId") Long officeId);
 
-    @Query("SELECT ra FROM RepairArticle ra WHERE ra.office.id = :officeId " +
-        "AND (:progresses IS NULL OR ra.progress IN :progresses) " +
-        "AND (:category IS NULL OR ra.category = :category)")
-    List<RepairArticle> findByOfficeIdAndProgressInAndCategory(
+    @Query("""
+           SELECT ra
+           FROM RepairArticle ra
+           WHERE ra.office.id = :officeId
+           AND (:progresses IS NULL OR ra.progress IN :progresses)
+           AND (:category IS NULL OR ra.category = :category)
+           ORDER BY ra.id DESC
+           """)
+    List<RepairArticle> findByOfficeIdAndProgressInAndCategoryOrderByCreatedAtDesc(
         @Param("officeId") Long officeId,
         @Param("progresses") List<Progress> progresses,
         @Param("category") ArticleCategory category);
 
-    @Query("SELECT ra FROM RepairArticle ra WHERE ra.office.id = :officeId " +
-        "AND ra.progress IN :progresses")
+    @Query("""
+           SELECT ra
+           FROM RepairArticle ra
+           WHERE ra.office.id = :officeId
+           AND ra.progress IN :progresses
+           """)
     List<RepairArticle> findByOfficeIdAndProgressIn(
         @Param("officeId") Long officeId,
         @Param("progresses") List<Progress> progresses);

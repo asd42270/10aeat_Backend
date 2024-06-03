@@ -28,19 +28,34 @@ include::{snippets}/get-repair-article-summary/response-fields.adoc[]
 
 유지보수 게시글을 전체 조회하는 API 입니다.
 
-* 정렬 기준 : isNewArticle -> redDot -> 그 외 게시물 최신순 정렬
-* isNewArticle = true 이면 24시간 내에 생성된 게시물입니다.
-* progress, category 파라미터거 없는 경우 전체 게시물이 조회됩니다.
+* 현재 로그인한 사용자가 관리자냐 소유주냐에 따라 응답값이 달라집니다.
+* 정렬 기준 : redDot = true 인 게시물이 최상단에 노출됩니다 (기본 정렬은 최신순)
+* progress, category 파라미터가 없는 경우 전체 게시물이 조회됩니다.
+* progress는 파라미터로 리스트, 단일 값 모두 필터링 가능합니다.
+* ex. progress=INPROGRESS,PENDING (o) /
+progress=INPROGRESS(o)
 
+== 전체조회 - OWNER
 === HttpRequest
 
-include::{snippets}/get-repair-article-list/http-request.adoc[]
-include::{snippets}/get-repair-article-list/query-parameters.adoc[]
+include::{snippets}/get-owner-repair-article-list/http-request.adoc[]
+include::{snippets}/get-owner-repair-article-list/query-parameters.adoc[]
 
 === HttpResponse
 
-include::{snippets}/get-repair-article-list/http-response.adoc[]
-include::{snippets}/get-repair-article-list/response-fields.adoc[]
+include::{snippets}/get-owner-repair-article-list/http-response.adoc[]
+include::{snippets}/get-owner-repair-article-list/response-fields.adoc[]
+
+== 전체조회 - MANAGER
+=== HttpRequest
+
+include::{snippets}/get-manager-repair-article-list/http-request.adoc[]
+include::{snippets}/get-manager-repair-article-list/query-parameters.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/get-manager-repair-article-list/http-response.adoc[]
+include::{snippets}/get-manager-repair-article-list/response-fields.adoc[]
 
 [[Get-Repair-Article-Detail]]
 == 유지보수 게시글 상세 조회
