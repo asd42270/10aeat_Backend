@@ -84,7 +84,7 @@ public class ManageIssueCheckServiceTest {
             // given
             ArticleIssueCheckRequestDto requestDto = new ArticleIssueCheckRequestDto(true);
             given(manageArticleRepository.findById(manageArticle.getId())).willReturn(Optional.of(manageArticle));
-            given(articleIssueRepository.findFirstByManageArticleOrderByCreatedAtDesc(manageArticle))
+            given(articleIssueRepository.findFirstByManageArticleAndDeletedAtIsNullOrderByCreatedAtDesc(manageArticle))
                     .willReturn(Optional.of(articleIssue));
             given(redisTemplate.opsForValue()).willReturn(mock(ValueOperations.class));
 
@@ -94,7 +94,7 @@ public class ManageIssueCheckServiceTest {
 
             // then
             verify(manageArticleRepository).findById(manageArticle.getId());
-            verify(articleIssueRepository).findFirstByManageArticleOrderByCreatedAtDesc(manageArticle);
+            verify(articleIssueRepository).findFirstByManageArticleAndDeletedAtIsNullOrderByCreatedAtDesc(manageArticle);
             verify(articleIssueCheckRepository).save(any(ArticleIssueCheck.class));
             Assertions.assertThat(responseDto.title()).isEqualTo(articleIssue.getTitle());
         }
@@ -117,7 +117,7 @@ public class ManageIssueCheckServiceTest {
             // given
             ArticleIssueCheckRequestDto requestDto = new ArticleIssueCheckRequestDto(true);
             given(manageArticleRepository.findById(manageArticle.getId())).willReturn(Optional.of(manageArticle));
-            given(articleIssueRepository.findFirstByManageArticleOrderByCreatedAtDesc(manageArticle)).willReturn(Optional.empty());
+            given(articleIssueRepository.findFirstByManageArticleAndDeletedAtIsNullOrderByCreatedAtDesc(manageArticle)).willReturn(Optional.empty());
 
             // when&then
             assertThrows(IssueNotFoundException.class,
