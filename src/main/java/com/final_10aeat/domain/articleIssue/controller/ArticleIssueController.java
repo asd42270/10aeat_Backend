@@ -41,4 +41,15 @@ public class ArticleIssueController {
         articleIssueService.repairIssuePublish(request, id, managerPrincipal.getManager());
         return ResponseDTO.ok();
     }
+
+    @DeleteMapping("/issue/{issue_id}")
+    public ResponseDTO<Void> deleteIssue(
+            @PathVariable("issue_id") Long id
+    ) {
+        ManagerPrincipal managerPrincipal = (ManagerPrincipal) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+
+        articleIssueService.deleteIssue(id, managerPrincipal.getManager());
+        return ResponseDTO.ok();
+    }
 }

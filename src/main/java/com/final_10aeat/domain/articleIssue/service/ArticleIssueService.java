@@ -1,8 +1,10 @@
 package com.final_10aeat.domain.articleIssue.service;
 
 import com.final_10aeat.common.exception.ArticleNotFoundException;
+import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssuePublishRequestDto;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
+import com.final_10aeat.domain.articleIssue.exception.IssueNotFoundException;
 import com.final_10aeat.domain.articleIssue.repository.ArticleIssueRepository;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
@@ -46,5 +48,17 @@ public class ArticleIssueService {
                 repairArticle, LocalDateTime.now(), manager);
 
         articleIssueRepository.save(articleIssue);
+    }
+
+    public void deleteIssue(Long issueId, Manager manager) {
+
+        ArticleIssue articleIssue = articleIssueRepository.findByIdAndDeletedAtIsNull(issueId)
+                .orElseThrow(IssueNotFoundException::new);
+
+        if (!articleIssue.getManager().getEmail().equals(manager.getEmail())) {
+            throw new UnauthorizedAccessException();
+        }
+
+        articleIssue.delete(LocalDateTime.now());
     }
 }
