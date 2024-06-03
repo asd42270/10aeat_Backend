@@ -3,7 +3,7 @@ package com.final_10aeat.domain.articleIssue.entity;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
-import com.final_10aeat.global.entity.BaseTimeEntity;
+import com.final_10aeat.global.entity.SoftDeletableBaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "article_issue")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ArticleIssue extends BaseTimeEntity {
+public class ArticleIssue extends SoftDeletableBaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,5 +55,9 @@ public class ArticleIssue extends BaseTimeEntity {
         this.repairArticle = repairArticle;
         this.createdAt = createdAt;
         this.manager = manager;
+    }
+
+    public void delete(LocalDateTime currentTime) {
+        super.delete(currentTime);
     }
 }
