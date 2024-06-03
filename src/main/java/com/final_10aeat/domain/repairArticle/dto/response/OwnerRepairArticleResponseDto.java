@@ -2,7 +2,7 @@ package com.final_10aeat.domain.repairArticle.dto.response;
 
 import java.time.LocalDateTime;
 
-public record RepairArticleResponseDto(
+public record OwnerRepairArticleResponseDto(
     Long id,
     String category,
     String managerName,
@@ -15,7 +15,6 @@ public record RepairArticleResponseDto(
     int viewCount,
     boolean isSave,
     boolean redDot,
-    boolean isNewArticle,
     String imageUrl
 ) {
 
