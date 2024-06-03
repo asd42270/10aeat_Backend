@@ -43,7 +43,7 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
     public Object initController() {
         getRepairArticleFacade = mock(GetRepairArticleFacade.class);
         authenticationService = mock(AuthenticationService.class);
-        return new GetRepairArticleController(authenticationService, getRepairArticleFacade);
+        return new GetRepairArticleController(getRepairArticleFacade);
     }
 
     @DisplayName("유지보수 게시글 요약 조회 API 문서화")
@@ -62,7 +62,7 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
             false
         );
 
-        when(getRepairArticleFacade.getRepairArticleSummary(1L)).thenReturn(summaryDto);
+        when(getRepairArticleFacade.getRepairArticleSummary()).thenReturn(summaryDto);
 
         // when & then
         mockMvc.perform(get("/repair/articles/summary")
@@ -109,7 +109,7 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
         );
 
         List<OwnerRepairArticleResponseDto> articles = List.of(articleDto1, articleDto2);
-        when(getRepairArticleFacade.getAllRepairArticles(userIdAndRole,
+        when(getRepairArticleFacade.getAllRepairArticles(
             List.of(Progress.INPROGRESS, Progress.PENDING), ArticleCategory.REPAIR)).thenReturn(
             (List) articles);
 
@@ -183,7 +183,7 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
         );
 
         List<ManagerRepairArticleResponseDto> articles = List.of(articleDto1, articleDto2);
-        when(getRepairArticleFacade.getAllRepairArticles(userIdAndRole,
+        when(getRepairArticleFacade.getAllRepairArticles(
             List.of(Progress.PENDING), null)).thenReturn((List) articles);
 
         // when & then
@@ -243,8 +243,7 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
             "수리회사 이름", "http://repaircompany.com"
         );
 
-        when(getRepairArticleFacade.getArticleDetails(1L, userIdAndRole.id(),
-            userIdAndRole.isManager())).thenReturn(detailDto);
+        when(getRepairArticleFacade.getArticleDetails(1L)).thenReturn(detailDto);
 
         // when & then
         mockMvc.perform(get("/repair/articles/{repairArticleId}", 1L)
