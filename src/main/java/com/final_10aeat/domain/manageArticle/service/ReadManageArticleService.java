@@ -78,7 +78,9 @@ public class ReadManageArticleService {
             .period(article.getPeriod())
             .periodCount(article.getPeriodCount())
             .title(article.getTitle())
-            .issueId(article.getIssue().getId())
+            .issueId(
+                ofNullable(article.getIssue()).isEmpty() ? null : article.getIssue().getId()
+            )
             .progress(article.getProgress())
             .legalBasis(article.getLegalBasis())
             .target(article.getTarget())
