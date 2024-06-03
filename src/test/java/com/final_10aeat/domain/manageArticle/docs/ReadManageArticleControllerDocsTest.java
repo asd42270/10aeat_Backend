@@ -78,7 +78,7 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
                         fieldWithPath("data.complete").type(NUMBER).description("완료된 사항 수"),
                         fieldWithPath("data.inprogress").type(NUMBER).description("진행 중인 사항 수"),
                         fieldWithPath("data.pending").type(NUMBER).description("대기 중인 사항 수"),
-                        fieldWithPath("data.hasIssue").type(ARRAY).description("문제가 있는 항목의 ID 목록")
+                        fieldWithPath("data.hasIssue").type(ARRAY).description("이슈 id 목록")
                     )
                 )
             );
@@ -138,6 +138,9 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
             .andDo(document("get-manage-article-detail",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
+                pathParameters(
+                    parameterWithName("manageArticleId").description("조회할 게시글 id")
+                ),
                 responseFields(
                     fieldWithPath("code").type(NUMBER).description("응답 상태 코드"),
                     fieldWithPath("data.period").type(STRING).description("점검 주기"),
@@ -196,7 +199,7 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
                 .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
-            .andDo(document("get-manage-article-summary",
+            .andDo(document("get-manage-article-list",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     pathParameters(
