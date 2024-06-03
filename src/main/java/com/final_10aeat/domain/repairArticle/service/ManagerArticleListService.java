@@ -26,7 +26,6 @@ public class ManagerArticleListService {
             officeId, progresses, category);
 
         return articles.stream()
-            .sorted((a, b) -> b.getCreatedAt().compareTo(a.getUpdatedAt()))
             .map(this::mapToDto)
             .collect(Collectors.toList());
     }
