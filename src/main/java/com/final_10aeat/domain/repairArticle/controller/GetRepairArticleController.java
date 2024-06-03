@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/repair/articles")
-public class OwnerRepairArticleController {
+public class GetRepairArticleController {
 
     private final AuthenticationService authenticationService;
     private final GetRepairArticleFacade getRepairArticleFacade;
