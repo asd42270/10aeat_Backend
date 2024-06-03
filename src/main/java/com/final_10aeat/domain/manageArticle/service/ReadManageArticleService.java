@@ -144,7 +144,7 @@ public class ReadManageArticleService {
         List<ManageArticle> articles = manageArticleRepository
             .findAllByOfficeIdAndDeletedAtNull(userOfficeId);
 
-        if (ofNullable(month).isPresent()) {
+        if (ofNullable(month).isEmpty()) {
             return listArticleMonthlyNullFrom(articles, year);
         }
 
