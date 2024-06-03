@@ -1,0 +1,23 @@
+= Issue Delete REST API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+=== link:../index.html[시작 페이지로 돌아가기]
+
+[[Mangae-Issue-Publish]]
+== 이슈 삭제 API
+
+이슈 삭제 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/issue-delete/path-parameters.adoc[]
+include::{snippets}/issue-delete/http-request.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/issue-delete/http-response.adoc[]
+include::{snippets}/issue-delete/response-fields.adoc[]
