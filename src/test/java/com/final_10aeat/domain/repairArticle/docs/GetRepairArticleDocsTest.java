@@ -18,13 +18,15 @@ import com.final_10aeat.common.dto.UserIdAndRole;
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.common.service.AuthenticationService;
+import com.final_10aeat.common.util.manager.WithManager;
 import com.final_10aeat.docs.RestDocsSupport;
-import com.final_10aeat.domain.repairArticle.controller.OwnerRepairArticleController;
+import com.final_10aeat.domain.repairArticle.controller.GetRepairArticleController;
 import com.final_10aeat.domain.repairArticle.dto.response.CustomProgressResponseDto;
+import com.final_10aeat.domain.repairArticle.dto.response.ManagerRepairArticleResponseDto;
+import com.final_10aeat.domain.repairArticle.dto.response.OwnerRepairArticleResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleDetailDto;
-import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleSummaryDto;
-import com.final_10aeat.domain.repairArticle.service.OwnerRepairArticleService;
+import com.final_10aeat.domain.repairArticle.service.GetRepairArticleFacade;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -32,16 +34,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
-public class OwnerRepairArticleDocsTest extends RestDocsSupport {
+public class GetRepairArticleDocsTest extends RestDocsSupport {
 
-    private OwnerRepairArticleService ownerRepairArticleService;
+    private GetRepairArticleFacade getRepairArticleFacade;
     private AuthenticationService authenticationService;
 
     @Override
     public Object initController() {
-        ownerRepairArticleService = mock(OwnerRepairArticleService.class);
+        getRepairArticleFacade = mock(GetRepairArticleFacade.class);
         authenticationService = mock(AuthenticationService.class);
-        return new OwnerRepairArticleController(ownerRepairArticleService, authenticationService);
+        return new GetRepairArticleController(authenticationService, getRepairArticleFacade);
     }
 
     @DisplayName("유지보수 게시글 요약 조회 API 문서화")
@@ -60,7 +62,7 @@ public class OwnerRepairArticleDocsTest extends RestDocsSupport {
             false
         );
 
-        when(ownerRepairArticleService.getRepairArticleSummary(1L)).thenReturn(summaryDto);
+        when(getRepairArticleFacade.getRepairArticleSummary(1L)).thenReturn(summaryDto);
 
         // when & then
         mockMvc.perform(get("/repair/articles/summary")
@@ -86,7 +88,7 @@ public class OwnerRepairArticleDocsTest extends RestDocsSupport {
             ));
     }
 
-    @DisplayName("유지보수 게시글 전체 조회 API 문서화")
+    @DisplayName("유지보수 게시글 전체 조회 API 문서화 - 소유주")
     @Test
     void testGetAllRepairArticles() throws Exception {
         UserIdAndRole userIdAndRole = new UserIdAndRole(1L, true);
@@ -94,24 +96,22 @@ public class OwnerRepairArticleDocsTest extends RestDocsSupport {
         when(authenticationService.getUserOfficeId()).thenReturn(1L);
 
         // given
-        RepairArticleResponseDto articleDto1 = new RepairArticleResponseDto(
-            1L, "REPAIR", "김관리자", "INPROGRESS", "제목1",
+        OwnerRepairArticleResponseDto articleDto1 = new OwnerRepairArticleResponseDto(
+            2L, "REPAIR", "김관리자", "INPROGRESS", "제목1",
             LocalDateTime.now(), LocalDateTime.now().plusDays(5),
-            LocalDateTime.now(), 5, 100, true, false, true,
-            "http://example.com/image1.jpg"
+            LocalDateTime.now(), 5, 100, true, true, "http://example.com/image1.jpg"
         );
 
-        RepairArticleResponseDto articleDto2 = new RepairArticleResponseDto(
-            2L, "REPAIR", "이관리자", "PENDING", "제목2",
+        OwnerRepairArticleResponseDto articleDto2 = new OwnerRepairArticleResponseDto(
+            1L, "REPAIR", "이관리자", "PENDING", "제목2",
             LocalDateTime.now(), LocalDateTime.now().plusDays(10),
-            LocalDateTime.now(), 3, 150, false, true, false,
-            "http://example.com/image2.jpg"
+            LocalDateTime.now(), 3, 150, false, false, "http://example.com/image2.jpg"
         );
 
-        List<RepairArticleResponseDto> articles = List.of(articleDto1, articleDto2);
-        when(ownerRepairArticleService.getAllRepairArticles(userIdAndRole,
+        List<OwnerRepairArticleResponseDto> articles = List.of(articleDto1, articleDto2);
+        when(getRepairArticleFacade.getAllRepairArticles(userIdAndRole,
             List.of(Progress.INPROGRESS, Progress.PENDING), ArticleCategory.REPAIR)).thenReturn(
-            articles);
+            (List) articles);
 
         // when & then
         mockMvc.perform(get("/repair/articles/list")
@@ -120,7 +120,7 @@ public class OwnerRepairArticleDocsTest extends RestDocsSupport {
                 .param("category", "REPAIR")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andDo(document("get-repair-article-list",
+            .andDo(document("get-owner-repair-article-list",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 queryParameters(
@@ -155,8 +155,72 @@ public class OwnerRepairArticleDocsTest extends RestDocsSupport {
                         .description("게시글 저장 여부"),
                     fieldWithPath("data[].redDot").type(JsonFieldType.BOOLEAN)
                         .description("레드닷 표시 여부"),
-                    fieldWithPath("data[].isNewArticle").type(JsonFieldType.BOOLEAN)
-                        .description("24시간 내 생성된 게시글 여부"),
+                    fieldWithPath("data[].imageUrl").type(JsonFieldType.STRING).optional()
+                        .description("대표 이미지 URL")
+                )
+            ));
+    }
+
+    @DisplayName("유지보수 게시글 전체 조회 API 문서화 - 관리자")
+    @Test
+    @WithManager
+    void testGetAllRepairArticlesForManager() throws Exception {
+        UserIdAndRole userIdAndRole = new UserIdAndRole(1L, true);
+        when(authenticationService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
+        when(authenticationService.getUserOfficeId()).thenReturn(1L);
+
+        // given
+        ManagerRepairArticleResponseDto articleDto1 = new ManagerRepairArticleResponseDto(
+            2L, "REPAIR", "김관리자", "PENDING", "제목1",
+            LocalDateTime.now(), LocalDateTime.now().plusDays(10),
+            LocalDateTime.now(), LocalDateTime.now(), 5, 100, "http://example.com/image1.jpg"
+        );
+
+        ManagerRepairArticleResponseDto articleDto2 = new ManagerRepairArticleResponseDto(
+            1L, "REPAIR", "이관리자", "PENDING", "제목2",
+            LocalDateTime.now(), LocalDateTime.now().plusDays(5),
+            LocalDateTime.now(), LocalDateTime.now(), 3, 150, "http://example.com/image2.jpg"
+        );
+
+        List<ManagerRepairArticleResponseDto> articles = List.of(articleDto1, articleDto2);
+        when(getRepairArticleFacade.getAllRepairArticles(userIdAndRole,
+            List.of(Progress.PENDING), null)).thenReturn((List) articles);
+
+        // when & then
+        mockMvc.perform(get("/repair/articles/list")
+                .param("progress", "PENDING")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andDo(document("get-manager-repair-article-list",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                queryParameters(
+                    parameterWithName("progress").description(
+                        "진행상황 (INPROGRESS / PENDING / COMPLETE)").optional()
+                ),
+                responseFields(
+                    fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 상태 코드"),
+                    fieldWithPath("message").type(JsonFieldType.STRING).optional()
+                        .description("응답 메시지"),
+                    fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("게시글 ID"),
+                    fieldWithPath("data[].category").type(JsonFieldType.STRING).description("카테고리"),
+                    fieldWithPath("data[].managerName").type(JsonFieldType.STRING)
+                        .description("작성자 이름"),
+                    fieldWithPath("data[].progress").type(JsonFieldType.STRING)
+                        .description("진행 상태"),
+                    fieldWithPath("data[].title").type(JsonFieldType.STRING).description("게시글 제목"),
+                    fieldWithPath("data[].startConstruction").type(JsonFieldType.STRING)
+                        .description("작업 시작 예정일"),
+                    fieldWithPath("data[].endConstruction").type(JsonFieldType.STRING)
+                        .description("작업 종료 예정일"),
+                    fieldWithPath("data[].createdAt").type(JsonFieldType.STRING)
+                        .description("게시글 생성일"),
+                    fieldWithPath("data[].updatedAt").type(JsonFieldType.STRING)
+                        .description("게시글 수정일"),
+                    fieldWithPath("data[].commentCount").type(JsonFieldType.NUMBER)
+                        .description("댓글 수"),
+                    fieldWithPath("data[].viewCount").type(JsonFieldType.NUMBER)
+                        .description("조회 수"),
                     fieldWithPath("data[].imageUrl").type(JsonFieldType.STRING).optional()
                         .description("대표 이미지 URL")
                 )
@@ -179,7 +243,7 @@ public class OwnerRepairArticleDocsTest extends RestDocsSupport {
             "수리회사 이름", "http://repaircompany.com"
         );
 
-        when(ownerRepairArticleService.getArticleDetails(1L, userIdAndRole.id(),
+        when(getRepairArticleFacade.getArticleDetails(1L, userIdAndRole.id(),
             userIdAndRole.isManager())).thenReturn(detailDto);
 
         // when & then
@@ -241,7 +305,7 @@ public class OwnerRepairArticleDocsTest extends RestDocsSupport {
         );
 
         List<CustomProgressResponseDto> progressList = List.of(progressDto1, progressDto2);
-        when(ownerRepairArticleService.getCustomProgressList(1L)).thenReturn(progressList);
+        when(getRepairArticleFacade.getCustomProgressList(1L)).thenReturn(progressList);
 
         // when & then
         mockMvc.perform(get("/repair/articles/progress/{repairArticleId}", 1L)
