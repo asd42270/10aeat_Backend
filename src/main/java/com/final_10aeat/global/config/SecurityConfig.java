@@ -1,11 +1,15 @@
 package com.final_10aeat.global.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.final_10aeat.global.exception.ErrorCode;
 import com.final_10aeat.global.security.jwt.JwtAuthenticationFilter;
+import com.final_10aeat.global.util.ResponseDTO;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,7 +17,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -25,6 +31,25 @@ import org.springframework.web.cors.CorsConfigurationSource;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    private final AuthenticationEntryPoint unauthorizedEntryPoint =
+        (request, response, authException) -> {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(
+                new ObjectMapper().writeValueAsString(
+                    ResponseDTO.error(ErrorCode.UNAUTHORIZED_ACCESS)));
+        };
+
+    private final AccessDeniedHandler accessDeniedHandler =
+        (request, response, accessDeniedException) -> {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(
+                new ObjectMapper().writeValueAsString(ResponseDTO.error(ErrorCode.NOT_FOUND)));
+        };
 
     CorsConfigurationSource corsConfigurerSource() {
         return request -> {
@@ -63,6 +88,11 @@ public class SecurityConfig {
             .sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-            ).build();
+            )
+            .exceptionHandling(e ->
+                e.authenticationEntryPoint(unauthorizedEntryPoint)
+                    .accessDeniedHandler(accessDeniedHandler)
+            )
+            .build();
     }
 }
