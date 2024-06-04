@@ -37,7 +37,6 @@ public class CommentService {
     private final RepairArticleRepository repairArticleRepository;
     private final MemberRepository memberRepository;
     private final ManagerRepository managerRepository;
-    private final AuthenticationService authenticationService;
 
     public void createComment(Long repairArticleId, CreateCommentRequestDto request, Long userId,
         boolean isManager) {
@@ -117,21 +116,16 @@ public class CommentService {
         }
     }
 
-    private boolean isAuthor(Comment comment, Long userId, boolean isManager) {
-        if (isManager) {
-            return Optional.ofNullable(comment.getManager())
-                .map(manager -> manager.getId().equals(userId))
-                .orElse(false);
-        } else {
-            return Optional.ofNullable(comment.getMember())
-                .map(member -> member.getId().equals(userId))
-                .orElse(false);
-        }
+    private boolean isAuthor(Comment comment, RepairArticle article) {
+        return Optional.ofNullable(comment.getManager())
+            .map(manager -> manager.getId().equals(article.getManager().getId()))
+            .orElse(false);
     }
 
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getCommentsByArticleId(Long repairArticleId) {
-        UserIdAndRole currentUser = authenticationService.getCurrentUserIdAndRole();
+        RepairArticle article = repairArticleRepository.findById(repairArticleId)
+            .orElseThrow(ArticleNotFoundException::new);
         List<Comment> comments = commentRepository.findByRepairArticleIdAndDeletedAtIsNull(
             repairArticleId);
 
@@ -141,7 +135,7 @@ public class CommentService {
                 comment.getContent(),
                 comment.getCreatedAt(),
                 comment.getParentComment(),
-                isAuthor(comment, currentUser.id(), currentUser.isManager()),
+                isAuthor(comment, article),
                 comment.getManager() != null ? comment.getManager().getName()
                     : comment.getMember().getName()
             ))

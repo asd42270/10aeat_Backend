@@ -180,7 +180,7 @@ public class CommentControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("data[].createdAt").description("댓글 생성 시간"),
                     fieldWithPath("data[].parentCommentId").description("부모 댓글 ID").optional().type(
                         JsonFieldType.NUMBER),
-                    fieldWithPath("data[].isManager").description("관리자 여부"),
+                    fieldWithPath("data[].isAuthor").description("게시글 작성자 여부"),
                     fieldWithPath("data[].writer").description("작성자 이름")
                 )
             ));
