@@ -7,7 +7,7 @@ public record CommentResponseDto(
     String content,
     LocalDateTime createdAt,
     Long parentCommentId,
-    boolean isManager,
+    boolean isAuthor,
     String writer
 ) {
 

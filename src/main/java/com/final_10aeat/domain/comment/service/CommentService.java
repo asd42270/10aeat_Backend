@@ -1,7 +1,9 @@
 package com.final_10aeat.domain.comment.service;
 
+import com.final_10aeat.common.dto.UserIdAndRole;
 import com.final_10aeat.common.exception.ArticleNotFoundException;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
+import com.final_10aeat.common.service.AuthenticationService;
 import com.final_10aeat.domain.comment.dto.request.CreateCommentRequestDto;
 import com.final_10aeat.domain.comment.dto.request.UpdateCommentRequestDto;
 import com.final_10aeat.domain.comment.dto.response.CommentResponseDto;
@@ -20,6 +22,7 @@ import com.final_10aeat.domain.repairArticle.exception.ManagerNotFoundException;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,7 @@ public class CommentService {
     private final RepairArticleRepository repairArticleRepository;
     private final MemberRepository memberRepository;
     private final ManagerRepository managerRepository;
+    private final AuthenticationService authenticationService;
 
     public void createComment(Long repairArticleId, CreateCommentRequestDto request, Long userId,
         boolean isManager) {
@@ -113,8 +117,21 @@ public class CommentService {
         }
     }
 
+    private boolean isAuthor(Comment comment, Long userId, boolean isManager) {
+        if (isManager) {
+            return Optional.ofNullable(comment.getManager())
+                .map(manager -> manager.getId().equals(userId))
+                .orElse(false);
+        } else {
+            return Optional.ofNullable(comment.getMember())
+                .map(member -> member.getId().equals(userId))
+                .orElse(false);
+        }
+    }
+
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getCommentsByArticleId(Long repairArticleId) {
+        UserIdAndRole currentUser = authenticationService.getCurrentUserIdAndRole();
         List<Comment> comments = commentRepository.findByRepairArticleIdAndDeletedAtIsNull(
             repairArticleId);
 
@@ -124,7 +141,7 @@ public class CommentService {
                 comment.getContent(),
                 comment.getCreatedAt(),
                 comment.getParentComment(),
-                comment.getManager() != null,
+                isAuthor(comment, currentUser.id(), currentUser.isManager()),
                 comment.getManager() != null ? comment.getManager().getName()
                     : comment.getMember().getName()
             ))
