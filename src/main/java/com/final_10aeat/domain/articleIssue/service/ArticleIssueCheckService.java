@@ -35,7 +35,7 @@ public class ArticleIssueCheckService {
         ManageArticle manageArticle = manageArticleRepository.findById(manageArticleId)
                 .orElseThrow(ArticleNotFoundException::new);
 
-        ArticleIssue articleIssue = articleIssueRepository.findFirstByManageArticleAndDeletedAtIsNullOrderByCreatedAtDesc(manageArticle)
+        ArticleIssue articleIssue = articleIssueRepository.findFirstByManageArticleAndDeletedAtIsNullOrderByIdDesc(manageArticle)
                 .orElseThrow(IssueNotFoundException::new);
 
         ArticleIssueCheckResponseDto responseDto = getArticleIssueCheckResponseDto(requestDto, member,
@@ -53,7 +53,7 @@ public class ArticleIssueCheckService {
         RepairArticle repairArticle = repairArticleRepository.findById(repairArticleId)
                 .orElseThrow(ArticleNotFoundException::new);
 
-        ArticleIssue articleIssue = articleIssueRepository.findFirstByRepairArticleAndDeletedAtIsNullOrderByCreatedAtDesc(repairArticle)
+        ArticleIssue articleIssue = articleIssueRepository.findFirstByRepairArticleAndDeletedAtIsNullOrderByIdDesc(repairArticle)
                 .orElseThrow(IssueNotFoundException::new);
 
         ArticleIssueCheckResponseDto responseDto = getArticleIssueCheckResponseDto(requestDto, member,

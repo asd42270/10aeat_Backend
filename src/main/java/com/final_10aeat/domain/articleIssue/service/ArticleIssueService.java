@@ -95,9 +95,6 @@ public class ArticleIssueService {
 
         ofNullable(request.title()).ifPresent(articleIssue::setTitle);
         ofNullable(request.content()).ifPresent(articleIssue::setContent);
-
-        articleIssue.setUpdatedAt(LocalDateTime.now());
-
     }
 
 }
