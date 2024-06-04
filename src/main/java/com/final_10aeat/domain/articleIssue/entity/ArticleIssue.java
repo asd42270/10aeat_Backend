@@ -62,6 +62,4 @@ public class ArticleIssue extends SoftDeletableBaseTimeEntity {
     public void delete(LocalDateTime currentTime) {
         super.delete(currentTime);
     }
-
-    public void setUpdatedAt(LocalDateTime currentTime) {this.updatedAt = currentTime;}
 }
