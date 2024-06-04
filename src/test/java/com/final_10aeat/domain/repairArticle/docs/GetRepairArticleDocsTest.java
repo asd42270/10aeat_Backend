@@ -99,13 +99,15 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
         OwnerRepairArticleResponseDto articleDto1 = new OwnerRepairArticleResponseDto(
             2L, "REPAIR", "김관리자", "INPROGRESS", "제목1",
             LocalDateTime.now(), LocalDateTime.now().plusDays(5),
-            LocalDateTime.now(), 5, 100, true, true, "http://example.com/image1.jpg"
+            LocalDateTime.now(), LocalDateTime.now(), 7, 100, true, true,
+            "http://example.com/image1.jpg"
         );
 
         OwnerRepairArticleResponseDto articleDto2 = new OwnerRepairArticleResponseDto(
             1L, "REPAIR", "이관리자", "PENDING", "제목2",
             LocalDateTime.now(), LocalDateTime.now().plusDays(10),
-            LocalDateTime.now(), 3, 150, false, false, "http://example.com/image2.jpg"
+            LocalDateTime.now().plusDays(6), LocalDateTime.now().plusDays(5), 3, 150, false, false,
+            "http://example.com/image2.jpg"
         );
 
         List<OwnerRepairArticleResponseDto> articles = List.of(articleDto1, articleDto2);
@@ -147,6 +149,8 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
                         .description("작업 종료 예정일"),
                     fieldWithPath("data[].createdAt").type(JsonFieldType.STRING)
                         .description("게시글 생성일"),
+                    fieldWithPath("data[].updatedAt").type(JsonFieldType.STRING)
+                        .description("게시글 수정일"),
                     fieldWithPath("data[].commentCount").type(JsonFieldType.NUMBER)
                         .description("댓글 수"),
                     fieldWithPath("data[].viewCount").type(JsonFieldType.NUMBER)
