@@ -1,9 +1,7 @@
 package com.final_10aeat.domain.comment.service;
 
-import com.final_10aeat.common.dto.UserIdAndRole;
 import com.final_10aeat.common.exception.ArticleNotFoundException;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
-import com.final_10aeat.common.service.AuthenticationService;
 import com.final_10aeat.domain.comment.dto.request.CreateCommentRequestDto;
 import com.final_10aeat.domain.comment.dto.request.UpdateCommentRequestDto;
 import com.final_10aeat.domain.comment.dto.response.CommentResponseDto;
