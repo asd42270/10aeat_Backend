@@ -7,6 +7,7 @@ import com.final_10aeat.common.util.manager.WithManager;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.articleIssue.controller.ArticleIssueController;
 import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssuePublishRequestDto;
+import com.final_10aeat.domain.articleIssue.dto.request.IssueUpdateRequestDto;
 import com.final_10aeat.domain.articleIssue.service.ArticleIssueService;
 import com.final_10aeat.domain.manager.entity.Manager;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -104,6 +106,40 @@ public class ArticleIssueControllerDocsTest extends RestDocsSupport {
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("repair_article_id").description("유지보수 게시글 id")
+                        ),
+                        requestFields(
+                                fieldWithPath("title").description("발행할 이슈의 제목"),
+                                fieldWithPath("content").description("발행할 이슈의 내용")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").description("응답 상태 코드")
+                        )
+                ));
+    }
+
+    @DisplayName(" 이슈 수정 API 문서화")
+    @Test
+    @WithManager
+    void updateIssue() throws Exception {
+
+        // given
+        IssueUpdateRequestDto request = IssueUpdateRequestDto.builder()
+                .title("이슈 수정")
+                .content("수정을 수정")
+                .build();
+
+        doNothing().when(articleIssueService).updateIssue(eq(request),any(Long.class), any(UserIdAndRole.class));
+
+        // when&then
+        mockMvc.perform(patch("/managers/articles/issue/{issue_id}", 1)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andDo(document("issue-update",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("issue_id").description("이슈 id")
                         ),
                         requestFields(
                                 fieldWithPath("title").description("발행할 이슈의 제목"),
