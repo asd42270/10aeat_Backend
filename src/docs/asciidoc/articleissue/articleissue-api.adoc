@@ -39,3 +39,18 @@ include::{snippets}/repair-issue-publish/request-fields.adoc[]
 
 include::{snippets}/repair-issue-publish/http-response.adoc[]
 include::{snippets}/repair-issue-publish/response-fields.adoc[]
+
+[[Delete-Issue]]
+== 이슈 삭제 API
+
+이슈 삭제 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/issue-delete/path-parameters.adoc[]
+include::{snippets}/issue-delete/http-request.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/issue-delete/http-response.adoc[]
+include::{snippets}/issue-delete/response-fields.adoc[]
