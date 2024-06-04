@@ -33,7 +33,7 @@ public interface RepairArticleRepository extends JpaRepository<RepairArticle, Lo
            WHERE ra.office.id = :officeId
            AND (:progresses IS NULL OR ra.progress IN :progresses)
            AND (:category IS NULL OR ra.category = :category)
-           ORDER BY ra.id DESC
+           ORDER BY ra.updatedAt DESC
            """)
     List<RepairArticle> findByOfficeIdAndProgressInAndCategoryOrderByCreatedAtDesc(
         @Param("officeId") Long officeId,
