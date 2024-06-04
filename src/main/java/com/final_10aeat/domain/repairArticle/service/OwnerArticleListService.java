@@ -63,6 +63,7 @@ public class OwnerArticleListService {
             article.getStartConstruction(),
             article.getEndConstruction(),
             article.getCreatedAt(),
+            article.getUpdatedAt(),
             commentCount,
             viewCount,
             isSaved,
