@@ -1,5 +1,6 @@
 package com.final_10aeat.domain.repairArticle.controller;
 
+import com.final_10aeat.common.dto.CustomPageDto;
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.domain.repairArticle.dto.response.CustomProgressResponseDto;
@@ -11,6 +12,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,14 +35,16 @@ public class GetRepairArticleController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<ResponseDTO<List<?>>> getAllRepairArticles(
+    public ResponseEntity<ResponseDTO<CustomPageDto>> getAllRepairArticles(
         @RequestParam(required = false) List<String> progress,
-        @RequestParam(required = false) ArticleCategory category) {
+        @RequestParam(required = false) ArticleCategory category,
+        Pageable pageable) {
 
         List<Progress> progressList = determineProgressFilter(progress);
-
-        List<?> articles = getRepairArticleFacade.getAllRepairArticles(progressList, category);
-        return ResponseEntity.ok(ResponseDTO.okWithData(articles));
+        Page<?> articles = getRepairArticleFacade.getAllRepairArticles(progressList, category,
+            pageable);
+        CustomPageDto pageDto = convertToCustomPageDto(articles);
+        return ResponseEntity.ok(ResponseDTO.okWithData(pageDto));
     }
 
     @GetMapping("/{repairArticleId}")
@@ -67,5 +72,15 @@ public class GetRepairArticleController {
             .map(String::toUpperCase)
             .map(Progress::valueOf)
             .collect(Collectors.toList());
+    }
+
+    private CustomPageDto<?> convertToCustomPageDto(Page<?> page) {
+        return new CustomPageDto<>(
+            page.getSize(),
+            page.getNumber(),
+            page.getTotalElements(),
+            page.getTotalPages(),
+            page.getContent()
+        );
     }
 }
