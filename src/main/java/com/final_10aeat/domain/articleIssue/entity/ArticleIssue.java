@@ -41,6 +41,9 @@ public class ArticleIssue extends SoftDeletableBaseTimeEntity {
     @Setter
     private String content;
 
+    @Setter
+    private boolean isActive;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manage_article_id", referencedColumnName = "id")
     private ManageArticle manageArticle;
