@@ -20,6 +20,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -127,5 +128,11 @@ public class ManageArticle extends SoftDeletableBaseTimeEntity {
         if (!anyComplete) {
             progress = Progress.PENDING;
         }
+    }
+
+    public Optional<ArticleIssue> getActiveIssue() {
+        return this.issues.stream()
+            .filter(ArticleIssue::isActive)
+            .findFirst();
     }
 }

@@ -20,6 +20,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -103,5 +104,12 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
 
     public boolean hasIssue() {
         return this.issues.stream().anyMatch(ArticleIssue::isActive);
+    }
+
+    public Optional<Long> getActiveIssueId() {
+        return this.issues.stream()
+            .filter(ArticleIssue::isActive)
+            .findFirst()
+            .map(ArticleIssue::getId);
     }
 }

@@ -47,8 +47,9 @@ public class OwnerArticleListService {
         int commentCount = (int) commentRepository.countByRepairArticleIdAndDeletedAtIsNull(
             article.getId());
         boolean isSaved = savedArticleIds.contains(article.getId());
-        boolean hasIssue =
-            article.hasIssue() && !checkedIssueIds.contains(article.getIssue().getId());
+        boolean hasIssue = article.hasIssue() && article.getActiveIssueId()
+            .map(id -> !checkedIssueIds.contains(id))
+            .orElse(false);
         int viewCount = article.getViewCount();
 
         return new OwnerRepairArticleResponseDto(
