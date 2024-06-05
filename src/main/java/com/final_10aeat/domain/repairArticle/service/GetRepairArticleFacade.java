@@ -9,6 +9,9 @@ import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleDetailDto
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleSummaryDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,15 +23,24 @@ public class GetRepairArticleFacade {
     private final GetRepairArticleService getRepairArticleService;
     private final AuthenticationService authenticationService;
 
-    public List<?> getAllRepairArticles(List<Progress> progresses, ArticleCategory category) {
+    public Page<?> getAllRepairArticles(List<Progress> progresses, ArticleCategory category,
+        Pageable pageable) {
         UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
         Long officeId = authenticationService.getUserOfficeId();
+        Pageable adjustedPageable = adjustPageableByRole(pageable, userIdAndRole.isManager());
+
         if (userIdAndRole.isManager()) {
-            return managerArticleListService.getAllRepairArticles(officeId, progresses, category);
+            return managerArticleListService.getAllRepairArticles(officeId, progresses, category,
+                adjustedPageable);
         } else {
             return ownerArticleListService.getAllRepairArticles(officeId, userIdAndRole.id(),
-                progresses, category);
+                progresses, category, adjustedPageable);
         }
+    }
+
+    private Pageable adjustPageableByRole(Pageable pageable, boolean isManager) {
+        int pageSize = isManager ? 5 : 20;
+        return PageRequest.of(pageable.getPageNumber(), pageSize, pageable.getSort());
     }
 
     public RepairArticleSummaryDto getRepairArticleSummary() {

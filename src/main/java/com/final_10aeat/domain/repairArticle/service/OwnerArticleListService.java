@@ -8,11 +8,12 @@ import com.final_10aeat.domain.repairArticle.dto.response.OwnerRepairArticleResp
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
 import com.final_10aeat.domain.save.repository.ArticleSaveRepository;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,23 +27,19 @@ public class OwnerArticleListService {
     private final ArticleSaveRepository articleSaveRepository;
     private final ArticleIssueCheckRepository articleIssueCheckRepository;
 
-    public List<OwnerRepairArticleResponseDto> getAllRepairArticles(Long officeId, Long userId,
-        List<Progress> progresses, ArticleCategory category) {
-        List<RepairArticle> articles = repairArticleRepository.findByOfficeIdAndProgressInAndCategoryOrderByCreatedAtDesc(
-            officeId, progresses, category);
+    public Page<OwnerRepairArticleResponseDto> getAllRepairArticles(Long officeId, Long userId,
+        List<Progress> progresses, ArticleCategory category, Pageable pageable) {
+        Page<RepairArticle> articles = repairArticleRepository.findByOfficeIdAndProgressInAndCategoryOrderByUpdatedAtDesc(
+            officeId, progresses, category, pageable);
 
         Set<Long> savedArticleIds;
         Set<Long> checkedIssueIds;
-
-        List<Long> articleIds = articles.stream().map(RepairArticle::getId)
+        List<Long> articleIds = articles.getContent().stream().map(RepairArticle::getId)
             .collect(Collectors.toList());
         savedArticleIds = articleSaveRepository.findSavedArticleIdsByMember(userId, articleIds);
         checkedIssueIds = articleIssueCheckRepository.findCheckedIssueIdsByMember(userId);
 
-        return articles.stream()
-            .map(article -> mapToDto(article, savedArticleIds, checkedIssueIds))
-            .sorted(Comparator.comparing(OwnerRepairArticleResponseDto::redDot).reversed())
-            .collect(Collectors.toList());
+        return articles.map(article -> mapToDto(article, savedArticleIds, checkedIssueIds));
     }
 
     private OwnerRepairArticleResponseDto mapToDto(RepairArticle article, Set<Long> savedArticleIds,
@@ -63,6 +60,7 @@ public class OwnerArticleListService {
             article.getStartConstruction(),
             article.getEndConstruction(),
             article.getCreatedAt(),
+            article.getUpdatedAt(),
             commentCount,
             viewCount,
             isSaved,

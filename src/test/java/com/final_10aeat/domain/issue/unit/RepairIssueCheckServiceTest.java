@@ -82,7 +82,7 @@ public class RepairIssueCheckServiceTest {
             // given
             ArticleIssueCheckRequestDto requestDto = new ArticleIssueCheckRequestDto(true);
             given(repairArticleRepository.findById(repairArticle.getId())).willReturn(Optional.of(repairArticle));
-            given(articleIssueRepository.findFirstByRepairArticleOrderByCreatedAtDesc(repairArticle))
+            given(articleIssueRepository.findFirstByRepairArticleAndDeletedAtIsNullOrderByIdDesc(repairArticle))
                     .willReturn(Optional.of(articleIssue));
             given(redisTemplate.opsForValue()).willReturn(mock(ValueOperations.class));
 
@@ -92,7 +92,7 @@ public class RepairIssueCheckServiceTest {
 
             // then
             verify(repairArticleRepository).findById(repairArticle.getId());
-            verify(articleIssueRepository).findFirstByRepairArticleOrderByCreatedAtDesc(repairArticle);
+            verify(articleIssueRepository).findFirstByRepairArticleAndDeletedAtIsNullOrderByIdDesc(repairArticle);
             verify(articleIssueCheckRepository).save(any(ArticleIssueCheck.class));
             Assertions.assertThat(responseDto.title()).isEqualTo(articleIssue.getTitle());
         }
@@ -115,7 +115,7 @@ public class RepairIssueCheckServiceTest {
             // given
             ArticleIssueCheckRequestDto requestDto = new ArticleIssueCheckRequestDto(true);
             given(repairArticleRepository.findById(repairArticle.getId())).willReturn(Optional.of(repairArticle));
-            given(articleIssueRepository.findFirstByRepairArticleOrderByCreatedAtDesc(repairArticle)).willReturn(Optional.empty());
+            given(articleIssueRepository.findFirstByRepairArticleAndDeletedAtIsNullOrderByIdDesc(repairArticle)).willReturn(Optional.empty());
 
             // when&then
             assertThrows(IssueNotFoundException.class,

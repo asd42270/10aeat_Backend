@@ -20,6 +20,7 @@ import com.final_10aeat.domain.repairArticle.exception.ManagerNotFoundException;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -113,8 +114,16 @@ public class CommentService {
         }
     }
 
+    private boolean isAuthor(Comment comment, RepairArticle article) {
+        return Optional.ofNullable(comment.getManager())
+            .map(manager -> manager.getId().equals(article.getManager().getId()))
+            .orElse(false);
+    }
+
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getCommentsByArticleId(Long repairArticleId) {
+        RepairArticle article = repairArticleRepository.findById(repairArticleId)
+            .orElseThrow(ArticleNotFoundException::new);
         List<Comment> comments = commentRepository.findByRepairArticleIdAndDeletedAtIsNull(
             repairArticleId);
 
@@ -124,7 +133,7 @@ public class CommentService {
                 comment.getContent(),
                 comment.getCreatedAt(),
                 comment.getParentComment(),
-                comment.getManager() != null,
+                isAuthor(comment, article),
                 comment.getManager() != null ? comment.getManager().getName()
                     : comment.getMember().getName()
             ))

@@ -9,7 +9,9 @@ import java.util.Optional;
 
 public interface ArticleIssueRepository extends JpaRepository<ArticleIssue, Long> {
 
-    Optional<ArticleIssue> findFirstByManageArticleOrderByCreatedAtDesc(ManageArticle manageArticle);
+    Optional<ArticleIssue> findFirstByManageArticleAndDeletedAtIsNullOrderByIdDesc(ManageArticle manageArticle);
 
-    Optional<ArticleIssue> findFirstByRepairArticleOrderByCreatedAtDesc(RepairArticle repairArticle);
+    Optional<ArticleIssue> findFirstByRepairArticleAndDeletedAtIsNullOrderByIdDesc(RepairArticle repairArticle);
+
+//    Optional<ArticleIssue> findByIdAndDeletedAtIsNull(Long id);
 }
