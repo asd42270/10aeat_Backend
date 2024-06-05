@@ -19,6 +19,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -85,7 +86,8 @@ public class ManageArticle extends SoftDeletableBaseTimeEntity {
     @Setter
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_issue_id", referencedColumnName = "id")
-    private Set<ArticleIssue> issues;
+    private Set<ArticleIssue> issues = new HashSet<>();
+    ;
 
     public void delete(LocalDateTime currentTime) {
         super.delete(currentTime);
