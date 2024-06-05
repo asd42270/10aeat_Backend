@@ -2,6 +2,7 @@ package com.final_10aeat.domain.manager.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.final_10aeat.common.config.TestConfig;
 import com.final_10aeat.domain.manager.repository.ManagerRepository;
 import com.final_10aeat.domain.office.repository.OfficeRepository;
 import com.final_10aeat.common.enumclass.MemberRole;
@@ -15,9 +16,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 @DataJpaTest
 @Transactional
+@Import(TestConfig.class)
 class ManagerEntityTest {
 
     @PersistenceContext
