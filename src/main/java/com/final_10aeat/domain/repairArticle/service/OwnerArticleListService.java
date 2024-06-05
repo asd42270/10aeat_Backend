@@ -51,6 +51,7 @@ public class OwnerArticleListService {
             .map(id -> !checkedIssueIds.contains(id))
             .orElse(false);
         int viewCount = article.getViewCount();
+        Long activeIssueId = article.getActiveIssueId().orElse(null);
 
         return new OwnerRepairArticleResponseDto(
             article.getId(),
@@ -67,7 +68,8 @@ public class OwnerArticleListService {
             isSaved,
             hasIssue,
             article.getImages().isEmpty() ? null
-                : article.getImages().iterator().next().getImageUrl()
+                : article.getImages().iterator().next().getImageUrl(),
+            activeIssueId
         );
     }
 }
