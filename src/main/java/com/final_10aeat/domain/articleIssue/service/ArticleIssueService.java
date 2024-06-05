@@ -8,7 +8,7 @@ import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssuePublishRequestDto;
 import com.final_10aeat.domain.articleIssue.dto.request.IssueUpdateRequestDto;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
-import com.final_10aeat.domain.articleIssue.exception.InactiveIssueUpdateException;
+import com.final_10aeat.domain.articleIssue.exception.InactiveIssueException;
 import com.final_10aeat.domain.articleIssue.exception.IssueNotFoundException;
 import com.final_10aeat.domain.articleIssue.repository.ArticleIssueRepository;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
@@ -68,7 +68,7 @@ public class ArticleIssueService {
         validateManager(userIdAndRole, articleIssue);
 
         if (!articleIssue.isActive()) {
-            throw new InactiveIssueUpdateException();
+            throw new InactiveIssueException();
         }
 
         update(request, articleIssue);
@@ -80,6 +80,7 @@ public class ArticleIssueService {
 
         validateManager(userIdAndRole, articleIssue);
 
+        articleIssue.setActive(false);
         articleIssue.delete(LocalDateTime.now());
         articleIssueRepository.save(articleIssue);
     }

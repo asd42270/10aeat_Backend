@@ -3,60 +3,46 @@ package com.final_10aeat.domain.articleIssue.controller;
 import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssueCheckRequestDto;
 import com.final_10aeat.domain.articleIssue.dto.response.ArticleIssueCheckResponseDto;
 import com.final_10aeat.domain.articleIssue.service.ArticleIssueCheckService;
+import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.global.security.principal.MemberPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/articles/issues")
 @RequiredArgsConstructor
-@RequestMapping("/issues")
-@PreAuthorize("hasRole('USER')")
 public class ArticleIssueCheckController {
 
     private final ArticleIssueCheckService articleIssueCheckService;
 
-    @PostMapping("/check/manage/{manage_article_id}")
-    public ResponseDTO<ArticleIssueCheckResponseDto> checkManageIssue(
-            @PathVariable("manage_article_id") Long manageArticleId,
-            @RequestBody @Valid ArticleIssueCheckRequestDto requestDto
+    @PostMapping("check/{issueId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseDTO<Void> checkIssue(
+        @PathVariable("issueId") Long issueId,
+        @RequestBody @Valid ArticleIssueCheckRequestDto request
     ) {
         MemberPrincipal memberPrincipal = (MemberPrincipal) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-        return ResponseDTO.okWithData(
-                articleIssueCheckService.manageIssueCheck(requestDto, manageArticleId,
-                        memberPrincipal.getMember())
-        );
+            .getAuthentication().getPrincipal();
+        Member member = memberPrincipal.getMember();
+
+        articleIssueCheckService.checkIssue(request, issueId, member);
+        return ResponseDTO.ok();
     }
 
-    @PostMapping("/check/repair/{repair_article_id}")
-    public ResponseDTO<ArticleIssueCheckResponseDto> checkRepairIssue(
-            @PathVariable("repair_article_id") Long repairArticleId,
-            @RequestBody @Valid ArticleIssueCheckRequestDto requestDto
+    @GetMapping("/{issueId}")
+    public ResponseDTO<ArticleIssueCheckResponseDto> getIssueDetail(
+        @PathVariable("issueId") Long issueId
     ) {
-        MemberPrincipal memberPrincipal = (MemberPrincipal) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-
-        return ResponseDTO.okWithData(
-                articleIssueCheckService.repairIssueCheck(requestDto, repairArticleId,
-                        memberPrincipal.getMember())
-        );
-    }
-
-    @GetMapping("/repair/{repair_article_id}")
-    public ResponseDTO<ArticleIssueCheckResponseDto> getRepairIssueDetail(
-            @PathVariable("repair_article_id") Long articleId
-    ) {
-        return ResponseDTO.okWithData(articleIssueCheckService.getRepairIssueDetail(articleId));
-    }
-
-    @GetMapping("/manage/{manage_article_id}")
-    public ResponseDTO<ArticleIssueCheckResponseDto> getManageIssueDetail(
-            @PathVariable("manage_article_id") Long articleId
-    ) {
-        return ResponseDTO.okWithData(articleIssueCheckService.getManageIssueDetail(articleId));
+        ArticleIssueCheckResponseDto responseDto = articleIssueCheckService.getIssueDetail(issueId);
+        return ResponseDTO.okWithData(responseDto);
     }
 }

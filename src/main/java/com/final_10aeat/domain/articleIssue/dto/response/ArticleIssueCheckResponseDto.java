@@ -5,10 +5,9 @@ import lombok.Builder;
 
 @Builder
 public record ArticleIssueCheckResponseDto(
-        Long id,
-        String title,
-        String content,
-        @AssertTrue
-        Boolean check
+    Long id,
+    String title,
+    String content
 ) {
+
 }

@@ -54,7 +54,7 @@ public enum ErrorCode {
 
     // ISSUE
     ISSUE_NOT_FOUND(HttpStatus.NOT_FOUND, "이슈를 찾을 수 없습니다."),
-    INACTIVE_ISSUE_UPDATE_ATTEMPT(HttpStatus.BAD_REQUEST, "활성화 상태의 이슈만 업데이트 가능합니다."),
+    INACTIVE_ISSUE_ATTEMPT(HttpStatus.BAD_REQUEST, "비활성화된 이슈입니다."),
 
     // COMMENT
     INVALID_COMMENT_DEPTH(HttpStatus.BAD_REQUEST, "대댓글은 1단만 작성할 수 있습니다."),
