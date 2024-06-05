@@ -1,9 +1,12 @@
 package com.final_10aeat.domain.manageArticle.repository;
 
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ManageArticleQueryDslRepository {
 
-    List<ManageArticle> searchByOfficeIdAndText(Long userOfficeId,String search);
+    Page<ManageArticle> searchByOfficeIdAndText(
+        Long userOfficeId, String search, Pageable pageRequest
+    );
 }
