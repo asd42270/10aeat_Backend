@@ -32,7 +32,7 @@ public enum ErrorCode {
     BUILDING_INFO_MINIMUM_ONE_REQUIRED(HttpStatus.BAD_REQUEST, "회원은 최소 하나 이상의 건물 정보를 가져야 합니다."),
     BUILDING_INFO_NOT_FOUND(HttpStatus.NOT_FOUND, "건물 정보를 찾을 수 없습니다."),
     BUILDING_INFO_NOT_ASSOCIATED_WITH_MEMBER(HttpStatus.BAD_REQUEST, "건물 정보가 회원과 연관되어 있지 않습니다."),
-    DUPLICATED_BUILDING_INFO(HttpStatus.CONFLICT,"동일한 동호수가 이미 존재합니다."),
+    DUPLICATED_BUILDING_INFO(HttpStatus.CONFLICT, "동일한 동호수가 이미 존재합니다."),
 
     // USER
     USER_NOT_EXIST(HttpStatus.BAD_REQUEST, "존재하지 않는 사용자입니다."),
@@ -54,6 +54,7 @@ public enum ErrorCode {
 
     // ISSUE
     ISSUE_NOT_FOUND(HttpStatus.NOT_FOUND, "이슈를 찾을 수 없습니다."),
+    INACTIVE_ISSUE_UPDATE_ATTEMPT(HttpStatus.BAD_REQUEST, "활성화 상태의 이슈만 업데이트 가능합니다."),
 
     // COMMENT
     INVALID_COMMENT_DEPTH(HttpStatus.BAD_REQUEST, "대댓글은 1단만 작성할 수 있습니다."),
