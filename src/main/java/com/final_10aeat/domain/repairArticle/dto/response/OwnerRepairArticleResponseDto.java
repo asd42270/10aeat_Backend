@@ -11,6 +11,7 @@ public record OwnerRepairArticleResponseDto(
     LocalDateTime startConstruction,
     LocalDateTime endConstruction,
     LocalDateTime createdAt,
+    LocalDateTime updatedAt,
     int commentCount,
     int viewCount,
     boolean isSave,

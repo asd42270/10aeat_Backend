@@ -3,6 +3,7 @@ package com.final_10aeat.domain.repairArticle.docs;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -14,6 +15,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.final_10aeat.common.dto.UserIdAndRole;
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
@@ -29,10 +31,18 @@ import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleSummaryDt
 import com.final_10aeat.domain.repairArticle.service.GetRepairArticleFacade;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 public class GetRepairArticleDocsTest extends RestDocsSupport {
 
@@ -45,6 +55,18 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
         authenticationService = mock(AuthenticationService.class);
         return new GetRepairArticleController(getRepairArticleFacade);
     }
+
+    @BeforeEach
+    void setUp(RestDocumentationContextProvider provider) {
+        this.mockMvc = MockMvcBuilders.standaloneSetup(initController())
+            .apply(documentationConfiguration(provider))
+            .addFilter(new CharacterEncodingFilter("UTF-8", true))
+            .setMessageConverters(getLocalDateTimeConverter())
+            .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+            .build();
+        objectMapper.registerModule(new JavaTimeModule());
+    }
+
 
     @DisplayName("유지보수 게시글 요약 조회 API 문서화")
     @Test
@@ -91,7 +113,7 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
     @DisplayName("유지보수 게시글 전체 조회 API 문서화 - 소유주")
     @Test
     void testGetAllRepairArticles() throws Exception {
-        UserIdAndRole userIdAndRole = new UserIdAndRole(1L, true);
+        UserIdAndRole userIdAndRole = new UserIdAndRole(1L, false);
         when(authenticationService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
         when(authenticationService.getUserOfficeId()).thenReturn(1L);
 
@@ -99,25 +121,33 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
         OwnerRepairArticleResponseDto articleDto1 = new OwnerRepairArticleResponseDto(
             2L, "REPAIR", "김관리자", "INPROGRESS", "제목1",
             LocalDateTime.now(), LocalDateTime.now().plusDays(5),
-            LocalDateTime.now(), 5, 100, true, true, "http://example.com/image1.jpg"
+            LocalDateTime.now(), LocalDateTime.now(), 7, 100, true, true,
+            "http://example.com/image1.jpg"
         );
 
         OwnerRepairArticleResponseDto articleDto2 = new OwnerRepairArticleResponseDto(
             1L, "REPAIR", "이관리자", "PENDING", "제목2",
             LocalDateTime.now(), LocalDateTime.now().plusDays(10),
-            LocalDateTime.now(), 3, 150, false, false, "http://example.com/image2.jpg"
+            LocalDateTime.now().plusDays(6), LocalDateTime.now().plusDays(5), 3, 150, false, false,
+            "http://example.com/image2.jpg"
         );
 
         List<OwnerRepairArticleResponseDto> articles = List.of(articleDto1, articleDto2);
+        Page<OwnerRepairArticleResponseDto> page = new PageImpl<>(articles, PageRequest.of(0, 5),
+            articles.size());
+
         when(getRepairArticleFacade.getAllRepairArticles(
-            List.of(Progress.INPROGRESS, Progress.PENDING), ArticleCategory.REPAIR)).thenReturn(
-            (List) articles);
+            List.of(Progress.INPROGRESS, Progress.PENDING), ArticleCategory.REPAIR,
+            PageRequest.of(0, 5)))
+            .thenReturn((Page) page);
 
         // when & then
         mockMvc.perform(get("/repair/articles/list")
                 .param("progress", "INPROGRESS")
                 .param("progress", "PENDING")
                 .param("category", "REPAIR")
+                .param("page", "0")
+                .param("size", "5")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(document("get-owner-repair-article-list",
@@ -127,35 +157,46 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
                     parameterWithName("progress").description(
                         "진행상황 (INPROGRESS,PENDING / COMPLETE)").optional(),
                     parameterWithName("category").description("카테고리 (INSTALL / REPAIR / REPLACE)")
-                        .optional()
+                        .optional(),
+                    parameterWithName("page").description("조회할 페이지 번호 (0부터 시작)").optional(),
+                    parameterWithName("size").description("이 파라미터가 없어도 기본값은 20으로 설정됩니다.").optional()
                 ),
                 responseFields(
                     fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 상태 코드"),
-                    fieldWithPath("message").type(JsonFieldType.STRING).optional()
-                        .description("응답 메시지"),
-                    fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("게시글 ID"),
-                    fieldWithPath("data[].category").type(JsonFieldType.STRING)
+                    fieldWithPath("data.pageSize").type(JsonFieldType.NUMBER).description("페이지 크기"),
+                    fieldWithPath("data.currentPage").type(JsonFieldType.NUMBER)
+                        .description("현재 페이지 번호"),
+                    fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
+                        .description("전체 항목 수"),
+                    fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
+                        .description("전체 페이지 수"),
+                    fieldWithPath("data.articles[].id").type(JsonFieldType.NUMBER)
+                        .description("게시글 ID"),
+                    fieldWithPath("data.articles[].category").type(JsonFieldType.STRING)
                         .description("카테고리"),
-                    fieldWithPath("data[].managerName").type(JsonFieldType.STRING)
+                    fieldWithPath("data.articles[].managerName").type(JsonFieldType.STRING)
                         .description("작성자 이름"),
-                    fieldWithPath("data[].progress").type(JsonFieldType.STRING)
+                    fieldWithPath("data.articles[].progress").type(JsonFieldType.STRING)
                         .description("진행 상태"),
-                    fieldWithPath("data[].title").type(JsonFieldType.STRING).description("게시글 제목"),
-                    fieldWithPath("data[].startConstruction").type(JsonFieldType.STRING)
+                    fieldWithPath("data.articles[].title").type(JsonFieldType.STRING)
+                        .description("게시글 제목"),
+                    fieldWithPath("data.articles[].startConstruction").type(JsonFieldType.STRING)
                         .description("작업 시작 예정일"),
-                    fieldWithPath("data[].endConstruction").type(JsonFieldType.STRING)
+                    fieldWithPath("data.articles[].endConstruction").type(JsonFieldType.STRING)
                         .description("작업 종료 예정일"),
-                    fieldWithPath("data[].createdAt").type(JsonFieldType.STRING)
+                    fieldWithPath("data.articles[].createdAt").type(JsonFieldType.STRING)
                         .description("게시글 생성일"),
-                    fieldWithPath("data[].commentCount").type(JsonFieldType.NUMBER)
+                    fieldWithPath("data.articles[].updatedAt").type(JsonFieldType.STRING)
+                        .description("게시글 수정일"),
+                    fieldWithPath("data.articles[].commentCount").type(JsonFieldType.NUMBER)
                         .description("댓글 수"),
-                    fieldWithPath("data[].viewCount").type(JsonFieldType.NUMBER)
+                    fieldWithPath("data.articles[].viewCount").type(JsonFieldType.NUMBER)
                         .description("조회 수"),
-                    fieldWithPath("data[].isSave").type(JsonFieldType.BOOLEAN)
+                    fieldWithPath("data.articles[].isSave").type(JsonFieldType.BOOLEAN)
                         .description("게시글 저장 여부"),
-                    fieldWithPath("data[].redDot").type(JsonFieldType.BOOLEAN)
+                    fieldWithPath("data.articles[].redDot").type(JsonFieldType.BOOLEAN)
                         .description("레드닷 표시 여부"),
-                    fieldWithPath("data[].imageUrl").type(JsonFieldType.STRING).optional()
+                    fieldWithPath("data.articles[].imageUrl").type(JsonFieldType.STRING).optional()
                         .description("대표 이미지 URL")
                 )
             ));
@@ -183,12 +224,18 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
         );
 
         List<ManagerRepairArticleResponseDto> articles = List.of(articleDto1, articleDto2);
+        Page<ManagerRepairArticleResponseDto> page = new PageImpl<>(articles, PageRequest.of(0, 5),
+            articles.size());
+
         when(getRepairArticleFacade.getAllRepairArticles(
-            List.of(Progress.PENDING), null)).thenReturn((List) articles);
+            List.of(Progress.PENDING), null, PageRequest.of(0, 5)))
+            .thenReturn((Page) page);
 
         // when & then
         mockMvc.perform(get("/repair/articles/list")
                 .param("progress", "PENDING")
+                .param("page", "0")
+                .param("size", "5")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(document("get-manager-repair-article-list",
@@ -196,32 +243,42 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
                 preprocessResponse(prettyPrint()),
                 queryParameters(
                     parameterWithName("progress").description(
-                        "진행상황 (INPROGRESS / PENDING / COMPLETE)").optional()
+                        "진행상황 (INPROGRESS / PENDING / COMPLETE)").optional(),
+                    parameterWithName("page").description("조회할 페이지 번호 (0부터 시작)").optional(),
+                    parameterWithName("size").description("이 파라미터가 없어도 기본값은 5로 설정됩니다.").optional()
                 ),
                 responseFields(
                     fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 상태 코드"),
-                    fieldWithPath("message").type(JsonFieldType.STRING).optional()
-                        .description("응답 메시지"),
-                    fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("게시글 ID"),
-                    fieldWithPath("data[].category").type(JsonFieldType.STRING).description("카테고리"),
-                    fieldWithPath("data[].managerName").type(JsonFieldType.STRING)
+                    fieldWithPath("data.pageSize").type(JsonFieldType.NUMBER).description("페이지 크기"),
+                    fieldWithPath("data.currentPage").type(JsonFieldType.NUMBER)
+                        .description("현재 페이지 번호"),
+                    fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
+                        .description("전체 항목 수"),
+                    fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
+                        .description("전체 페이지 수"),
+                    fieldWithPath("data.articles[].id").type(JsonFieldType.NUMBER)
+                        .description("게시글 ID"),
+                    fieldWithPath("data.articles[].category").type(JsonFieldType.STRING)
+                        .description("카테고리"),
+                    fieldWithPath("data.articles[].managerName").type(JsonFieldType.STRING)
                         .description("작성자 이름"),
-                    fieldWithPath("data[].progress").type(JsonFieldType.STRING)
+                    fieldWithPath("data.articles[].progress").type(JsonFieldType.STRING)
                         .description("진행 상태"),
-                    fieldWithPath("data[].title").type(JsonFieldType.STRING).description("게시글 제목"),
-                    fieldWithPath("data[].startConstruction").type(JsonFieldType.STRING)
+                    fieldWithPath("data.articles[].title").type(JsonFieldType.STRING)
+                        .description("게시글 제목"),
+                    fieldWithPath("data.articles[].startConstruction").type(JsonFieldType.STRING)
                         .description("작업 시작 예정일"),
-                    fieldWithPath("data[].endConstruction").type(JsonFieldType.STRING)
+                    fieldWithPath("data.articles[].endConstruction").type(JsonFieldType.STRING)
                         .description("작업 종료 예정일"),
-                    fieldWithPath("data[].createdAt").type(JsonFieldType.STRING)
+                    fieldWithPath("data.articles[].createdAt").type(JsonFieldType.STRING)
                         .description("게시글 생성일"),
-                    fieldWithPath("data[].updatedAt").type(JsonFieldType.STRING)
+                    fieldWithPath("data.articles[].updatedAt").type(JsonFieldType.STRING)
                         .description("게시글 수정일"),
-                    fieldWithPath("data[].commentCount").type(JsonFieldType.NUMBER)
+                    fieldWithPath("data.articles[].commentCount").type(JsonFieldType.NUMBER)
                         .description("댓글 수"),
-                    fieldWithPath("data[].viewCount").type(JsonFieldType.NUMBER)
+                    fieldWithPath("data.articles[].viewCount").type(JsonFieldType.NUMBER)
                         .description("조회 수"),
-                    fieldWithPath("data[].imageUrl").type(JsonFieldType.STRING).optional()
+                    fieldWithPath("data.articles[].imageUrl").type(JsonFieldType.STRING).optional()
                         .description("대표 이미지 URL")
                 )
             ));
