@@ -42,6 +42,7 @@ public class ArticleIssue extends SoftDeletableBaseTimeEntity {
     private String content;
 
     @Setter
+    @Column(name = "is_active")
     private boolean isActive;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -57,20 +58,20 @@ public class ArticleIssue extends SoftDeletableBaseTimeEntity {
     private Manager manager;
 
     public ArticleIssue(String title, String content, ManageArticle manageArticle,
-        LocalDateTime createdAt, Manager manager) {
+        Manager manager) {
         this.title = title;
         this.content = content;
         this.manageArticle = manageArticle;
-        this.createdAt = createdAt;
+        this.isActive = true;
         this.manager = manager;
     }
 
     public ArticleIssue(String title, String content, RepairArticle repairArticle,
-        LocalDateTime createdAt, Manager manager) {
+        Manager manager) {
         this.title = title;
         this.content = content;
         this.repairArticle = repairArticle;
-        this.createdAt = createdAt;
+        this.isActive = true;
         this.manager = manager;
     }
 
