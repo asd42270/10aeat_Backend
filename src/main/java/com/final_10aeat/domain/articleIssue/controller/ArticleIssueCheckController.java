@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/articles/issues")
+@RequestMapping("/articles/issue")
 @RequiredArgsConstructor
 public class ArticleIssueCheckController {
 
     private final ArticleIssueCheckService articleIssueCheckService;
 
-    @PostMapping("check/{issueId}")
+    @PostMapping("/check/{issueId}")
     @PreAuthorize("hasRole('USER')")
     public ResponseDTO<Void> checkIssue(
         @PathVariable("issueId") Long issueId,
@@ -38,7 +38,7 @@ public class ArticleIssueCheckController {
         return ResponseDTO.ok();
     }
 
-    @GetMapping("/{issueId}")
+    @GetMapping("/detail/{issueId}")
     public ResponseDTO<ArticleIssueCheckResponseDto> getIssueDetail(
         @PathVariable("issueId") Long issueId
     ) {

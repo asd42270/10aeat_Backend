@@ -57,7 +57,7 @@ public class ArticleIssueCheckControllerDocsTest extends RestDocsSupport {
         ArticleIssueCheckRequestDto requestDto = new ArticleIssueCheckRequestDto(true);
 
         // when & then
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/articles/issues/check/{issueId}", 1)
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/articles/issue/check/{issueId}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDto)))
             .andExpect(status().isOk())
@@ -87,7 +87,7 @@ public class ArticleIssueCheckControllerDocsTest extends RestDocsSupport {
         when(articleIssueCheckService.getIssueDetail(any(Long.class))).thenReturn(responseDto);
 
         // then
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/articles/issues/{issueId}", 1))
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/articles/issue/detail/{issueId}", 1))
             .andExpect(status().isOk())
             .andDo(document("issue-detail",
                 preprocessRequest(prettyPrint()),
