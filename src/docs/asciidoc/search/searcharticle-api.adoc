@@ -1,0 +1,41 @@
+= Get Repair Article REST API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+=== link:../index.html[시작 페이지로 돌아가기]
+
+* keyword는 문자열로 요청하시면 됩니다
+- 테스트 중 인코딩되어 어색하게 보일 수 있습니다
+
+[[Search-Repair-Article]]
+== 유지보수 게시글 텍스트 검색
+
+유지보수 게시글을 검색하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/repair-article-search/http-request.adoc[]
+include::{snippets}/repair-article-search/query-parameters.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/repair-article-search/http-response.adoc[]
+include::{snippets}/repair-article-search/response-fields.adoc[]
+
+[[Search-Manage-Article]]
+== 법정점검 게시글 텍스트 검색
+
+법정점검 게시글을 검색하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/manage-article-search/http-request.adoc[]
+include::{snippets}/manage-article-search/query-parameters.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/repair-article-search/http-response.adoc[]
+include::{snippets}/repair-article-search/response-fields.adoc[]
