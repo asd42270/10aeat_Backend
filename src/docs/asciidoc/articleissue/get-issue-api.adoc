@@ -21,3 +21,33 @@ include::{snippets}/issue-detail/http-request.adoc[]
 
 include::{snippets}/issue-detail/http-response.adoc[]
 include::{snippets}/issue-detail/response-fields.adoc[]
+
+[[Get-Manage-Issue-History]]
+== 법정관리 게시글 이슈 히스트리 조회 API
+
+법정관리 게시글의 이슈 히스트리를 조회하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/manage-issue-history/path-parameters.adoc[]
+include::{snippets}/manage-issue-history/http-request.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/manage-issue-history/http-response.adoc[]
+include::{snippets}/manage-issue-history/response-fields.adoc[]
+
+[[Get-Repair-Issue-History]]
+== 유지보수 게시글 이슈 히스트리 조회 API
+
+유지보수 게시글의 이슈 히스트리를 조회하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/repair-issue-history/path-parameters.adoc[]
+include::{snippets}/repair-issue-history/http-request.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/repair-issue-history/http-response.adoc[]
+include::{snippets}/repair-issue-history/response-fields.adoc[]
