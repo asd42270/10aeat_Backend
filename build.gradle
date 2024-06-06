@@ -3,7 +3,6 @@ plugins {
     id 'org.springframework.boot' version '3.2.5'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
-    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com'
@@ -18,7 +17,6 @@ configurations {
         extendsFrom annotationProcessor
     }
     asciidoctorExt
-    querydsl.extendsFrom compileClasspath
 }
 
 repositories {
@@ -101,17 +99,4 @@ bootJar {
 
 clean {
     delete file('src/main/generated')
-}
-
-def querydslDir = "$buildDir/generated/querydsl"
-
-querydsl {
-    jpa = true
-    querydslSourcesDir = querydslDir
-}
-sourceSets {
-    main.java.srcDir querydslDir
-}
-compileQuerydsl{
-    options.annotationProcessorPath = configurations.querydsl
 }

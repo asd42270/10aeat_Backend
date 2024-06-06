@@ -32,7 +32,7 @@ jobs:
         shell: bash
 
       - name: Creat asciidoctor snippet
-        run: ./gradlew clean compileQuerydsl asciidoctor
+        run: ./gradlew clean asciidoctor
         shell: bash
 
       - name: Build and Test with Gradle
