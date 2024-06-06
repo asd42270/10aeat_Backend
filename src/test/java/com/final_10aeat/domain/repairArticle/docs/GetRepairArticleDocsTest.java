@@ -122,14 +122,14 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
             2L, "REPAIR", "김관리자", "INPROGRESS", "제목1",
             LocalDateTime.now(), LocalDateTime.now().plusDays(5),
             LocalDateTime.now(), LocalDateTime.now(), 7, 100, true, true,
-            "http://example.com/image1.jpg"
+            "http://example.com/image1.jpg", 1L
         );
 
         OwnerRepairArticleResponseDto articleDto2 = new OwnerRepairArticleResponseDto(
             1L, "REPAIR", "이관리자", "PENDING", "제목2",
             LocalDateTime.now(), LocalDateTime.now().plusDays(10),
             LocalDateTime.now().plusDays(6), LocalDateTime.now().plusDays(5), 3, 150, false, false,
-            "http://example.com/image2.jpg"
+            "http://example.com/image2.jpg", null
         );
 
         List<OwnerRepairArticleResponseDto> articles = List.of(articleDto1, articleDto2);
@@ -197,7 +197,9 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
                     fieldWithPath("data.articles[].redDot").type(JsonFieldType.BOOLEAN)
                         .description("레드닷 표시 여부"),
                     fieldWithPath("data.articles[].imageUrl").type(JsonFieldType.STRING).optional()
-                        .description("대표 이미지 URL")
+                        .description("대표 이미지 URL"),
+                    fieldWithPath("data.articles[].activeIssueId").type(JsonFieldType.NUMBER).optional()
+                        .description("활성화된 이슈 ID")
                 )
             ));
     }
@@ -214,13 +216,13 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
         ManagerRepairArticleResponseDto articleDto1 = new ManagerRepairArticleResponseDto(
             2L, "REPAIR", "김관리자", "PENDING", "제목1",
             LocalDateTime.now(), LocalDateTime.now().plusDays(10),
-            LocalDateTime.now(), LocalDateTime.now(), 5, 100, "http://example.com/image1.jpg"
+            LocalDateTime.now(), LocalDateTime.now(), 5, 100, "http://example.com/image1.jpg", 1L
         );
 
         ManagerRepairArticleResponseDto articleDto2 = new ManagerRepairArticleResponseDto(
             1L, "REPAIR", "이관리자", "PENDING", "제목2",
             LocalDateTime.now(), LocalDateTime.now().plusDays(5),
-            LocalDateTime.now(), LocalDateTime.now(), 3, 150, "http://example.com/image2.jpg"
+            LocalDateTime.now(), LocalDateTime.now(), 3, 150, "http://example.com/image2.jpg", null
         );
 
         List<ManagerRepairArticleResponseDto> articles = List.of(articleDto1, articleDto2);
@@ -279,7 +281,9 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
                     fieldWithPath("data.articles[].viewCount").type(JsonFieldType.NUMBER)
                         .description("조회 수"),
                     fieldWithPath("data.articles[].imageUrl").type(JsonFieldType.STRING).optional()
-                        .description("대표 이미지 URL")
+                        .description("대표 이미지 URL"),
+                    fieldWithPath("data.articles[].activeIssueId").type(JsonFieldType.NUMBER).optional()
+                        .description("활성화된 이슈 ID")
                 )
             ));
     }

@@ -18,9 +18,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -99,10 +99,17 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
         super.delete(currentTime);
     }
 
-    @OneToOne(mappedBy = "repairArticle", fetch = FetchType.LAZY)
-    private ArticleIssue issue;
+    @OneToMany(mappedBy = "repairArticle", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<ArticleIssue> issues;
 
     public boolean hasIssue() {
-        return this.issue != null;
+        return this.issues.stream().anyMatch(ArticleIssue::isActive);
+    }
+
+    public Optional<Long> getActiveIssueId() {
+        return this.issues.stream()
+            .filter(ArticleIssue::isActive)
+            .findFirst()
+            .map(ArticleIssue::getId);
     }
 }

@@ -54,10 +54,7 @@ public class ReadManageArticleService {
             if (progress == Progress.PENDING) {
                 pending++;
             }
-
-            if (ofNullable(article.getIssue()).isPresent()) {
-                issueList.add(article.getIssue().getId());
-            }
+            article.getActiveIssue().ifPresent(issue -> issueList.add(issue.getId()));
         }
 
         return new SummaryManageArticleResponse(complete, inprogress, pending, issueList);
@@ -80,9 +77,7 @@ public class ReadManageArticleService {
             .period(article.getPeriod())
             .periodCount(article.getPeriodCount())
             .title(article.getTitle())
-            .issueId(
-                ofNullable(article.getIssue()).isEmpty() ? null : article.getIssue().getId()
-            )
+            .issueId(article.getActiveIssue().map(ArticleIssue::getId).orElse(null))
             .progress(article.getProgress())
             .legalBasis(article.getLegalBasis())
             .target(article.getTarget())
@@ -120,9 +115,7 @@ public class ReadManageArticleService {
                 (int) article.getSchedules().stream()
                     .filter(ManageSchedule::isComplete).count()
             )
-            .issueId(ofNullable(article.getIssue())
-                .map(ArticleIssue::getId).orElse(0L)
-            )
+            .issueId(article.getActiveIssue().map(ArticleIssue::getId).orElse(null))
             .build();
     }
 

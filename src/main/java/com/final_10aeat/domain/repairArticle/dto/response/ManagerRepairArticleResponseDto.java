@@ -14,7 +14,8 @@ public record ManagerRepairArticleResponseDto(
     LocalDateTime updatedAt,
     int commentCount,
     int viewCount,
-    String imageUrl
+    String imageUrl,
+    Long activeIssueId
 ) {
 
 }

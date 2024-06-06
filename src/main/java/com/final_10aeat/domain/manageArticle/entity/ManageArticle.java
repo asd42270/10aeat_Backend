@@ -17,10 +17,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -82,9 +84,10 @@ public class ManageArticle extends SoftDeletableBaseTimeEntity {
     private Office office;
 
     @Setter
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_issue_id", referencedColumnName = "id")
-    private ArticleIssue issue;
+    private Set<ArticleIssue> issues = new HashSet<>();
+    ;
 
     public void delete(LocalDateTime currentTime) {
         super.delete(currentTime);
@@ -127,5 +130,11 @@ public class ManageArticle extends SoftDeletableBaseTimeEntity {
         if (!anyComplete) {
             progress = Progress.PENDING;
         }
+    }
+
+    public Optional<ArticleIssue> getActiveIssue() {
+        return this.issues.stream()
+            .filter(ArticleIssue::isActive)
+            .findFirst();
     }
 }

@@ -1,5 +1,11 @@
 package com.final_10aeat.domain.issue.unit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.final_10aeat.common.dto.UserIdAndRole;
 import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
@@ -10,18 +16,15 @@ import com.final_10aeat.domain.articleIssue.repository.ArticleIssueRepository;
 import com.final_10aeat.domain.articleIssue.service.ArticleIssueService;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
-import org.junit.jupiter.api.*;
+import java.util.Optional;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 public class IssueUpdateServiceTest {
 
@@ -31,26 +34,27 @@ public class IssueUpdateServiceTest {
     private ArticleIssueService articleIssueService;
 
     private final Manager manager = Manager.builder()
-            .id(1L)
-            .email("email")
-            .password("password")
-            .role(MemberRole.MANAGER)
-            .build();
+        .id(1L)
+        .email("email")
+        .password("password")
+        .role(MemberRole.MANAGER)
+        .build();
 
 
     private final RepairArticle repairArticle = RepairArticle.builder()
-            .id(1L)
-            .title("유지관리 게시글")
-            .content("유지관리 게시글 내용")
-            .build();
+        .id(1L)
+        .title("유지관리 게시글")
+        .content("유지관리 게시글 내용")
+        .build();
 
     private final ArticleIssue articleIssue = ArticleIssue.builder()
-            .id(1L)
-            .title("이슈가 발행됐어요")
-            .content("이슈에요")
-            .repairArticle(repairArticle)
-            .manager(manager)
-            .build();
+        .id(1L)
+        .title("이슈가 발행됐어요")
+        .content("이슈에요")
+        .repairArticle(repairArticle)
+        .manager(manager)
+        .isActive(true)
+        .build();
 
     private final UserIdAndRole userIdAndRole = new UserIdAndRole(manager.getId(), true);
 
@@ -68,16 +72,18 @@ public class IssueUpdateServiceTest {
         void _willSuccess() {
             // given
             IssueUpdateRequestDto request = IssueUpdateRequestDto.builder()
-                    .title("수정함")
-                    .build();
+                .title("수정함")
+                .build();
 
-            given(articleIssueRepository.findById(1L)).willReturn(Optional.ofNullable(articleIssue));
+            given(articleIssueRepository.findById(1L)).willReturn(
+                Optional.ofNullable(articleIssue));
 
             // when
-            articleIssueService.updateIssue(request,1L, userIdAndRole);
+            articleIssueService.updateIssue(request, 1L, userIdAndRole);
 
             // then
             verify(articleIssueRepository, times(1)).findById(1L);
+            verify(articleIssueRepository, times(1)).save(articleIssue);
 
             assertThat(articleIssue.getTitle()).isEqualTo(request.title());
         }
@@ -87,13 +93,14 @@ public class IssueUpdateServiceTest {
         void _issueNotFound() {
             // given
             IssueUpdateRequestDto request = IssueUpdateRequestDto.builder()
-                    .title("수정함")
-                    .build();
+                .title("수정함")
+                .build();
 
             given(articleIssueRepository.findById(1L)).willReturn(Optional.empty());
 
             // when&then
-            assertThrows(IssueNotFoundException.class, ()->articleIssueService.updateIssue(request,1L, userIdAndRole));
+            assertThrows(IssueNotFoundException.class,
+                () -> articleIssueService.updateIssue(request, 1L, userIdAndRole));
         }
 
         @Test
@@ -101,16 +108,17 @@ public class IssueUpdateServiceTest {
         void _unauthorizedException() {
             // given
             IssueUpdateRequestDto request = IssueUpdateRequestDto.builder()
-                    .title("수정함")
-                    .build();
+                .title("수정함")
+                .build();
 
             UserIdAndRole wrongUserIdAndRole = new UserIdAndRole(2L, true);
 
-            given(articleIssueRepository.findById(1L)).willReturn(Optional.ofNullable(articleIssue));
+            given(articleIssueRepository.findById(1L)).willReturn(
+                Optional.ofNullable(articleIssue));
 
             // when&then
             Assertions.assertThrows(UnauthorizedAccessException.class,
-                    ()-> articleIssueService.updateIssue(request ,1L, wrongUserIdAndRole));
+                () -> articleIssueService.updateIssue(request, 1L, wrongUserIdAndRole));
         }
 
         @Test
@@ -118,16 +126,17 @@ public class IssueUpdateServiceTest {
         void _unauthorizedException_() {
             // given
             IssueUpdateRequestDto request = IssueUpdateRequestDto.builder()
-                    .title("수정함")
-                    .build();
+                .title("수정함")
+                .build();
 
             UserIdAndRole wrongUserIdAndRole = new UserIdAndRole(manager.getId(), false);
 
-            given(articleIssueRepository.findById(1L)).willReturn(Optional.ofNullable(articleIssue));
+            given(articleIssueRepository.findById(1L)).willReturn(
+                Optional.ofNullable(articleIssue));
 
             // when&then
             Assertions.assertThrows(UnauthorizedAccessException.class,
-                    ()-> articleIssueService.updateIssue(request,1L, wrongUserIdAndRole));
+                () -> articleIssueService.updateIssue(request, 1L, wrongUserIdAndRole));
         }
     }
 }

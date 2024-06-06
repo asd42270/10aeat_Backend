@@ -16,7 +16,8 @@ public record OwnerRepairArticleResponseDto(
     int viewCount,
     boolean isSave,
     boolean redDot,
-    String imageUrl
+    String imageUrl,
+    Long activeIssueId
 ) {
 
 }

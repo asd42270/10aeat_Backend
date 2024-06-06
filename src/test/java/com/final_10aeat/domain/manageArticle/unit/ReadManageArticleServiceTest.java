@@ -20,6 +20,7 @@ import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
 import com.final_10aeat.domain.manageArticle.service.ReadManageArticleService;
 import com.final_10aeat.domain.office.entity.Office;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,6 +58,7 @@ public class ReadManageArticleServiceTest {
         .build();
     private final ArticleIssue issue = ArticleIssue.builder()
         .id(1L)
+        .isActive(true)
         .build();
     private final ManageArticle article1 = ManageArticle.builder()
         .id(1L)
@@ -64,6 +66,7 @@ public class ReadManageArticleServiceTest {
         .progress(Progress.COMPLETE)
         .office(office)
         .schedules(new ArrayList<>())
+        .issues(new HashSet<>())
         .build();
 
     private final ManageArticle article2 = ManageArticle.builder()
@@ -72,6 +75,7 @@ public class ReadManageArticleServiceTest {
         .progress(Progress.PENDING)
         .office(office)
         .schedules(new ArrayList<>())
+        .issues(new HashSet<>())
         .build();
 
 
@@ -86,7 +90,7 @@ public class ReadManageArticleServiceTest {
         // given
         article1.addSchedule(schedule1);
         article2.addSchedule(schedule3);
-        article1.setIssue(issue);
+        article1.getIssues().add(issue);
         List<ManageArticle> articleList = List.of(article1, article2);
         given(manageArticleRepository.findAllByOfficeIdAndDeletedAtNull(anyLong()))
             .willReturn(articleList);
