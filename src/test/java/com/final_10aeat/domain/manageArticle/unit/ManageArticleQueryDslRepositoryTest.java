@@ -39,6 +39,7 @@ public class ManageArticleQueryDslRepositoryTest {
     @Test
     @DisplayName("건물id와 텍스트로 검색 테스트")
     void searchByOfficeIdAndTextTest() {
+        // given
         Office savedOffice = officeRepository.save(office);
         List<ManageArticle> manageArticles = List.of(
             makeArticle("none", savedOffice),
@@ -51,9 +52,11 @@ public class ManageArticleQueryDslRepositoryTest {
         manageArticleRepository.saveAll(manageArticles);
         PageRequest pageRequest = PageRequest.of(0, 3);
 
+        // when
         Page<ManageArticle> keyword = manageArticleRepository
             .searchByOfficeIdAndText(savedOffice.getId(), "keyword", pageRequest);
 
+        // then
         assertEquals(keyword.getContent().size(), 1);
     }
 

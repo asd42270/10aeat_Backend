@@ -39,6 +39,7 @@ public class RepairArticleQueryDslRepositoryTest {
     @Test
     @DisplayName("건물id와 텍스트로 검색 테스트")
     void searchByOfficeIdAndTextTest() {
+        // given
         Office savedOffice = officeRepository.save(office);
         List<RepairArticle> articles = List.of(
             makeArticle("none", savedOffice),
@@ -51,9 +52,11 @@ public class RepairArticleQueryDslRepositoryTest {
         repairArticleRepository.saveAll(articles);
         PageRequest pageRequest = PageRequest.of(0, 3);
 
+        // when
         Page<RepairArticle> keyword = repairArticleRepository
             .searchByTextAnsOfficeId(savedOffice.getId(), "keyword", pageRequest);
 
+        // then
         assertEquals(keyword.getContent().size(), 1);
     }
 
