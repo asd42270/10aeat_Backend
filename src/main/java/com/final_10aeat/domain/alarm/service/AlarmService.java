@@ -13,11 +13,14 @@ import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.MemberRepository;
 import com.final_10aeat.global.util.ResponseDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.List;
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@EnableAsync
 public class AlarmService {
 
     private final AlarmRepository alarmRepository;
@@ -48,7 +52,8 @@ public class AlarmService {
         return deferredResult;
     }
 
-    @EventListener
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void commentEventHandler(CommentEvent event) {
         Member member = event.member();
         DeferredResult<ResponseEntity<ResponseDTO<AlarmResponseDto>>> deferredResult = alarmMap.get(member.getId());
@@ -62,23 +67,21 @@ public class AlarmService {
 
         Alarm savedAlarm = alarmRepository.save(alarm);
 
-        if (deferredResult == null) {
-            return;
+        if (Optional.ofNullable(deferredResult).isPresent()) {
+            AlarmResponseDto response = AlarmResponseDto.builder()
+                    .alarmId(savedAlarm.getId()) //저장된 알림의 id
+                    .targetId(event.commentId())
+                    .alarmType(AlarmType.ANSWER)
+                    .checked(savedAlarm.getChecked())
+                    .build();
+
+            deferredResult.setResult(ResponseEntity
+                    .ok(ResponseDTO.okWithData(response)));
         }
-
-        AlarmResponseDto response = AlarmResponseDto.builder()
-                .alarmId(savedAlarm.getId()) //저장된 알림의 id
-                .targetId(event.commentId())
-                .alarmType(AlarmType.ANSWER)
-                .checked(savedAlarm.getChecked())
-                .build();
-
-
-        deferredResult.setResult(ResponseEntity
-                .ok(ResponseDTO.okWithData(response)));
     }
 
-    @EventListener
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void bookMarkEventHandler(BookmarkCommentEvent event) {
 
         event.members().parallelStream()
