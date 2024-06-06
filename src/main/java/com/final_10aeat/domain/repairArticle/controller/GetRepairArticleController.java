@@ -1,5 +1,7 @@
 package com.final_10aeat.domain.repairArticle.controller;
 
+import static com.final_10aeat.common.dto.util.PageConverter.convertToCustomPageDto;
+
 import com.final_10aeat.common.dto.CustomPageDto;
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
@@ -35,7 +37,7 @@ public class GetRepairArticleController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<ResponseDTO<CustomPageDto>> getAllRepairArticles(
+    public ResponseEntity<ResponseDTO<CustomPageDto<?>>> getAllRepairArticles(
         @RequestParam(required = false) List<String> progress,
         @RequestParam(required = false) ArticleCategory category,
         Pageable pageable) {
@@ -43,7 +45,7 @@ public class GetRepairArticleController {
         List<Progress> progressList = determineProgressFilter(progress);
         Page<?> articles = getRepairArticleFacade.getAllRepairArticles(progressList, category,
             pageable);
-        CustomPageDto pageDto = convertToCustomPageDto(articles);
+        CustomPageDto<?> pageDto = convertToCustomPageDto(articles);
         return ResponseEntity.ok(ResponseDTO.okWithData(pageDto));
     }
 
@@ -72,15 +74,5 @@ public class GetRepairArticleController {
             .map(String::toUpperCase)
             .map(Progress::valueOf)
             .collect(Collectors.toList());
-    }
-
-    private CustomPageDto<?> convertToCustomPageDto(Page<?> page) {
-        return new CustomPageDto<>(
-            page.getSize(),
-            page.getNumber(),
-            page.getTotalElements(),
-            page.getTotalPages(),
-            page.getContent()
-        );
     }
 }

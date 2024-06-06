@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ManageArticleRepository extends JpaRepository<ManageArticle, Long> {
+public interface ManageArticleRepository extends JpaRepository<ManageArticle, Long>, ManageArticleQueryDslRepository {
 
     List<ManageArticle> findAllByDeletedAtBeforeAndDeletedAtNotNull(LocalDateTime createdAt);
     List<ManageArticle> findAllByOfficeIdAndDeletedAtNull(Long id);

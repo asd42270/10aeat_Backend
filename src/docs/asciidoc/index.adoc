@@ -23,6 +23,8 @@ endif::[]
 === link:managearticle/manageSchedule-api.html[법정점검 일정 관리 API]
 === link:save/articlesave-api.html[게시글 저장 API]
 === link:comment/comment-api.html[댓글 API]
+=== link:articleissue/articleissue-api.html[이슈 API]
+=== link:articleissue/issuecheck-api.html[이슈 확인 API]
 
 == API Common Response
 
