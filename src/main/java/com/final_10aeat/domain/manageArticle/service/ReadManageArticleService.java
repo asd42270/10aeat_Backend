@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -179,5 +181,12 @@ public class ReadManageArticleService {
             )
             .map(this::listArticleFrom)
             .toList();
+    }
+
+    public Page<ListManageArticleResponse> search(
+        Long userOfficeId, String search, Pageable pageRequest
+    ) {
+        return manageArticleRepository.searchByOfficeIdAndText(userOfficeId, search, pageRequest)
+            .map(this::listArticleFrom);
     }
 }

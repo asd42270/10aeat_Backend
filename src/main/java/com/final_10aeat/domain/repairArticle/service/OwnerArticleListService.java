@@ -69,4 +69,19 @@ public class OwnerArticleListService {
                 : article.getImages().iterator().next().getImageUrl()
         );
     }
+
+    public Page<OwnerRepairArticleResponseDto> search(
+        Long userOfficeId, Long userId, String keyword, Pageable pageRequest
+    ) {
+        Page<RepairArticle> articles = repairArticleRepository.searchByTextAnsOfficeId(userOfficeId, keyword, pageRequest);
+
+        Set<Long> savedArticleIds;
+        Set<Long> checkedIssueIds;
+        List<Long> articleIds = articles.getContent().stream().map(RepairArticle::getId)
+            .collect(Collectors.toList());
+        savedArticleIds = articleSaveRepository.findSavedArticleIdsByMember(userId, articleIds);
+        checkedIssueIds = articleIssueCheckRepository.findCheckedIssueIdsByMember(userId);
+
+        return articles.map(article -> mapToDto(article, savedArticleIds, checkedIssueIds));
+    }
 }
