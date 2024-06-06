@@ -47,7 +47,6 @@ public class ArticleIssueCheckService {
         }
 
         return ArticleIssueCheckResponseDto.builder()
-            .id(articleIssue.getId())
             .title(articleIssue.getTitle())
             .content(articleIssue.getContent())
             .build();

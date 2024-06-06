@@ -43,7 +43,6 @@ public class RepairIssueDetailServiceTest {
         .build();
 
     private final ArticleIssueCheckResponseDto responseDto = ArticleIssueCheckResponseDto.builder()
-        .id(articleIssue.getId())
         .title(articleIssue.getTitle())
         .content(articleIssue.getContent())
         .build();
