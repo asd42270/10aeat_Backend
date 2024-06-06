@@ -7,8 +7,8 @@ import com.final_10aeat.common.exception.ArticleNotFoundException;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssuePublishRequestDto;
 import com.final_10aeat.domain.articleIssue.dto.request.IssueUpdateRequestDto;
+import com.final_10aeat.domain.articleIssue.dto.response.IssueHistoryResponseDto;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
-import com.final_10aeat.domain.articleIssue.exception.InactiveIssueException;
 import com.final_10aeat.domain.articleIssue.exception.IssueNotFoundException;
 import com.final_10aeat.domain.articleIssue.repository.ArticleIssueRepository;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
@@ -17,6 +17,8 @@ import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,10 +69,6 @@ public class ArticleIssueService {
 
         validateManager(userIdAndRole, articleIssue);
 
-        if (!articleIssue.isActive()) {
-            throw new InactiveIssueException();
-        }
-
         update(request, articleIssue);
     }
 
@@ -98,5 +96,21 @@ public class ArticleIssueService {
         ofNullable(request.title()).ifPresent(articleIssue::setTitle);
         ofNullable(request.content()).ifPresent(articleIssue::setContent);
         articleIssueRepository.save(articleIssue);
+    }
+
+    public List<IssueHistoryResponseDto> getManageArticleIssueHistory(Long manageArticleId) {
+        return articleIssueRepository.findByManageArticleIdAndDeletedAtIsNull(manageArticleId)
+            .stream()
+            .map(issue -> new IssueHistoryResponseDto(issue.getId(), issue.getTitle(),
+                issue.getContent(), issue.isActive(), issue.getCreatedAt()))
+            .collect(Collectors.toList());
+    }
+
+    public List<IssueHistoryResponseDto> getRepairArticleIssueHistory(Long repairArticleId) {
+        return articleIssueRepository.findByRepairArticleIdAndDeletedAtIsNull(repairArticleId)
+            .stream()
+            .map(issue -> new IssueHistoryResponseDto(issue.getId(), issue.getTitle(),
+                issue.getContent(), issue.isActive(), issue.getCreatedAt()))
+            .collect(Collectors.toList());
     }
 }
