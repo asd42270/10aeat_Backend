@@ -102,7 +102,7 @@ public class ArticleIssueService {
         return articleIssueRepository.findByManageArticleIdAndDeletedAtIsNull(manageArticleId)
             .stream()
             .map(issue -> new IssueHistoryResponseDto(issue.getId(), issue.getTitle(),
-                issue.getContent(), issue.isActive(), issue.getCreatedAt()))
+                issue.isActive(), issue.getCreatedAt()))
             .collect(Collectors.toList());
     }
 
@@ -110,7 +110,7 @@ public class ArticleIssueService {
         return articleIssueRepository.findByRepairArticleIdAndDeletedAtIsNull(repairArticleId)
             .stream()
             .map(issue -> new IssueHistoryResponseDto(issue.getId(), issue.getTitle(),
-                issue.getContent(), issue.isActive(), issue.getCreatedAt()))
+                issue.isActive(), issue.getCreatedAt()))
             .collect(Collectors.toList());
     }
 }
