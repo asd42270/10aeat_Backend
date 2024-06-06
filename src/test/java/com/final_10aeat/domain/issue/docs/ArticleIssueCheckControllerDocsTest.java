@@ -80,7 +80,7 @@ public class ArticleIssueCheckControllerDocsTest extends RestDocsSupport {
     @Test
     void testIssueDetail() throws Exception {
         // given
-        ArticleIssueCheckResponseDto responseDto = new ArticleIssueCheckResponseDto(1L, "이슈 제목",
+        ArticleIssueCheckResponseDto responseDto = new ArticleIssueCheckResponseDto("이슈 제목",
             "이슈 내용");
 
         // when
@@ -97,7 +97,6 @@ public class ArticleIssueCheckControllerDocsTest extends RestDocsSupport {
                 ),
                 responseFields(
                     fieldWithPath("code").description("응답 상태 코드"),
-                    fieldWithPath("data.id").description("이슈 ID"),
                     fieldWithPath("data.title").description("이슈 제목"),
                     fieldWithPath("data.content").description("이슈 내용")
                 )

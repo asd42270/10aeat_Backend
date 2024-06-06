@@ -1,0 +1,23 @@
+= Get Issue REST API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+=== link:../index.html[시작 페이지로 돌아가기]
+
+[[Get-Issue-Detail]]
+== 이슈 상세 조회 API
+
+이슈 상세조회 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/issue-detail/path-parameters.adoc[]
+include::{snippets}/issue-detail/http-request.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/issue-detail/http-response.adoc[]
+include::{snippets}/issue-detail/response-fields.adoc[]
