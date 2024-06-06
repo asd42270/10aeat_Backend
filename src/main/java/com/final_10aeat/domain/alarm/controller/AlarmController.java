@@ -22,7 +22,7 @@ public class AlarmController {
     private final AlarmService alarmService;
     private final AuthenticationService authenticationService;
 
-    @GetMapping()
+    @GetMapping
     public DeferredResult<ResponseEntity<ResponseDTO<AlarmResponseDto>>> getAlarm() {
 
         MemberPrincipal memberPrincipal = (MemberPrincipal) SecurityContextHolder.getContext()
