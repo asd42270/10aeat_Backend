@@ -1,4 +1,4 @@
-package com.final_10aeat.domain.alarm;
+package com.final_10aeat.domain.alarm.unit;
 
 import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.alarm.dto.response.AlarmResponseDto;
@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-public class AlarmEventHandlerServiceTest {
+public class EventHandlerServiceTest {
 
     @Mock
     private AlarmRepository alarmRepository;

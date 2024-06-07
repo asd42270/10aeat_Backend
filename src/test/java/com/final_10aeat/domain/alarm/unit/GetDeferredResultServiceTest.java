@@ -1,4 +1,4 @@
-package com.final_10aeat.domain.alarm;
+package com.final_10aeat.domain.alarm.unit;
 
 import com.final_10aeat.domain.alarm.dto.response.AlarmResponseDto;
 import com.final_10aeat.domain.alarm.service.AlarmService;
@@ -15,7 +15,6 @@ import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,12 +22,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @RecordApplicationEvents
-public class AlarmGetDeferredResultServiceTest {
+public class GetDeferredResultServiceTest {
 
     @InjectMocks
     private AlarmService alarmService;
-
-    private final ConcurrentHashMap<Long, DeferredResult<ResponseEntity<ResponseDTO<AlarmResponseDto>>>> alarmMap = new ConcurrentHashMap<>();
 
     @BeforeEach
     public void setUp()  { MockitoAnnotations.openMocks(this); }
