@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -33,6 +34,7 @@ public abstract class RestDocsSupport {
             .apply(documentationConfiguration(provider))
             .addFilter(new CharacterEncodingFilter("UTF-8", true))
             .setMessageConverters(getLocalDateTimeConverter())
+            .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
             .build();
         objectMapper.registerModule(new JavaTimeModule());
     }
