@@ -128,8 +128,7 @@ public class GetRepairArticleService {
             customProgress.getTitle(),
             customProgress.getContent(),
             customProgress.isInProgress(),
-            customProgress.getStartSchedule(),
-            customProgress.getEndSchedule()
+            customProgress.getStartSchedule()
         );
     }
 }
