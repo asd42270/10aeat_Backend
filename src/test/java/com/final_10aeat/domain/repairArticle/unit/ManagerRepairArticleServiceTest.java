@@ -93,7 +93,6 @@ public class ManagerRepairArticleServiceTest {
             .title("안건진행사항 제목")
             .content("상세 내용")
             .startSchedule(LocalDateTime.now())
-            .endSchedule(LocalDateTime.now().plusDays(1))
             .inProgress(false)
             .repairArticle(repairArticle)
             .build();
@@ -277,7 +276,6 @@ public class ManagerRepairArticleServiceTest {
             RepairArticle article = createTestRepairArticle(createTestManager());
             CreateCustomProgressRequestDto requestDto = new CreateCustomProgressRequestDto(
                 LocalDateTime.now(),
-                LocalDateTime.now().plusDays(1),
                 "안건진행사항 제목",
                 "상세 내용"
             );
@@ -300,7 +298,6 @@ public class ManagerRepairArticleServiceTest {
         void NotFound_willFail() {
             CreateCustomProgressRequestDto requestDto = new CreateCustomProgressRequestDto(
                 LocalDateTime.now(),
-                LocalDateTime.now().plusDays(1),
                 "Progress Title",
                 "Progress Content"
             );
@@ -325,7 +322,6 @@ public class ManagerRepairArticleServiceTest {
             CustomProgress customProgress = createTestCustomProgress(article);
             UpdateCustomProgressRequestDto requestDto = new UpdateCustomProgressRequestDto(
                 LocalDateTime.now(),
-                LocalDateTime.now().plusDays(1),
                 "안건진행사항 제목 수정",
                 "내용 수정수정",
                 true
@@ -346,7 +342,6 @@ public class ManagerRepairArticleServiceTest {
             CustomProgress customProgress = createTestCustomProgress(article);
             UpdateCustomProgressRequestDto requestDto = new UpdateCustomProgressRequestDto(
                 LocalDateTime.now(),
-                LocalDateTime.now().plusDays(1),
                 "안건진행사항 제목 수정",
                 "내용 수정수정",
                 true
@@ -364,7 +359,6 @@ public class ManagerRepairArticleServiceTest {
         void NotFound_willFail() {
             UpdateCustomProgressRequestDto requestDto = new UpdateCustomProgressRequestDto(
                 LocalDateTime.now(),
-                LocalDateTime.now().plusDays(1),
                 "안건진행사항 제목 수정",
                 "내용 수정수정",
                 true

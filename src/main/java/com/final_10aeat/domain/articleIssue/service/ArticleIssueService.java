@@ -38,7 +38,7 @@ public class ArticleIssueService {
         ManageArticle manageArticle = manageArticleRepository.findById(id)
             .orElseThrow(ArticleNotFoundException::new);
 
-        manageArticle.getIssues().forEach(issue -> issue.setActive(false));
+        manageArticle.getIssues().forEach(issue -> issue.setEnabled(false));
 
         ArticleIssue articleIssue = new ArticleIssue(request.title(), request.content(),
             manageArticle, manager);
@@ -53,7 +53,7 @@ public class ArticleIssueService {
         RepairArticle repairArticle = repairArticleRepository.findById(id)
             .orElseThrow(ArticleNotFoundException::new);
 
-        repairArticle.getIssues().forEach(issue -> issue.setActive(false));
+        repairArticle.getIssues().forEach(issue -> issue.setEnabled(false));
 
         ArticleIssue articleIssue = new ArticleIssue(request.title(), request.content(),
             repairArticle, manager);
@@ -78,7 +78,7 @@ public class ArticleIssueService {
 
         validateManager(userIdAndRole, articleIssue);
 
-        articleIssue.setActive(false);
+        articleIssue.setEnabled(false);
         articleIssue.delete(LocalDateTime.now());
         articleIssueRepository.save(articleIssue);
     }
@@ -102,7 +102,7 @@ public class ArticleIssueService {
         return articleIssueRepository.findByManageArticleIdAndDeletedAtIsNull(manageArticleId)
             .stream()
             .map(issue -> new IssueHistoryResponseDto(issue.getId(), issue.getTitle(),
-                issue.isActive(), issue.getCreatedAt()))
+                issue.isEnabled(), issue.getCreatedAt()))
             .collect(Collectors.toList());
     }
 
@@ -110,7 +110,7 @@ public class ArticleIssueService {
         return articleIssueRepository.findByRepairArticleIdAndDeletedAtIsNull(repairArticleId)
             .stream()
             .map(issue -> new IssueHistoryResponseDto(issue.getId(), issue.getTitle(),
-                issue.isActive(), issue.getCreatedAt()))
+                issue.isEnabled(), issue.getCreatedAt()))
             .collect(Collectors.toList());
     }
 }

@@ -103,12 +103,12 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
     private Set<ArticleIssue> issues;
 
     public boolean hasIssue() {
-        return this.issues.stream().anyMatch(ArticleIssue::isActive);
+        return this.issues.stream().anyMatch(ArticleIssue::isEnabled);
     }
 
     public Optional<Long> getActiveIssueId() {
         return this.issues.stream()
-            .filter(ArticleIssue::isActive)
+            .filter(ArticleIssue::isEnabled)
             .findFirst()
             .map(ArticleIssue::getId);
     }

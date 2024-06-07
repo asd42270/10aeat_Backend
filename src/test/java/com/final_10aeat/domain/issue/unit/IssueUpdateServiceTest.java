@@ -53,7 +53,7 @@ public class IssueUpdateServiceTest {
         .content("이슈에요")
         .repairArticle(repairArticle)
         .manager(manager)
-        .isActive(true)
+        .enabled(true)
         .build();
 
     private final UserIdAndRole userIdAndRole = new UserIdAndRole(manager.getId(), true);

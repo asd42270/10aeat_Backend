@@ -7,8 +7,7 @@ public record CustomProgressResponseDto(
     String title,
     String content,
     boolean inProgress,
-    LocalDateTime startSchedule,
-    LocalDateTime endSchedule
+    LocalDateTime startSchedule
 ) {
 
 }

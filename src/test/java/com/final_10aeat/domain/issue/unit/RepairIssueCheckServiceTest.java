@@ -54,7 +54,7 @@ public class RepairIssueCheckServiceTest {
         .title("이슈가 발행됐어요")
         .content("이슈에요")
         .repairArticle(repairArticle)
-        .isActive(true)
+        .enabled(true)
         .build();
 
     @BeforeEach
@@ -101,7 +101,7 @@ public class RepairIssueCheckServiceTest {
         void _inactiveIssue() {
             // given
             ArticleIssueCheckRequestDto requestDto = new ArticleIssueCheckRequestDto(true);
-            articleIssue.setActive(false);
+            articleIssue.setEnabled(false);
             given(articleIssueRepository.findById(articleIssue.getId())).willReturn(
                 Optional.of(articleIssue));
 

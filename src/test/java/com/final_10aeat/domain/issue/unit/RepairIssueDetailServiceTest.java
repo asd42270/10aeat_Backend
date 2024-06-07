@@ -39,7 +39,7 @@ public class RepairIssueDetailServiceTest {
         .title("이슈")
         .content("내용")
         .repairArticle(repairArticle)
-        .isActive(true)
+        .enabled(true)
         .build();
 
     private final ArticleIssueCheckResponseDto responseDto = ArticleIssueCheckResponseDto.builder()
@@ -73,7 +73,7 @@ public class RepairIssueDetailServiceTest {
         void _inactiveIssue() {
             // given
             Long issueId = 1L;
-            articleIssue.setActive(false);
+            articleIssue.setEnabled(false);
             given(articleIssueRepository.findById(issueId)).willReturn(Optional.of(articleIssue));
 
             // when & then

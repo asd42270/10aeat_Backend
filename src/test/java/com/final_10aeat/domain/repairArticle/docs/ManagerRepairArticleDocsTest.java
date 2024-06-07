@@ -159,7 +159,6 @@ public class ManagerRepairArticleDocsTest extends RestDocsSupport {
         // given
         CreateCustomProgressRequestDto requestDto = new CreateCustomProgressRequestDto(
             LocalDateTime.now(),
-            LocalDateTime.now().plusDays(10),
             "안건진행사항 제목",
             "안건진행사항 내용"
         );
@@ -177,7 +176,6 @@ public class ManagerRepairArticleDocsTest extends RestDocsSupport {
                 ),
                 requestFields(
                     fieldWithPath("startSchedule").description("안건진행사항 시작 일정"),
-                    fieldWithPath("endSchedule").description("안건진행사항 종료 일정"),
                     fieldWithPath("title").description("안건진행사항 제목"),
                     fieldWithPath("content").description("안건진행사항 내용")
                 ),
@@ -194,7 +192,6 @@ public class ManagerRepairArticleDocsTest extends RestDocsSupport {
         // given
         UpdateCustomProgressRequestDto requestDto = new UpdateCustomProgressRequestDto(
             LocalDateTime.now(),
-            LocalDateTime.now().plusDays(15),
             "안건진행사항 제목 수정",
             "안건진행사항 내용 수정",
             true
@@ -213,7 +210,6 @@ public class ManagerRepairArticleDocsTest extends RestDocsSupport {
                 ),
                 requestFields(
                     fieldWithPath("startSchedule").description("안건진행사항 시작 일정"),
-                    fieldWithPath("endSchedule").description("안건진행사항 종료 일정"),
                     fieldWithPath("title").description("안건진행사항 제목"),
                     fieldWithPath("content").description("안건진행사항 내용"),
                     fieldWithPath("inProgress").description("진행 중인 안건인지 여부")
