@@ -54,7 +54,7 @@ public class RepairIssueCheckServiceTest {
         .title("이슈가 발행됐어요")
         .content("이슈에요")
         .repairArticle(repairArticle)
-        .isActive(true)
+        .enabled(true)
         .build();
 
     @BeforeEach

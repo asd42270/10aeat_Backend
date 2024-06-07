@@ -356,13 +356,11 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
         // given
         CustomProgressResponseDto progressDto1 = new CustomProgressResponseDto(
             1L, "진행사항 제목 1", "진행사항 내용 1", true,
-            LocalDateTime.now(), LocalDateTime.now().plusDays(1)
-        );
+            LocalDateTime.now());
 
         CustomProgressResponseDto progressDto2 = new CustomProgressResponseDto(
             2L, "진행사항 제목 2", "진행사항 내용 2", false,
-            LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(2)
-        );
+            LocalDateTime.now().minusDays(1));
 
         List<CustomProgressResponseDto> progressList = List.of(progressDto1, progressDto2);
         when(getRepairArticleFacade.getCustomProgressList(1L)).thenReturn(progressList);
@@ -388,9 +386,7 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
                     fieldWithPath("data[].inProgress").type(JsonFieldType.BOOLEAN)
                         .description("진행 중 여부"),
                     fieldWithPath("data[].startSchedule").type(JsonFieldType.STRING)
-                        .description("시작 일정"),
-                    fieldWithPath("data[].endSchedule").type(JsonFieldType.STRING)
-                        .description("종료 일정")
+                        .description("시작 일정")
                 )
             ));
     }

@@ -58,7 +58,7 @@ public class ReadManageArticleServiceTest {
         .build();
     private final ArticleIssue issue = ArticleIssue.builder()
         .id(1L)
-        .isActive(true)
+        .enabled(true)
         .build();
     private final ManageArticle article1 = ManageArticle.builder()
         .id(1L)
