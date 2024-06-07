@@ -25,7 +25,7 @@ public class ArticleIssueCheckService {
         ArticleIssue articleIssue = articleIssueRepository.findById(issueId)
             .orElseThrow(IssueNotFoundException::new);
 
-        if (!articleIssue.isActive()) {
+        if (!articleIssue.isEnabled()) {
             throw new InactiveIssueException();
         }
 
@@ -42,7 +42,7 @@ public class ArticleIssueCheckService {
         ArticleIssue articleIssue = articleIssueRepository.findById(issueId)
             .orElseThrow(IssueNotFoundException::new);
 
-        if (!articleIssue.isActive()) {
+        if (!articleIssue.isEnabled()) {
             throw new InactiveIssueException();
         }
 

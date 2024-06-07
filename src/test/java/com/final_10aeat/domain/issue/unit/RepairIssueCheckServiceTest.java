@@ -101,7 +101,7 @@ public class RepairIssueCheckServiceTest {
         void _inactiveIssue() {
             // given
             ArticleIssueCheckRequestDto requestDto = new ArticleIssueCheckRequestDto(true);
-            articleIssue.setActive(false);
+            articleIssue.setEnabled(false);
             given(articleIssueRepository.findById(articleIssue.getId())).willReturn(
                 Optional.of(articleIssue));
 
