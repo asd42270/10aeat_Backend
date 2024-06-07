@@ -1,5 +1,9 @@
 package com.final_10aeat.domain.issue.unit;
 
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
+
 import com.final_10aeat.common.dto.UserIdAndRole;
 import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
@@ -9,16 +13,15 @@ import com.final_10aeat.domain.articleIssue.repository.ArticleIssueRepository;
 import com.final_10aeat.domain.articleIssue.service.ArticleIssueService;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
-import org.junit.jupiter.api.*;
+import java.util.Optional;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.util.Optional;
-
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
 
 public class IssueDeleteServiceTest {
 
@@ -29,26 +32,26 @@ public class IssueDeleteServiceTest {
     private ArticleIssueService articleIssueService;
 
     private final Manager manager = Manager.builder()
-            .id(1L)
-            .email("email")
-            .password("password")
-            .role(MemberRole.MANAGER)
-            .build();
+        .id(1L)
+        .email("email")
+        .password("password")
+        .role(MemberRole.MANAGER)
+        .build();
 
 
     private final RepairArticle repairArticle = RepairArticle.builder()
-            .id(1L)
-            .title("유지관리 게시글")
-            .content("유지관리 게시글 내용")
-            .build();
+        .id(1L)
+        .title("유지관리 게시글")
+        .content("유지관리 게시글 내용")
+        .build();
 
     private final ArticleIssue articleIssue = ArticleIssue.builder()
-            .id(1L)
-            .title("이슈가 발행됐어요")
-            .content("이슈에요")
-            .repairArticle(repairArticle)
-            .manager(manager)
-            .build();
+        .id(1L)
+        .title("이슈가 발행됐어요")
+        .content("이슈에요")
+        .repairArticle(repairArticle)
+        .manager(manager)
+        .build();
 
     private final UserIdAndRole userIdAndRole = new UserIdAndRole(manager.getId(), true);
 
@@ -66,14 +69,16 @@ public class IssueDeleteServiceTest {
         void _willSuccess() {
             // given
             Long issueId = 1L;
-            given(articleIssueRepository.findById(issueId)).willReturn(Optional.ofNullable(articleIssue));
+            given(articleIssueRepository.findById(issueId)).willReturn(
+                Optional.ofNullable(articleIssue));
 
             // when
             articleIssueService.deleteIssue(issueId, userIdAndRole);
 
             // then
             then(articleIssueRepository).should(times(1)).findById(issueId);
-            then(articleIssueRepository).should(times(1)).deleteById(issueId); // deleteById 호출 확인
+            then(articleIssueRepository).should(times(1))
+                .save(articleIssue); // delete 메서드를 사용하여 상태를 변경한 후 save 호출 확인
         }
     }
 
@@ -85,7 +90,8 @@ public class IssueDeleteServiceTest {
         given(articleIssueRepository.findById(issueId)).willReturn(Optional.empty());
 
         // when&then
-        Assertions.assertThrows(IssueNotFoundException.class, ()-> articleIssueService.deleteIssue(issueId, userIdAndRole));
+        Assertions.assertThrows(IssueNotFoundException.class,
+            () -> articleIssueService.deleteIssue(issueId, userIdAndRole));
     }
 
     @Test
@@ -94,10 +100,12 @@ public class IssueDeleteServiceTest {
         // given
         Long issueId = 1L;
         UserIdAndRole wrongUserIdAndRole = new UserIdAndRole(2L, true);
-        given(articleIssueRepository.findById(issueId)).willReturn(Optional.ofNullable(articleIssue));
+        given(articleIssueRepository.findById(issueId)).willReturn(
+            Optional.ofNullable(articleIssue));
 
         // when&then
-        Assertions.assertThrows(UnauthorizedAccessException.class, ()-> articleIssueService.deleteIssue(issueId, wrongUserIdAndRole));
+        Assertions.assertThrows(UnauthorizedAccessException.class,
+            () -> articleIssueService.deleteIssue(issueId, wrongUserIdAndRole));
     }
 
     @Test
@@ -106,10 +114,12 @@ public class IssueDeleteServiceTest {
         // given
         Long issueId = 1L;
         UserIdAndRole wrongUserIdAndRole = new UserIdAndRole(manager.getId(), false);
-        given(articleIssueRepository.findById(issueId)).willReturn(Optional.ofNullable(articleIssue));
+        given(articleIssueRepository.findById(issueId)).willReturn(
+            Optional.ofNullable(articleIssue));
 
         // when&then
-        Assertions.assertThrows(UnauthorizedAccessException.class, ()-> articleIssueService.deleteIssue(issueId, wrongUserIdAndRole));
+        Assertions.assertThrows(UnauthorizedAccessException.class,
+            () -> articleIssueService.deleteIssue(issueId, wrongUserIdAndRole));
     }
 
 

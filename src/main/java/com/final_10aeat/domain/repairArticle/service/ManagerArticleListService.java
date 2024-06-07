@@ -33,6 +33,7 @@ public class ManagerArticleListService {
         int commentCount = (int) commentRepository.countByRepairArticleIdAndDeletedAtIsNull(
             article.getId());
         int viewCount = article.getViewCount();
+        Long activeIssueId = article.getActiveIssueId().orElse(null);
 
         return new ManagerRepairArticleResponseDto(
             article.getId(),
@@ -47,7 +48,8 @@ public class ManagerArticleListService {
             commentCount,
             viewCount,
             article.getImages().isEmpty() ? null
-                : article.getImages().iterator().next().getImageUrl()
+                : article.getImages().iterator().next().getImageUrl(),
+            activeIssueId
         );
     }
 }

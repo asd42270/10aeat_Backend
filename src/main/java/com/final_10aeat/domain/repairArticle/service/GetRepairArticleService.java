@@ -59,7 +59,9 @@ public class GetRepairArticleService {
     private boolean hasRedDotIssue(RepairArticle article, UserIdAndRole userIdAndRole) {
         Long userId = userIdAndRole.id();
         Set<Long> checkedIssueIds = articleIssueCheckRepository.findCheckedIssueIdsByMember(userId);
-        return article.hasIssue() && !checkedIssueIds.contains(article.getIssue().getId());
+        return article.getActiveIssueId()
+            .map(id -> !checkedIssueIds.contains(id))
+            .orElse(false);
     }
 
     public RepairArticleDetailDto getArticleDetails(Long articleId, Long userId,

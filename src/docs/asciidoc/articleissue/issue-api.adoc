@@ -1,4 +1,4 @@
-= Repair Article REST API Docs
+= Issue REST API Docs
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -26,7 +26,7 @@ include::{snippets}/manage-issue-publish/response-fields.adoc[]
 [[Repair-Issue-Publish]]
 == 유지보수 게시글 이슈 발행
 
-유지관리 게시글 이슈를 발행하는 API 입니다.
+유지보수 게시글 이슈를 발행하는 API 입니다.
 
 === HttpRequest
 
@@ -49,6 +49,7 @@ include::{snippets}/repair-issue-publish/response-fields.adoc[]
 
 include::{snippets}/issue-update/path-parameters.adoc[]
 include::{snippets}/issue-update/http-request.adoc[]
+include::{snippets}/issue-update/request-fields.adoc[]
 
 === HttpResponse
 
@@ -70,3 +71,21 @@ include::{snippets}/issue-delete/http-request.adoc[]
 
 include::{snippets}/issue-delete/http-response.adoc[]
 include::{snippets}/issue-delete/response-fields.adoc[]
+
+[[Check-Issue]]
+== 이슈 체크 API
+
+이슈 체크 API 입니다.
+
+* 이슈 팝업 창의 확인했어요 기능
+
+=== HttpRequest
+
+include::{snippets}/issue-check/path-parameters.adoc[]
+include::{snippets}/issue-check/http-request.adoc[]
+include::{snippets}/issue-check/request-fields.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/issue-check/http-response.adoc[]
+include::{snippets}/issue-check/response-fields.adoc[]

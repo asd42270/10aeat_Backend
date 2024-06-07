@@ -4,7 +4,8 @@ import lombok.Builder;
 
 @Builder
 public record IssueUpdateRequestDto(
-        String title,
-        String content
+    String title,
+    String content
 ) {
+
 }
