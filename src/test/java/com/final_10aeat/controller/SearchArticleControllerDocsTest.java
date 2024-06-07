@@ -51,7 +51,7 @@ public class SearchArticleControllerDocsTest extends RestDocsSupport {
             LocalDateTime.of(2024, 5, 1, 0, 0),
             LocalDateTime.of(2024, 5, 2, 0, 0),
             7, 100, true, true,
-            "http://example.com/image1.jpg"
+            "http://example.com/image1.jpg",1L
         );
 
         given(searchArticleUseCase.repairSearch(any(), any()))
@@ -60,7 +60,7 @@ public class SearchArticleControllerDocsTest extends RestDocsSupport {
         // then
         mockMvc.perform(get("/repair")
                 .param("keyword", "제목")
-                .param("page","0")
+                .param("page", "0")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(document("repair-article-search",
@@ -106,7 +106,11 @@ public class SearchArticleControllerDocsTest extends RestDocsSupport {
                     fieldWithPath("data.articles[].redDot").type(JsonFieldType.BOOLEAN)
                         .description("레드닷 표시 여부"),
                     fieldWithPath("data.articles[].imageUrl").type(JsonFieldType.STRING).optional()
-                        .description("대표 이미지 URL")
+                        .description("대표 이미지 URL"),
+                    fieldWithPath("data.articles[].imageUrl").type(STRING).optional()
+                        .description("대표 이미지 URL"),
+                    fieldWithPath("data.articles[].activeIssueId").type(NUMBER)
+                        .description("이슈 ID")
                 )
             ));
     }
@@ -134,7 +138,7 @@ public class SearchArticleControllerDocsTest extends RestDocsSupport {
         // when & then
         mockMvc.perform(get("/manage")
                 .param("keyword", "제목")
-                .param("page","0")
+                .param("page", "0")
                 .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
@@ -162,7 +166,8 @@ public class SearchArticleControllerDocsTest extends RestDocsSupport {
                             .description("전체 일정 수"),
                         fieldWithPath("data.articles[].completedSchedule").type(NUMBER)
                             .description("완료된 일정 수"),
-                        fieldWithPath("data.articles[].issueId").type(NUMBER).description("이슈 ID")
+                        fieldWithPath("data.articles[].issueId").type(NUMBER)
+                            .description("이슈 ID")
                     )
                 )
             );
