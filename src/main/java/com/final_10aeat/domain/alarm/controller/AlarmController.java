@@ -32,11 +32,11 @@ public class AlarmController {
     }
 
     @GetMapping("/history")
-    public List<AlarmResponseDto> getAlarmHistory() {
+    public ResponseDTO<List<AlarmResponseDto>> getAlarmHistory() {
 
         UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
 
-        return alarmService.getAlarmHistory(userIdAndRole);
+        return ResponseDTO.okWithData(alarmService.getAlarmHistory(userIdAndRole));
     }
 
     @PostMapping("/{alarm_id}")
