@@ -34,6 +34,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AlarmControllerDocsTest extends RestDocsSupport {
@@ -75,7 +76,7 @@ public class AlarmControllerDocsTest extends RestDocsSupport {
         // then
         mockMvc.perform(asyncDispatch(mvcResult))
                 .andExpect(status().isOk())
-                .andDo(document("get-alarm",
+                .andDo(document("get-alarm-success",
                         preprocessResponse(prettyPrint()),
                         responseFields(
                                 fieldWithPath("code").description("응답상태 코드"),
@@ -102,13 +103,13 @@ public class AlarmControllerDocsTest extends RestDocsSupport {
         when(alarmService.getDeferredResult(member.getId())).thenReturn(result);
 
         MvcResult mvcResult = mockMvc.perform(get("/alarm"))
-                .andExpect(status().isOk())
+                .andExpect(request().asyncStarted())
                 .andReturn();
 
 
         mockMvc.perform(asyncDispatch(mvcResult))
                 .andExpect(status().isNoContent())
-                .andDo(document("get-alarm",
+                .andDo(document("get-alarm-fail",
                         preprocessResponse(prettyPrint()),
                         responseFields(
                                 fieldWithPath("code").description("응답상태 데이터")
