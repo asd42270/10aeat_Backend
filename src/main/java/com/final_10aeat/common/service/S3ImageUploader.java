@@ -23,28 +23,22 @@ public class S3ImageUploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    // S3 파일 업로드
     public String upload(MultipartFile multipartFile, String dirName) throws IOException {
-        // MultipartFile -> File
         File convertFile = convert(multipartFile).orElseThrow(ImageConvertException::new);
 
-        // S3에 저장할 파일명
         String fileName = dirName + "/" + UUID.randomUUID() + "_" + convertFile.getName();
 
-        // S3에 파일 업로드
         s3Client.putObject(new PutObjectRequest(bucket, fileName, convertFile)
             .withCannedAcl(CannedAccessControlList.PublicRead));
         String uploadImageUrl = s3Client.getUrl(bucket, fileName).toString();
 
-        // 로컬 파일 삭제
         convertFile.delete();
 
         return uploadImageUrl;
     }
 
-    // 파일 convert 후 로컬에 업로드
     private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(UUID.randomUUID()+file.getOriginalFilename());
+        File convertFile = new File(UUID.randomUUID() + file.getOriginalFilename());
 
         if (convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
