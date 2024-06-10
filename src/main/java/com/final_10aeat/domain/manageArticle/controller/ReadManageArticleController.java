@@ -3,6 +3,8 @@ package com.final_10aeat.domain.manageArticle.controller;
 
 import static java.util.Optional.ofNullable;
 
+import com.final_10aeat.common.dto.CustomPageDto;
+import com.final_10aeat.common.dto.util.PageConverter;
 import com.final_10aeat.common.service.AuthenticationService;
 import com.final_10aeat.domain.manageArticle.dto.response.DetailManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.ListManageArticleResponse;
@@ -13,6 +15,9 @@ import com.final_10aeat.global.util.ResponseDTO;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,17 +53,33 @@ public class ReadManageArticleController {
     }
 
     @GetMapping("/list")
-    public ResponseDTO<List<ListManageArticleResponse>> listArticle(
+    public ResponseDTO<CustomPageDto<ListManageArticleResponse>> listArticle(
         @RequestParam(required = false) Integer year,
-        @RequestParam(required = false) Boolean complete
+        @RequestParam(required = false) Boolean complete,
+        @PageableDefault(size = 20, sort = "id", direction = Direction.DESC) Pageable pageRequest
     ) {
         Long userOfficeId = authenticationService.getUserOfficeId();
 
+        if (ofNullable(complete).isEmpty()) {
+            return ResponseDTO.okWithData(
+                PageConverter.convertToCustomPageDto(
+                    readManageArticleService.listArticleByProgress(
+                        ofNullable(year).orElseGet(() -> LocalDate.now().getYear()),
+                        userOfficeId,
+                        pageRequest
+                    )
+                )
+            );
+        }
+
         return ResponseDTO.okWithData(
-            readManageArticleService.listArticle(
-                ofNullable(year).orElseGet(() -> LocalDate.now().getYear()),
-                userOfficeId,
-                complete
+            PageConverter.convertToCustomPageDto(
+                readManageArticleService.listArticleByProgress(
+                    ofNullable(year).orElseGet(() -> LocalDate.now().getYear()),
+                    userOfficeId,
+                    pageRequest,
+                    complete
+                )
             )
         );
     }

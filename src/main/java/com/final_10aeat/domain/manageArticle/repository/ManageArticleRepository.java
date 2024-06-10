@@ -14,9 +14,5 @@ public interface ManageArticleRepository extends JpaRepository<ManageArticle, Lo
 
     List<ManageArticle> findAllByOfficeIdAndDeletedAtNull(Long id);
 
-    List<ManageArticle> findAllByOfficeIdAndDeletedAtNullAndProgressIn(
-        Long office_id, List<Progress> progress
-    );
-
     Optional<ManageArticle> findByIdAndDeletedAtNull(Long id);
 }

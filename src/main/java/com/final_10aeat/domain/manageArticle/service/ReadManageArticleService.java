@@ -101,36 +101,24 @@ public class ReadManageArticleService {
             .build();
     }
 
-    public List<ListManageArticleResponse> listArticle(
-        Integer year, Long userOfficeId, Boolean complete
+    public Page<ListManageArticleResponse> listArticleByProgress(
+        Integer year, Long userOfficeId, Pageable pageRequest
     ) {
-        if (ofNullable(complete).isEmpty()) {
-            List<ManageArticle> articles = manageArticleRepository
-                .findAllByOfficeIdAndDeletedAtNull(userOfficeId);
+        Page<ManageArticle> articles = manageArticleRepository
+            .findAllByUnDeletedOfficeIdAndScheduleYear(userOfficeId, year, pageRequest);
 
-            return articles.stream()
-                .filter(
-                    article -> article.getSchedules().stream()
-                        .anyMatch(
-                            schedule -> schedule.getYear().equals(year)
-                        )
-                )
-                .map(this::listArticleFrom).toList();
-        } else {
-            List<ManageArticle> articles = manageArticleRepository
-                .findAllByOfficeIdAndDeletedAtNullAndProgressIn(
-                    userOfficeId, complete ? completeProgress : unCompleteProgress
-                );
+        return articles.map(this::listArticleFrom);
+    }
 
-            return articles.stream()
-                .filter(
-                    article -> article.getSchedules().stream()
-                        .anyMatch(
-                            schedule -> schedule.getYear().equals(year)
-                        )
-                )
-                .map(this::listArticleFrom).toList();
-        }
+    public Page<ListManageArticleResponse> listArticleByProgress(
+        Integer year, Long userOfficeId, Pageable pageRequest, Boolean complete
+    ) {
+        Page<ManageArticle> articles = manageArticleRepository
+            .findAllByUnDeletedOfficeIdAndScheduleYearAndProgress(
+                userOfficeId, year, pageRequest, complete ? completeProgress : unCompleteProgress
+            );
+
+        return articles.map(this::listArticleFrom);
     }
 
     private ListManageArticleResponse listArticleFrom(ManageArticle article) {
