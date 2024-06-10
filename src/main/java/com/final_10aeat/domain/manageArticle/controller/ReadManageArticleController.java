@@ -49,14 +49,16 @@ public class ReadManageArticleController {
 
     @GetMapping("/list")
     public ResponseDTO<List<ListManageArticleResponse>> listArticle(
-        @RequestParam(required = false) Integer year
+        @RequestParam(required = false) Integer year,
+        @RequestParam(required = false) Boolean complete
     ) {
         Long userOfficeId = authenticationService.getUserOfficeId();
 
         return ResponseDTO.okWithData(
             readManageArticleService.listArticle(
                 ofNullable(year).orElseGet(() -> LocalDate.now().getYear()),
-                userOfficeId
+                userOfficeId,
+                complete
             )
         );
     }

@@ -192,18 +192,23 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
         );
 
         given(authenticationService.getUserOfficeId()).willReturn(1L);
-        given(readManageArticleService.listArticle(anyInt(), anyLong())).willReturn(responseList);
+        given(readManageArticleService.listArticle(anyInt(), anyLong(), any())).willReturn(
+            responseList);
 
         // when & then
         mockMvc.perform(get("/manage/articles/list")
                 .contentType(MediaType.APPLICATION_JSON)
+                .param("year", "2024")
+                .param("complete", "true")
             )
             .andExpect(status().isOk())
             .andDo(document("get-manage-article-list",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
                     pathParameters(
-                        parameterWithName("year").description("일정이 있는 연도, null인 경우 당 년도").optional()
+                        parameterWithName("year").description("일정이 있는 연도, null인 경우 당 년도").optional(),
+                        parameterWithName("complete").description(
+                            "true = 완료, false = 진행중&대기, null인 경우 전체 검색").optional()
                     ),
                     responseFields(
                         fieldWithPath("code").type(NUMBER).description("응답 상태 코드"),
@@ -266,13 +271,13 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
         );
 
         given(authenticationService.getUserOfficeId()).willReturn(1L);
-        given(readManageArticleService.monthlyListArticle(anyLong(),anyInt(),any()))
+        given(readManageArticleService.monthlyListArticle(anyLong(), anyInt(), any()))
             .willReturn(responseList);
 
         // when & then
         mockMvc.perform(get("/manage/articles/monthly/list")
-                .param("year","2024")
-                .param("month","1")
+                .param("year", "2024")
+                .param("month", "1")
                 .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
