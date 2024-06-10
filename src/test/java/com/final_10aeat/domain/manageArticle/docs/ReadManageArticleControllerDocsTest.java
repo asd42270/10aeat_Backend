@@ -28,12 +28,12 @@ import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.manageArticle.controller.ReadManageArticleController;
 import com.final_10aeat.domain.manageArticle.dto.response.DetailManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.ListManageArticleResponse;
+import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleSummaryResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.ManageScheduleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.SummaryManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.service.ReadManageArticleService;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -229,10 +229,16 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
     @WithMember
     void testMonthlySummary() throws Exception {
         // given
-        Set<Integer> response = Set.of(1, 2, 3);
+        List<ManageArticleSummaryResponse> response =
+            List.of(
+                new ManageArticleSummaryResponse(1, 1),
+                new ManageArticleSummaryResponse(3, 2),
+                new ManageArticleSummaryResponse(6, 5)
+            );
 
         given(authenticationService.getUserOfficeId()).willReturn(1L);
-        given(readManageArticleService.monthlySummary(anyInt(), anyLong())).willReturn(response);
+        given(readManageArticleService.monthlySummary(anyInt(), anyLong()))
+            .willReturn(response);
 
         // when & then
         mockMvc.perform(get("/manage/articles/monthly/summary")
@@ -247,7 +253,9 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
                     ),
                     responseFields(
                         fieldWithPath("code").type(NUMBER).description("응답 상태 코드"),
-                        fieldWithPath("data").type(ARRAY).description("일정이 있는 월 목록")
+                        fieldWithPath("data").type(ARRAY).description("응답 리스트"),
+                        fieldWithPath("data[].month").type(NUMBER).description("데이터가 존재하는 월"),
+                        fieldWithPath("data[].total").type(NUMBER).description("해당 월의 게시글 갯수")
                     )
                 )
             );

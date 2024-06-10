@@ -155,7 +155,8 @@ public class ReadManageArticleService {
         return toSummaryDto(articles, year);
     }
 
-    private List<ManageArticleSummaryResponse> toSummaryDto(List<ManageArticle> articles, Integer year) {
+    private List<ManageArticleSummaryResponse> toSummaryDto(List<ManageArticle> articles,
+        Integer year) {
         List<ManageArticleSummaryResponse> monthly = new ArrayList<>();
         HashMap<Integer, Set<Long>> monthArticleIdMap = new HashMap<>();
 
@@ -164,7 +165,7 @@ public class ReadManageArticleService {
                 .filter(schedule -> schedule.getYear().equals(year))
                 .forEach(schedule -> {
                     Integer month = schedule.getMonth();
-                    monthArticleIdMap.getOrDefault(month, new HashSet<>())
+                    monthArticleIdMap.computeIfAbsent(month, k -> new HashSet<>())
                         .add(article.getId());
                 })
         );
