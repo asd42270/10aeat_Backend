@@ -11,6 +11,7 @@ public enum ErrorCode {
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다."),
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "접근 권한이 없습니다."),
     UNEXPECTED_PRINCIPAL(HttpStatus.INTERNAL_SERVER_ERROR, "예상치 못한 Principal 타입입니다."),
+    FILE_CONVERT_FAIL(HttpStatus.INTERNAL_SERVER_ERROR,"이미지 업로드에 실패했습니다."),
 
     // MANAGER
     MANAGER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 관리자입니다"),

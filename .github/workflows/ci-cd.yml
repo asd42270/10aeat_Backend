@@ -83,6 +83,9 @@ jobs:
             -e MAIL_HOST=${{ secrets.MAIL_HOST }} \
             -e MAIL_USERNAME=${{ secrets.MAIL_USERNAME }} \
             -e MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }} \
+            -e BUCKET_NAME=${{ secrets.BUCKET_NAME }} \
+            -e S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }} \
+            -e S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY }} \
             -p 80:8080 -d ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKER_HUB_REPOSITORY }}:develop
             sleep 60
             curl -s http://10aeat.com/health/server
