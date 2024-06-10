@@ -8,12 +8,14 @@ import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
 import com.final_10aeat.domain.manageArticle.dto.response.DetailManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.ListManageArticleResponse;
+import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleSummaryResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.SummaryManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.util.ScheduleConverter;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.entity.ManageSchedule;
 import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -146,18 +148,30 @@ public class ReadManageArticleService {
             .build();
     }
 
-    public Set<Integer> monthlySummary(Integer year, Long officeId) {
-        Set<Integer> monthly = new HashSet<>();
-        List<ManageArticle> articles = manageArticleRepository
-            .findAllByOfficeIdAndDeletedAtNull(officeId);
+    public List<ManageArticleSummaryResponse> monthlySummary(Integer year, Long officeId) {
+        List<ManageArticle> articles = manageArticleRepository.findAllByOfficeIdAndDeletedAtNull(
+            officeId);
+
+        return toSummaryDto(articles, year);
+    }
+
+    private List<ManageArticleSummaryResponse> toSummaryDto(List<ManageArticle> articles,
+        Integer year) {
+        List<ManageArticleSummaryResponse> monthly = new ArrayList<>();
+        HashMap<Integer, Set<Long>> monthArticleIdMap = new HashMap<>();
 
         articles.forEach(
-            article -> article.getSchedules()
-                .stream().filter(
-                    manageSchedule -> manageSchedule.getYear().equals(year)
-                ).forEach(
-                    schedule -> monthly.add(schedule.getMonth())
-                )
+            article -> article.getSchedules().stream()
+                .filter(schedule -> schedule.getYear().equals(year))
+                .forEach(schedule -> {
+                    Integer month = schedule.getMonth();
+                    monthArticleIdMap.computeIfAbsent(month, k -> new HashSet<>())
+                        .add(article.getId());
+                })
+        );
+
+        monthArticleIdMap.forEach(
+            (key, value) -> monthly.add(new ManageArticleSummaryResponse(key, value.size()))
         );
         return monthly;
     }

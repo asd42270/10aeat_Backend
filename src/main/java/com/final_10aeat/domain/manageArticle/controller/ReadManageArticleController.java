@@ -6,12 +6,12 @@ import static java.util.Optional.ofNullable;
 import com.final_10aeat.common.service.AuthenticationService;
 import com.final_10aeat.domain.manageArticle.dto.response.DetailManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.ListManageArticleResponse;
+import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleSummaryResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.SummaryManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.service.ReadManageArticleService;
 import com.final_10aeat.global.util.ResponseDTO;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,7 +64,7 @@ public class ReadManageArticleController {
     }
 
     @GetMapping("/monthly/summary")
-    public ResponseDTO<Set<Integer>> monthlySummary(
+    public ResponseDTO<List<ManageArticleSummaryResponse>> monthlySummary(
         @RequestParam(required = false) Integer year
     ) {
         Long userOfficeId = authenticationService.getUserOfficeId();
