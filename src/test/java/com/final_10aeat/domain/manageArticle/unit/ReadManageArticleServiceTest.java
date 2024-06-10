@@ -167,7 +167,7 @@ public class ReadManageArticleServiceTest {
 
         // when
         List<ListManageArticleResponse> result =
-            readManageArticleService.listArticle(2024, 1L);
+            readManageArticleService.listArticle(2024, 1L, null);
 
         // then
         assertThat(result.size()).isEqualTo(1);

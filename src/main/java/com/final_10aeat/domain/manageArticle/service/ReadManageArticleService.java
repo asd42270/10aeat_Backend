@@ -30,6 +30,15 @@ public class ReadManageArticleService {
 
     private final ManageArticleRepository manageArticleRepository;
 
+    private final List<Progress> unCompleteProgress = List.of(
+        Progress.PENDING,
+        Progress.INPROGRESS
+    );
+
+    private final List<Progress> completeProgress = List.of(
+        Progress.COMPLETE
+    );
+
     public SummaryManageArticleResponse summary(Long id) {
         List<ManageArticle> articles = manageArticleRepository
             .findAllByOfficeIdAndDeletedAtNull(id);
@@ -90,18 +99,36 @@ public class ReadManageArticleService {
             .build();
     }
 
-    public List<ListManageArticleResponse> listArticle(Integer year, Long userOfficeId) {
-        List<ManageArticle> articles = manageArticleRepository
-            .findAllByOfficeIdAndDeletedAtNull(userOfficeId);
+    public List<ListManageArticleResponse> listArticle(
+        Integer year, Long userOfficeId, Boolean complete
+    ) {
+        if (ofNullable(complete).isEmpty()) {
+            List<ManageArticle> articles = manageArticleRepository
+                .findAllByOfficeIdAndDeletedAtNull(userOfficeId);
 
-        return articles.stream()
-            .filter(
-                article -> article.getSchedules().stream()
-                    .anyMatch(
-                        schedule -> schedule.getYear().equals(year)
-                    )
-            )
-            .map(this::listArticleFrom).toList();
+            return articles.stream()
+                .filter(
+                    article -> article.getSchedules().stream()
+                        .anyMatch(
+                            schedule -> schedule.getYear().equals(year)
+                        )
+                )
+                .map(this::listArticleFrom).toList();
+        } else {
+            List<ManageArticle> articles = manageArticleRepository
+                .findAllByOfficeIdAndDeletedAtNullAndProgressIn(
+                    userOfficeId, complete ? completeProgress : unCompleteProgress
+                );
+
+            return articles.stream()
+                .filter(
+                    article -> article.getSchedules().stream()
+                        .anyMatch(
+                            schedule -> schedule.getYear().equals(year)
+                        )
+                )
+                .map(this::listArticleFrom).toList();
+        }
     }
 
     private ListManageArticleResponse listArticleFrom(ManageArticle article) {
