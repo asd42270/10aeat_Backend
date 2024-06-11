@@ -150,6 +150,7 @@ public class ManageArticleQueryDslRepositoryImpl implements ManageArticleQueryDs
 
         booleanBuilder.and(manageArticle.office.id.eq(command.officeId()));
         booleanBuilder.and(manageSchedule.year.eq(command.year()));
+        booleanBuilder.and(manageArticle.deletedAt.isNull());
 
         if (ofNullable(command.keyword()).isPresent()) {
             booleanBuilder.and(manageArticle.title.contains(command.keyword())
