@@ -36,7 +36,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 
 public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
 
@@ -170,7 +174,7 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
     @WithMember
     void testList() throws Exception {
         // given
-        List<ListManageArticleResponse> responseList = List.of(
+        List<ListManageArticleResponse> content = List.of(
             ListManageArticleResponse.builder()
                 .id(1L)
                 .period(ManagePeriod.YEAR)
@@ -191,9 +195,13 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
                 .build()
         );
 
+        PageRequest pageRequest = PageRequest.of(0, 10); // 0 페이지, 페이지 당 10개 항목
+        Page<ListManageArticleResponse> responseList = new PageImpl<>(content, pageRequest, content.size());
+
+
         given(authenticationService.getUserOfficeId()).willReturn(1L);
-        given(readManageArticleService.listArticle(anyInt(), anyLong(), any())).willReturn(
-            responseList);
+        given(readManageArticleService.listArticleByProgress(anyInt(), anyLong(), any(),any()))
+            .willReturn(responseList);
 
         // when & then
         mockMvc.perform(get("/manage/articles/list")
@@ -207,18 +215,29 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
                     preprocessResponse(prettyPrint()),
                     pathParameters(
                         parameterWithName("year").description("일정이 있는 연도, null인 경우 당 년도").optional(),
-                        parameterWithName("complete").description(
-                            "true = 완료, false = 진행중&대기, null인 경우 전체 검색").optional()
+                        parameterWithName("complete")
+                            .description("true = 완료, false = 진행중&대기, null인 경우 전체 검색").optional(),
+                        parameterWithName("page")
+                            .description("가져올 페이지 번호, null인 경우 첫 페이지, zeroBaseNumbering").optional()
                     ),
                     responseFields(
                         fieldWithPath("code").type(NUMBER).description("응답 상태 코드"),
-                        fieldWithPath("data[].id").type(NUMBER).description("점검  ID"),
-                        fieldWithPath("data[].period").type(STRING).description("점검 주기"),
-                        fieldWithPath("data[].periodCount").type(NUMBER).description("주기별 횟수"),
-                        fieldWithPath("data[].title").type(STRING).description("제목"),
-                        fieldWithPath("data[].allSchedule").type(NUMBER).description("전체 일정 수"),
-                        fieldWithPath("data[].completedSchedule").type(NUMBER).description("완료된 일정 수"),
-                        fieldWithPath("data[].issueId").type(NUMBER).description("이슈 ID")
+                        fieldWithPath("data.pageSize").type(JsonFieldType.NUMBER).description("페이지 크기"),
+                        fieldWithPath("data.currentPage").type(JsonFieldType.NUMBER)
+                            .description("현재 페이지 번호"),
+                        fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
+                            .description("전체 항목 수"),
+                        fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
+                            .description("전체 페이지 수"),
+                        fieldWithPath("data.articles[].id").type(NUMBER).description("점검  ID"),
+                        fieldWithPath("data.articles[].period").type(STRING).description("점검 주기"),
+                        fieldWithPath("data.articles[].periodCount").type(NUMBER).description("주기별 횟수"),
+                        fieldWithPath("data.articles[].title").type(STRING).description("제목"),
+                        fieldWithPath("data.articles[].allSchedule").type(NUMBER)
+                            .description("전체 일정 수"),
+                        fieldWithPath("data.articles[].completedSchedule").type(NUMBER)
+                            .description("완료된 일정 수"),
+                        fieldWithPath("data.articles[].issueId").type(NUMBER).description("이슈 ID")
                     )
                 )
             );
@@ -266,7 +285,7 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
     @WithMember
     void testMonthlyList() throws Exception {
         // given
-        List<ListManageArticleResponse> responseList = List.of(
+        Page<ListManageArticleResponse> responseList = new PageImpl<>(List.of(
             ListManageArticleResponse.builder()
                 .id(1L)
                 .period(ManagePeriod.YEAR)
@@ -275,11 +294,11 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
                 .allSchedule(12)
                 .completedSchedule(6)
                 .issueId(1L)
-                .build()
+                .build())
         );
 
         given(authenticationService.getUserOfficeId()).willReturn(1L);
-        given(readManageArticleService.monthlyListArticle(anyLong(), anyInt(), any()))
+        given(readManageArticleService.monthlyListArticle(anyLong(), anyInt(), any(), any()))
             .willReturn(responseList);
 
         // when & then
@@ -294,17 +313,28 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
                 preprocessResponse(prettyPrint()),
                 pathParameters(
                     parameterWithName("year").description("일정이 있는 연도, null인 경우 당 년도").optional(),
-                    parameterWithName("month").description("검색할 월, null인 경우 전체 월").optional()
+                    parameterWithName("month").description("검색할 월, null인 경우 전체 월").optional(),
+                    parameterWithName("page")
+                        .description("가져올 페이지 번호, null인 경우 첫 페이지, zeroBaseNumbering").optional()
                 ),
                 responseFields(
                     fieldWithPath("code").type(NUMBER).description("응답 상태 코드"),
-                    fieldWithPath("data[].id").type(NUMBER).description("점검  ID"),
-                    fieldWithPath("data[].period").type(STRING).description("점검 주기"),
-                    fieldWithPath("data[].periodCount").type(NUMBER).description("주기별 횟수"),
-                    fieldWithPath("data[].title").type(STRING).description("제목"),
-                    fieldWithPath("data[].allSchedule").type(NUMBER).description("전체 일정 수"),
-                    fieldWithPath("data[].completedSchedule").type(NUMBER).description("완료된 일정 수"),
-                    fieldWithPath("data[].issueId").type(NUMBER).description("이슈 ID")
+                    fieldWithPath("data.pageSize").type(JsonFieldType.NUMBER).description("페이지 크기"),
+                    fieldWithPath("data.currentPage").type(JsonFieldType.NUMBER)
+                        .description("현재 페이지 번호"),
+                    fieldWithPath("data.totalElements").type(JsonFieldType.NUMBER)
+                        .description("전체 항목 수"),
+                    fieldWithPath("data.totalPages").type(JsonFieldType.NUMBER)
+                        .description("전체 페이지 수"),
+                    fieldWithPath("data.articles[].id").type(NUMBER).description("점검  ID"),
+                    fieldWithPath("data.articles[].period").type(STRING).description("점검 주기"),
+                    fieldWithPath("data.articles[].periodCount").type(NUMBER).description("주기별 횟수"),
+                    fieldWithPath("data.articles[].title").type(STRING).description("제목"),
+                    fieldWithPath("data.articles[].allSchedule").type(NUMBER)
+                        .description("전체 일정 수"),
+                    fieldWithPath("data.articles[].completedSchedule").type(NUMBER)
+                        .description("완료된 일정 수"),
+                    fieldWithPath("data.articles[].issueId").type(NUMBER).description("이슈 ID")
                 )
             ));
     }
