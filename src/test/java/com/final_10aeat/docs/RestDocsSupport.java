@@ -35,6 +35,7 @@ public abstract class RestDocsSupport {
             .addFilter(new CharacterEncodingFilter("UTF-8", true))
             .setMessageConverters(getLocalDateTimeConverter())
             .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+            .setAsyncRequestTimeout(2000L)
             .build();
         objectMapper.registerModule(new JavaTimeModule());
     }

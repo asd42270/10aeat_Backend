@@ -1,0 +1,67 @@
+= Alarm REST API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+=== link:../index.html[시작 페이지로 돌아가기]
+
+[[Get-Alarm-Success]]
+== 알림 요청 성공 API
+
+알림 요청 성공 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/get-alarm-success/http-request.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/get-alarm-success/http-response.adoc[]
+include::{snippets}/get-alarm-success/response-fields.adoc[]
+
+[[Get-Alarm-Fail]]
+== 알림 요청 실패 API
+
+알림 요청 실패 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/get-alarm-fail/http-request.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/get-alarm-fail/http-response.adoc[]
+include::{snippets}/get-alarm-fail/response-fields.adoc[]
+
+[[Alarm-History]]
+== 알림 히스토리 조회 API
+
+알림 히스토리 조회 API 입니다.
+[]
+요청은 성공하나 전달값이 존재하지 않습니다.
+
+=== HttpRequest
+
+include::{snippets}/alarm-check/curl-request.adoc[]
+include::{snippets}/alarm-check/http-request.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/alarm-history/http-response.adoc[]
+include::{snippets}/alarm-history/response-fields.adoc[]
+
+[[Checked-Alarm]]
+== 알림 확인 API
+
+알림 확인 API 입니다.
+
+=== HttpRequest
+include::{snippets}/alarm-check/path-parameters.adoc[]
+include::{snippets}/alarm-check/http-request.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/alarm-check/http-response.adoc[]
+include::{snippets}/alarm-check/response-fields.adoc[]
