@@ -1,17 +1,24 @@
 package com.final_10aeat.domain.manageArticle.repository;
 
+import static java.util.Optional.ofNullable;
+
 import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.domain.manageArticle.dto.request.GetMonthlyListWithYearQuery;
 import com.final_10aeat.domain.manageArticle.dto.request.GetYearListQuery;
+import com.final_10aeat.domain.manageArticle.dto.request.SearchManageArticleQuery;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.entity.QManageArticle;
 import com.final_10aeat.domain.manageArticle.entity.QManageSchedule;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -105,6 +112,58 @@ public class ManageArticleQueryDslRepositoryImpl implements ManageArticleQueryDs
             .limit(pageRequest.getPageSize());
 
         return sortAndFetchToPage(pageRequest, manageArticle, query);
+    }
+
+    @Override
+    public Page<ManageArticle> searchByKeyword(SearchManageArticleQuery command) {
+        QManageArticle manageArticle = QManageArticle.manageArticle;
+        QManageSchedule manageSchedule = QManageSchedule.manageSchedule;
+        Pageable pageRequest = command.pageRequest();
+
+        JPAQuery<ManageArticle> query = queryFactory.selectFrom(manageArticle)
+            .leftJoin(manageArticle.schedules, manageSchedule)
+            .where(setQuery(command, manageArticle, manageSchedule))
+            .offset(pageRequest.getOffset())
+            .limit(pageRequest.getPageSize());
+
+        BooleanExpression scheduleNotPassed = manageSchedule.scheduleStart.goe(
+            LocalDateTime.now().withHour(0).withMinute(0)
+        );
+
+        OrderSpecifier<Integer> orderByScheduleStatus = new CaseBuilder()
+            .when(scheduleNotPassed).then(0)
+            .otherwise(1).asc();
+        OrderSpecifier<LocalDateTime> orderByScheduleStart = manageSchedule.scheduleStart.asc();
+        OrderSpecifier<Long> orderById = manageArticle.id.desc();
+
+        query.orderBy(orderByScheduleStatus, orderByScheduleStart, orderById);
+
+        QueryResults<ManageArticle> queryResult = query.fetchResults();
+
+        return new PageImpl<>(queryResult.getResults(), pageRequest, queryResult.getTotal());
+    }
+
+    private BooleanBuilder setQuery(SearchManageArticleQuery command,
+        QManageArticle manageArticle, QManageSchedule manageSchedule
+    ) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        booleanBuilder.and(manageArticle.office.id.eq(command.officeId()));
+        booleanBuilder.and(manageSchedule.year.eq(command.year()));
+
+        if (ofNullable(command.keyword()).isPresent()) {
+            booleanBuilder.and(manageArticle.title.contains(command.keyword())
+                .or(manageArticle.legalBasis.contains(command.keyword()))
+                .or(manageArticle.target.contains(command.keyword()))
+                .or(manageArticle.responsibility.contains(command.keyword()))
+            );
+        }
+
+        if (ofNullable(command.month()).isPresent()) {
+            booleanBuilder.and(manageSchedule.month.eq(command.month()));
+        }
+
+        return booleanBuilder;
     }
 
     @NotNull
