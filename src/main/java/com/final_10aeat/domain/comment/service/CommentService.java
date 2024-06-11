@@ -2,6 +2,8 @@ package com.final_10aeat.domain.comment.service;
 
 import com.final_10aeat.common.exception.ArticleNotFoundException;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
+import com.final_10aeat.domain.alarm.event.BookmarkCommentEvent;
+import com.final_10aeat.domain.alarm.event.CommentEvent;
 import com.final_10aeat.domain.comment.dto.request.CreateCommentRequestDto;
 import com.final_10aeat.domain.comment.dto.request.UpdateCommentRequestDto;
 import com.final_10aeat.domain.comment.dto.response.CommentResponseDto;
@@ -18,13 +20,17 @@ import com.final_10aeat.domain.member.repository.MemberRepository;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.final_10aeat.domain.repairArticle.exception.ManagerNotFoundException;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
+import com.final_10aeat.domain.save.entity.ArticleSave;
+import com.final_10aeat.domain.save.repository.ArticleSaveRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
@@ -35,27 +41,29 @@ public class CommentService {
     private final RepairArticleRepository repairArticleRepository;
     private final MemberRepository memberRepository;
     private final ManagerRepository managerRepository;
+    private final ApplicationEventPublisher eventPublisher;
+    private final ArticleSaveRepository articleSaveRepository;
 
     public void createComment(Long repairArticleId, CreateCommentRequestDto request, Long userId,
-        boolean isManager) {
+                              boolean isManager) {
         RepairArticle repairArticle = repairArticleRepository.findById(repairArticleId)
-            .orElseThrow(ArticleNotFoundException::new);
+                .orElseThrow(ArticleNotFoundException::new);
 
         Comment.CommentBuilder commentBuilder = Comment.builder()
-            .content(request.content())
-            .repairArticle(repairArticle)
-            .parentComment(null);
+                .content(request.content())
+                .repairArticle(repairArticle)
+                .parentComment(null);
 
         if (isManager) {
             Manager manager = managerRepository.findById(userId)
-                .orElseThrow(ManagerNotFoundException::new);
+                    .orElseThrow(ManagerNotFoundException::new);
             commentBuilder.manager(manager);
             if (!repairArticle.getOffice().getId().equals(manager.getOffice().getId())) {
                 throw new UnauthorizedAccessException();
             }
         } else {
             Member member = memberRepository.findById(userId)
-                .orElseThrow(UserNotExistException::new);
+                    .orElseThrow(UserNotExistException::new);
             commentBuilder.member(member);
             if (!repairArticle.getOffice().getId().equals(member.getDefaultOffice())) {
                 throw new UnauthorizedAccessException();
@@ -71,6 +79,22 @@ public class CommentService {
         commentBuilder.parentComment(parentComment != null ? parentComment.getId() : null);
 
         commentRepository.save(commentBuilder.build());
+
+        List<Member> articleMembers = articleSaveRepository.findAllByRepairArticleId(repairArticleId).stream()
+                .map(ArticleSave::getMember)
+                .toList();
+
+        if (parentComment != null) {
+            eventPublisher.publishEvent(CommentEvent.builder()
+                    .member(parentComment.getMember())
+                    .commentId(parentComment.getId())
+                    .build());
+        }
+
+        eventPublisher.publishEvent(BookmarkCommentEvent.builder()
+                .members(articleMembers)
+                .articleId(repairArticleId)
+                .build());
     }
 
     private Comment getParentComment(Long parentCommentId) {
@@ -78,13 +102,13 @@ public class CommentService {
             return null;
         }
         return commentRepository.findById(parentCommentId)
-            .orElseThrow(ParentCommentNotFoundException::new);
+                .orElseThrow(ParentCommentNotFoundException::new);
     }
 
     public void updateComment(Long commentId, UpdateCommentRequestDto request, Long userId,
-        boolean isManager) {
+                              boolean isManager) {
         Comment comment = commentRepository.findById(commentId)
-            .orElseThrow(CommentNotFoundException::new);
+                .orElseThrow(CommentNotFoundException::new);
 
         checkAuthorization(comment, userId, isManager);
 
@@ -94,7 +118,7 @@ public class CommentService {
 
     public void deleteComment(Long commentId, Long userId, boolean isManager) {
         Comment comment = commentRepository.findById(commentId)
-            .orElseThrow(CommentNotFoundException::new);
+                .orElseThrow(CommentNotFoundException::new);
 
         checkAuthorization(comment, userId, isManager);
 
@@ -116,27 +140,27 @@ public class CommentService {
 
     private boolean isAuthor(Comment comment, RepairArticle article) {
         return Optional.ofNullable(comment.getManager())
-            .map(manager -> manager.getId().equals(article.getManager().getId()))
-            .orElse(false);
+                .map(manager -> manager.getId().equals(article.getManager().getId()))
+                .orElse(false);
     }
 
     @Transactional(readOnly = true)
     public List<CommentResponseDto> getCommentsByArticleId(Long repairArticleId) {
         RepairArticle article = repairArticleRepository.findById(repairArticleId)
-            .orElseThrow(ArticleNotFoundException::new);
+                .orElseThrow(ArticleNotFoundException::new);
         List<Comment> comments = commentRepository.findByRepairArticleIdAndDeletedAtIsNull(
-            repairArticleId);
+                repairArticleId);
 
         return comments.stream()
-            .map(comment -> new CommentResponseDto(
-                comment.getId(),
-                comment.getContent(),
-                comment.getCreatedAt(),
-                comment.getParentComment(),
-                isAuthor(comment, article),
-                comment.getManager() != null ? comment.getManager().getName()
-                    : comment.getMember().getName()
-            ))
-            .collect(Collectors.toList());
+                .map(comment -> new CommentResponseDto(
+                        comment.getId(),
+                        comment.getContent(),
+                        comment.getCreatedAt(),
+                        comment.getParentComment(),
+                        isAuthor(comment, article),
+                        comment.getManager() != null ? comment.getManager().getName()
+                                : comment.getMember().getName()
+                ))
+                .collect(Collectors.toList());
     }
 }

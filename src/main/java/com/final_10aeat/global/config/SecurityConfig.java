@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.final_10aeat.global.exception.ErrorCode;
 import com.final_10aeat.global.security.jwt.JwtAuthenticationFilter;
 import com.final_10aeat.global.util.ResponseDTO;
-import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,8 +20,12 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.DelegatingSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Collections;
 
 @EnableWebSecurity
 @Configuration
@@ -39,7 +42,7 @@ public class SecurityConfig {
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(
                 new ObjectMapper().writeValueAsString(
-                    ResponseDTO.error(ErrorCode.UNAUTHORIZED_ACCESS)));
+                    ResponseDTO.errorWithMessage(HttpStatus.UNAUTHORIZED, "잘못된 경로입니다")));
         };
 
     private final AccessDeniedHandler accessDeniedHandler =
@@ -71,6 +74,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                .securityContext((securityContext)->securityContext.securityContextRepository(
+                        new DelegatingSecurityContextRepository(
+                                new RequestAttributeSecurityContextRepository()
+                        )
+                ))
             .csrf(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
             .cors(c -> c.configurationSource(corsConfigurerSource()))

@@ -12,6 +12,7 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+    open-in-view: false
   data:
     redis:
       host: ${LOCAL_REDIS_URL}
