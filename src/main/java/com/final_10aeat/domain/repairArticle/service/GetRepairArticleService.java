@@ -64,6 +64,7 @@ public class GetRepairArticleService {
             .orElse(false);
     }
 
+    @Transactional
     public RepairArticleDetailDto getArticleDetails(Long articleId, Long userId,
         boolean isManager) {
         incrementViewCount(articleId, userId, isManager);
