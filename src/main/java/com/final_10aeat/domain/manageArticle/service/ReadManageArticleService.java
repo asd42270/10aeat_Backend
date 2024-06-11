@@ -216,7 +216,7 @@ public class ReadManageArticleService {
             .build();
     }
 
-    private static LocalDateTime getCurrentSchedules(ManageArticle article) {
+    private LocalDateTime getCurrentSchedules(ManageArticle article) {
         LocalDateTime now = LocalDateTime.now();
         return article.getSchedules().stream()
             .map(ManageSchedule::getScheduleStart)
