@@ -1,0 +1,38 @@
+= Get Repair Article REST API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+=== link:../index.html[시작 페이지로 돌아가기]
+
+[[Manager-Search-Repair-Article]]
+== 관리자 사이드 유지보수 게시글 텍스트 검색
+
+관리자 사이드 유지보수 게시글을 검색하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/manager-repair-article-search/http-request.adoc[]
+include::{snippets}/manager-repair-article-search/query-parameters.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/manager-repair-article-search/http-response.adoc[]
+include::{snippets}/manager-repair-article-search/response-fields.adoc[]
+
+[[Manager-Search-Manage-Article]]
+== 관리자 사이드 법정점검 게시글 텍스트 검색
+
+관리자 사이드 법정점검 게시글을 검색하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/manager-manage-article-search/http-request.adoc[]
+include::{snippets}/manager-manage-article-search/query-parameters.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/manager-repair-article-search/http-response.adoc[]
+include::{snippets}/manager-repair-article-search/response-fields.adoc[]
