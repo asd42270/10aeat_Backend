@@ -39,7 +39,7 @@ public class ManageIssueDetailServiceTest {
         .title("이슈")
         .content("내용")
         .manageArticle(manageArticle)
-        .isActive(true)
+        .enabled(true)
         .build();
 
     @BeforeEach
@@ -83,7 +83,7 @@ public class ManageIssueDetailServiceTest {
         void _inactiveIssue() {
             // given
             Long issueId = articleIssue.getId();
-            articleIssue.setActive(false);
+            articleIssue.setEnabled(false);
             given(articleIssueRepository.findById(issueId)).willReturn(Optional.of(articleIssue));
 
             // when & then

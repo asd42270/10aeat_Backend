@@ -1,13 +1,18 @@
 package com.final_10aeat.domain.repairArticle.repository;
 
+import com.final_10aeat.common.enumclass.ArticleCategory;
+import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.domain.repairArticle.entity.QRepairArticle;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -47,5 +52,50 @@ public class RepairArticleQueryDslRepositoryImpl implements RepairArticleQueryDs
         QueryResults<RepairArticle> queryResult = query.fetchResults();
 
         return new PageImpl<>(queryResult.getResults(), pageRequest, queryResult.getTotal());
+    }
+
+    @Override
+    public List<RepairArticle> findSoftDeletedBefore(LocalDateTime cutoffDate) {
+        QRepairArticle repairArticle = QRepairArticle.repairArticle;
+
+        return queryFactory.selectFrom(repairArticle)
+            .where(repairArticle.deletedAt.isNotNull()
+                .and(repairArticle.deletedAt.before(cutoffDate)))
+            .fetch();
+    }
+
+    @Override
+    public Page<RepairArticle> findByOfficeIdAndProgressInAndCategoryOrderByUpdatedAtDesc(
+        Long officeId, List<Progress> progresses, ArticleCategory category, Pageable pageable
+    ) {
+        QRepairArticle repairArticle = QRepairArticle.repairArticle;
+
+        BooleanExpression progressPredicate =
+            progresses != null ? repairArticle.progress.in(progresses) : null;
+        BooleanExpression categoryPredicate =
+            category != null ? repairArticle.category.eq(category) : null;
+
+        JPAQuery<RepairArticle> query = queryFactory.selectFrom(repairArticle)
+            .where(repairArticle.office.id.eq(officeId),
+                progressPredicate,
+                categoryPredicate)
+            .orderBy(repairArticle.updatedAt.desc())
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize());
+
+        QueryResults<RepairArticle> queryResult = query.fetchResults();
+
+        return new PageImpl<>(queryResult.getResults(), pageable, queryResult.getTotal());
+    }
+
+    @Override
+    public List<RepairArticle> findByOfficeIdAndProgressIn(Long officeId,
+        List<Progress> progresses) {
+        QRepairArticle repairArticle = QRepairArticle.repairArticle;
+
+        return queryFactory.selectFrom(repairArticle)
+            .where(repairArticle.office.id.eq(officeId),
+                repairArticle.progress.in(progresses))
+            .fetch();
     }
 }

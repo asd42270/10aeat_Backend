@@ -22,8 +22,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter
 @Builder
+@Getter
 @Table(name = "article_issue")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -42,8 +42,8 @@ public class ArticleIssue extends SoftDeletableBaseTimeEntity {
     private String content;
 
     @Setter
-    @Column(name = "is_active")
-    private boolean isActive;
+    @Column(name = "is_enabled")
+    private boolean enabled = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manage_article_id", referencedColumnName = "id")
@@ -62,7 +62,7 @@ public class ArticleIssue extends SoftDeletableBaseTimeEntity {
         this.title = title;
         this.content = content;
         this.manageArticle = manageArticle;
-        this.isActive = true;
+        this.enabled = true;
         this.manager = manager;
     }
 
@@ -71,7 +71,7 @@ public class ArticleIssue extends SoftDeletableBaseTimeEntity {
         this.title = title;
         this.content = content;
         this.repairArticle = repairArticle;
-        this.isActive = true;
+        this.enabled = true;
         this.manager = manager;
     }
 

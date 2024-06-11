@@ -134,7 +134,7 @@ public class ManageArticle extends SoftDeletableBaseTimeEntity {
 
     public Optional<ArticleIssue> getActiveIssue() {
         return this.issues.stream()
-            .filter(ArticleIssue::isActive)
+            .filter(ArticleIssue::isEnabled)
             .findFirst();
     }
 }

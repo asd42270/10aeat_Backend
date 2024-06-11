@@ -131,7 +131,6 @@ public class ManagerRepairArticleService {
             .title(request.title())
             .content(request.content())
             .startSchedule(request.startSchedule())
-            .endSchedule(request.endSchedule())
             .inProgress(false)
             .repairArticle(repairArticle)
             .build();
@@ -148,7 +147,6 @@ public class ManagerRepairArticleService {
         verifyManager(repairArticle, managerId);
 
         Optional.ofNullable(request.startSchedule()).ifPresent(customProgress::setStartSchedule);
-        Optional.ofNullable(request.endSchedule()).ifPresent(customProgress::setEndSchedule);
         Optional.ofNullable(request.title()).ifPresent(customProgress::setTitle);
         Optional.ofNullable(request.content()).ifPresent(customProgress::setContent);
         Optional.ofNullable(request.inProgress()).ifPresent(inProgress -> {

@@ -2,6 +2,7 @@ package com.final_10aeat.domain.manageArticle.unit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
@@ -30,6 +31,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 public class ReadManageArticleServiceTest {
 
@@ -58,7 +63,7 @@ public class ReadManageArticleServiceTest {
         .build();
     private final ArticleIssue issue = ArticleIssue.builder()
         .id(1L)
-        .isActive(true)
+        .enabled(true)
         .build();
     private final ManageArticle article1 = ManageArticle.builder()
         .id(1L)
@@ -152,7 +157,7 @@ public class ReadManageArticleServiceTest {
     }
 
     @Test
-    @DisplayName("listArticle() 에 성공한다")
+    @DisplayName("listArticleByProgress()withOut complete 에 성공한다")
     void listArticle_WillSuccess() {
         // given
         article1.addSchedule(schedule1);
@@ -160,19 +165,21 @@ public class ReadManageArticleServiceTest {
         article1.addSchedule(schedule4);
         article2.addSchedule(schedule2);
 
-        List<ManageArticle> articleList = List.of(article1, article2);
+        Page<ManageArticle> articleList = new PageImpl<>(
+            List.of(article1, article2)
+        );
 
-        given(manageArticleRepository.findAllByOfficeIdAndDeletedAtNull(anyLong()))
+        given(manageArticleRepository.findAllByYear(any()))
             .willReturn(articleList);
 
         // when
-        List<ListManageArticleResponse> result =
-            readManageArticleService.listArticle(2024, 1L);
+        Page<ListManageArticleResponse> result =
+            readManageArticleService.listArticleByProgress(
+                2024, 1L, PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "id"))
+            );
 
         // then
-        assertThat(result.size()).isEqualTo(1);
-        assertThat(result.get(0).allSchedule()).isEqualTo(3);
-        assertThat(result.get(0).completedSchedule()).isEqualTo(2);
+        assertThat(result.getSize()).isEqualTo(2);
     }
 
     @Test
@@ -206,16 +213,16 @@ public class ReadManageArticleServiceTest {
         article1.addSchedule(schedule4);
         article2.addSchedule(schedule2);
 
-        List<ManageArticle> articleList = List.of(article1, article2);
+        Page<ManageArticle> articleList = new PageImpl<>(List.of(article1, article2));
 
-        given(manageArticleRepository.findAllByOfficeIdAndDeletedAtNull(anyLong()))
+        given(manageArticleRepository.findAllByYearAndMonthly(any()))
             .willReturn(articleList);
 
         // when
         var result =
-            readManageArticleService.monthlyListArticle(1L, 2024, 1);
+            readManageArticleService.monthlyListArticle(1L, 2024, 1, null);
 
         // then
-        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.getSize()).isEqualTo(2);
     }
 }

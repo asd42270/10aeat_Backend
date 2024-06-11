@@ -45,10 +45,6 @@ public class CustomProgress {
     @Setter
     private LocalDateTime startSchedule;
 
-    @Column(name = "schedule_end")
-    @Setter
-    private LocalDateTime endSchedule;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "repair_article_id")
     private RepairArticle repairArticle;
