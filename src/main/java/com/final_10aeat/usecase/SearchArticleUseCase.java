@@ -1,10 +1,13 @@
 package com.final_10aeat.usecase;
 
+import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.common.service.AuthenticationService;
 import com.final_10aeat.domain.manageArticle.dto.response.ListManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.SearchManagersManageResponse;
 import com.final_10aeat.domain.manageArticle.service.ReadManageArticleService;
 import com.final_10aeat.domain.repairArticle.dto.response.OwnerRepairArticleResponseDto;
+import com.final_10aeat.domain.repairArticle.dto.response.SearchManagerRepairArticleResponseDto;
+import com.final_10aeat.domain.repairArticle.service.ManagerArticleListService;
 import com.final_10aeat.domain.repairArticle.service.OwnerArticleListService;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ public class SearchArticleUseCase {
     private final AuthenticationService authenticationService;
     private final ReadManageArticleService readManageArticleService;
     private final OwnerArticleListService ownerArticleListService;
+    private final ManagerArticleListService managerArticleListService;
 
     public Page<OwnerRepairArticleResponseDto> repairSearch(
         String keyword, Pageable pageRequest
@@ -44,6 +48,15 @@ public class SearchArticleUseCase {
         Long userOfficeId = authenticationService.getUserOfficeId();
         return readManageArticleService.managerSearch(
             userOfficeId, year, keyword, month, pageRequest, now
+        );
+    }
+
+    public Page<SearchManagerRepairArticleResponseDto> managerSearchRepair(
+        Progress progress, String keyword, Pageable pageRequest
+    ) {
+        Long userOfficeId = authenticationService.getUserOfficeId();
+        return managerArticleListService.repairSearch(
+            userOfficeId, keyword, progress, pageRequest
         );
     }
 }
