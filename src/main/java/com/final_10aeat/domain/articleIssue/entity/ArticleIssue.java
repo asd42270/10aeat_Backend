@@ -43,7 +43,7 @@ public class ArticleIssue extends SoftDeletableBaseTimeEntity {
 
     @Setter
     @Column(name = "is_enabled")
-    private boolean enabled;
+    private boolean enabled = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manage_article_id", referencedColumnName = "id")
