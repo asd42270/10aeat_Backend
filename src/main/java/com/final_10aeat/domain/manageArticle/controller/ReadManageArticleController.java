@@ -99,16 +99,20 @@ public class ReadManageArticleController {
     }
 
     @GetMapping("/monthly/list")
-    public ResponseDTO<List<ListManageArticleResponse>> monthlyListArticle(
+    public ResponseDTO<CustomPageDto<ListManageArticleResponse>> monthlyListArticle(
         @RequestParam(required = false) Integer year,
-        @RequestParam(required = false) Integer month
+        @RequestParam(required = false) Integer month,
+        @PageableDefault(size = 20, sort = "id", direction = Direction.DESC) Pageable pageRequest
     ) {
         Long userOfficeId = authenticationService.getUserOfficeId();
         return ResponseDTO.okWithData(
-            readManageArticleService.monthlyListArticle(
-                userOfficeId,
-                ofNullable(year).orElseGet(() -> LocalDate.now().getYear()),
-                month
+            PageConverter.convertToCustomPageDto(
+                readManageArticleService.monthlyListArticle(
+                    userOfficeId,
+                    ofNullable(year).orElseGet(() -> LocalDate.now().getYear()),
+                    month,
+                    pageRequest
+                )
             )
         );
     }

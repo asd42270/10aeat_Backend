@@ -1,6 +1,8 @@
 package com.final_10aeat.domain.manageArticle.repository;
 
 import com.final_10aeat.common.enumclass.Progress;
+import com.final_10aeat.domain.manageArticle.dto.request.GetMonthlyListWithYearQuery;
+import com.final_10aeat.domain.manageArticle.dto.request.GetYearListQuery;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.entity.QManageArticle;
 import com.final_10aeat.domain.manageArticle.entity.QManageSchedule;
@@ -42,26 +44,7 @@ public class ManageArticleQueryDslRepositoryImpl implements ManageArticleQueryDs
             .offset(pageRequest.getOffset())
             .limit(pageRequest.getPageSize());
 
-        return sortAndFetchtoPage(pageRequest, manageArticle, query);
-    }
-
-    @Override
-    public Page<ManageArticle> findAllByUnDeletedOfficeIdAndScheduleYear(Long userOfficeId,
-        Integer year, Pageable pageRequest) {
-        QManageArticle manageArticle = QManageArticle.manageArticle;
-        QManageSchedule manageSchedule = QManageSchedule.manageSchedule;
-
-        JPAQuery<ManageArticle> query = queryFactory.selectFrom(manageArticle)
-            .leftJoin(manageArticle.schedules, manageSchedule)
-            .where(
-                manageSchedule.year.eq(year),
-                manageArticle.office.id.eq(userOfficeId),
-                manageArticle.deletedAt.isNull()
-            )
-            .offset(pageRequest.getOffset())
-            .limit(pageRequest.getPageSize());
-
-        return sortAndFetchtoPage(pageRequest, manageArticle, query);
+        return sortAndFetchToPage(pageRequest, manageArticle, query);
     }
 
     @Override
@@ -82,11 +65,50 @@ public class ManageArticleQueryDslRepositoryImpl implements ManageArticleQueryDs
             .offset(pageRequest.getOffset())
             .limit(pageRequest.getPageSize());
 
-        return sortAndFetchtoPage(pageRequest, manageArticle, query);
+        return sortAndFetchToPage(pageRequest, manageArticle, query);
+    }
+
+    @Override
+    public Page<ManageArticle> findAllByYear(GetYearListQuery command) {
+        QManageArticle manageArticle = QManageArticle.manageArticle;
+        QManageSchedule manageSchedule = QManageSchedule.manageSchedule;
+        Pageable pageRequest = command.pageRequest();
+
+        JPAQuery<ManageArticle> query = queryFactory.selectFrom(manageArticle)
+            .leftJoin(manageArticle.schedules, manageSchedule)
+            .where(
+                manageSchedule.year.eq(command.year()),
+                manageArticle.office.id.eq(command.officeId()),
+                manageArticle.deletedAt.isNull()
+            )
+            .offset(pageRequest.getOffset())
+            .limit(pageRequest.getPageSize());
+
+        return sortAndFetchToPage(pageRequest, manageArticle, query);
+    }
+
+    @Override
+    public Page<ManageArticle> findAllByYearAndMonthly(GetMonthlyListWithYearQuery command) {
+        QManageArticle manageArticle = QManageArticle.manageArticle;
+        QManageSchedule manageSchedule = QManageSchedule.manageSchedule;
+        Pageable pageRequest = command.pageRequest();
+
+        JPAQuery<ManageArticle> query = queryFactory.selectFrom(manageArticle)
+            .leftJoin(manageArticle.schedules, manageSchedule)
+            .where(
+                manageSchedule.year.eq(command.year()),
+                manageSchedule.month.eq(command.month()),
+                manageArticle.office.id.eq(command.officeId()),
+                manageArticle.deletedAt.isNull()
+            )
+            .offset(pageRequest.getOffset())
+            .limit(pageRequest.getPageSize());
+
+        return sortAndFetchToPage(pageRequest, manageArticle, query);
     }
 
     @NotNull
-    private Page<ManageArticle> sortAndFetchtoPage(
+    private Page<ManageArticle> sortAndFetchToPage(
         Pageable pageRequest, QManageArticle manageArticle, JPAQuery<ManageArticle> query
     ) {
         for (Sort.Order order : pageRequest.getSort()) {
