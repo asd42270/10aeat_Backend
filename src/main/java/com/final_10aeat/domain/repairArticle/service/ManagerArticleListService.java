@@ -25,7 +25,7 @@ public class ManagerArticleListService {
 
     public Page<ManagerRepairArticleResponseDto> getAllRepairArticles(Long officeId,
         List<Progress> progresses, ArticleCategory category, Pageable pageable) {
-        Page<RepairArticle> articles = repairArticleRepository.findByOfficeIdAndProgressInAndCategoryOrderByUpdatedAtDesc(
+        Page<RepairArticle> articles = repairArticleRepository.findByOfficeIdAndProgressInAndCategoryOrderByIdDesc(
             officeId, progresses, category, pageable);
 
         return articles.map(this::mapToDto);
