@@ -1,19 +1,16 @@
 package com.final_10aeat.domain.manageArticle.dto.request;
 
-import org.springframework.data.domain.Pageable;
-
 public record GetYearListQuery(
     Integer year,
-    Long officeId,
-    Pageable pageRequest
+    Long officeId
 ) {
+
     public static GetYearListQuery toQueryDto(
-        Integer year, Long officeId, Pageable pageRequest
+        Integer year, Long officeId
     ) {
         return new GetYearListQuery(
             year,
-            officeId,
-            pageRequest
+            officeId
         );
     }
 }

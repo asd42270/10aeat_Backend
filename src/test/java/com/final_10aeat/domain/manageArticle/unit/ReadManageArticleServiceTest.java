@@ -12,6 +12,8 @@ import com.final_10aeat.common.exception.ArticleNotFoundException;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.common.util.EntityUtil;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
+import com.final_10aeat.domain.manageArticle.dto.request.GetYearListPageQuery;
+import com.final_10aeat.domain.manageArticle.dto.request.GetYearListQuery;
 import com.final_10aeat.domain.manageArticle.dto.response.DetailManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.ListManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.SummaryManageArticleResponse;
@@ -97,11 +99,11 @@ public class ReadManageArticleServiceTest {
         article2.addSchedule(schedule3);
         article1.getIssues().add(issue);
         List<ManageArticle> articleList = List.of(article1, article2);
-        given(manageArticleRepository.findAllByOfficeIdAndDeletedAtNull(anyLong()))
+        given(manageArticleRepository.findAllByYear(any(GetYearListQuery.class)))
             .willReturn(articleList);
 
         // when
-        SummaryManageArticleResponse summary = readManageArticleService.summary(1L);
+        SummaryManageArticleResponse summary = readManageArticleService.summary(1L, 2024);
 
         // then
         assertThat(summary.complete()).isEqualTo(1);
@@ -169,7 +171,7 @@ public class ReadManageArticleServiceTest {
             List.of(article1, article2)
         );
 
-        given(manageArticleRepository.findAllByYear(any()))
+        given(manageArticleRepository.findAllByYear(any(GetYearListPageQuery.class)))
             .willReturn(articleList);
 
         // when
