@@ -28,8 +28,10 @@ import com.final_10aeat.domain.repairArticle.repository.CustomProgressRepository
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
 import com.final_10aeat.domain.repairArticle.service.ManagerRepairArticleService;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -82,7 +84,7 @@ public class ManagerRepairArticleServiceTest {
             .company("수리 업체 이름")
             .companyWebsite("http://testcompany.com")
             .manager(manager)
-            .images(new HashSet<>())
+            .images(new ArrayList<>())
             .customProgressSet(new HashSet<>())
             .build();
     }
@@ -115,13 +117,13 @@ public class ManagerRepairArticleServiceTest {
                 LocalDateTime.now().plusDays(1),
                 "수리 업체 이름",
                 "http://testcompany.com",
-                Collections.singletonList("http://image.com/image.jpg")
+                List.of()
             );
 
             when(managerRepository.findById(anyLong())).thenReturn(Optional.of(manager));
             when(repairArticleRepository.save(any(RepairArticle.class))).thenAnswer(invocation -> {
                 RepairArticle savedArticle = invocation.getArgument(0);
-                savedArticle.setImages(Collections.emptySet());
+                savedArticle.setImages(Collections.emptyList());
                 return savedArticle;
             });
 
@@ -143,7 +145,7 @@ public class ManagerRepairArticleServiceTest {
                 LocalDateTime.now().plusDays(1),
                 "수리 업체 이름",
                 "http://testcompany.com",
-                Collections.singletonList("http://image.com/image.jpg")
+                Collections.singletonList(1L)
             );
 
             when(managerRepository.findById(anyLong())).thenReturn(Optional.empty());
@@ -208,8 +210,7 @@ public class ManagerRepairArticleServiceTest {
                 LocalDateTime.now(),
                 LocalDateTime.now().plusDays(2),
                 "수리 업체 수정",
-                "http://updatedcompany.com",
-                Collections.singletonList("http://image.com/new_image.jpg")
+                "http://updatedcompany.com"
             );
 
             when(repairArticleRepository.findById(anyLong())).thenReturn(Optional.of(article));
@@ -231,8 +232,7 @@ public class ManagerRepairArticleServiceTest {
                 LocalDateTime.now(),
                 LocalDateTime.now().plusDays(2),
                 "Updated Company",
-                "http://updatedcompany.com",
-                Collections.singletonList("http://image.com/new_image.jpg")
+                "http://updatedcompany.com"
             );
 
             when(repairArticleRepository.findById(anyLong())).thenReturn(Optional.empty());
@@ -257,8 +257,7 @@ public class ManagerRepairArticleServiceTest {
                 LocalDateTime.now(),
                 LocalDateTime.now().plusDays(2),
                 "수리 업체 수정",
-                "http://updatedcompany.com",
-                Collections.singletonList("http://image.com/new_image.jpg")
+                "http://updatedcompany.com"
             );
 
             assertThrows(ArticleAlreadyDeletedException.class,

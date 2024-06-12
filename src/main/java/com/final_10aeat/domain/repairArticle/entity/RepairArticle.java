@@ -20,6 +20,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import lombok.AccessLevel;
@@ -81,7 +83,7 @@ public class RepairArticle extends SoftDeletableBaseTimeEntity {
 
     @Setter
     @OneToMany(mappedBy = "repairArticle", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<RepairArticleImage> images;
+    private List<RepairArticleImage> images = new ArrayList<>();
 
     @Setter
     @OneToMany(mappedBy = "repairArticle", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

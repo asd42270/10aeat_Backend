@@ -53,7 +53,7 @@ public class ManagerRepairArticleDocsTest extends RestDocsSupport {
             LocalDateTime.now().plusDays(5),
             "수리 회사 이름",
             "http://repaircompanywebsite.com",
-            List.of("http://example.com/image1.jpg", "http://example.com/image2.jpg")
+            List.of(1L, 2L)
         );
 
         // when & then
@@ -75,7 +75,7 @@ public class ManagerRepairArticleDocsTest extends RestDocsSupport {
                     fieldWithPath("constructionEnd").description("작업 종료 예정일"),
                     fieldWithPath("repairCompany").description("수리 담당 회사의 이름"),
                     fieldWithPath("repairCompanyWebsite").description("수리 회사 웹사이트 URL"),
-                    fieldWithPath("images").description("이미지 URL 목록")
+                    fieldWithPath("imageIds").description("이미지 ID 리스트")
                 ),
                 responseFields(
                     fieldWithPath("code").description("응답 상태 코드")
@@ -117,8 +117,7 @@ public class ManagerRepairArticleDocsTest extends RestDocsSupport {
             LocalDateTime.now(),
             LocalDateTime.now().plusDays(5),
             "수리 회사 이름 수정",
-            "http://updatedrepaircompanywebsite.com",
-            List.of("http://example.com/image3.jpg", "http://example.com/image4.jpg")
+            "http://updatedrepaircompanywebsite.com"
 
         );
 
@@ -143,8 +142,7 @@ public class ManagerRepairArticleDocsTest extends RestDocsSupport {
                     fieldWithPath("constructionStart").description("작업 시작 예정일"),
                     fieldWithPath("constructionEnd").description("작업 종료 예정일"),
                     fieldWithPath("repairCompany").description("수리 담당 회사의 이름"),
-                    fieldWithPath("repairCompanyWebsite").description("수리 회사 웹사이트 URL"),
-                    fieldWithPath("images").description("이미지 URL 목록")
+                    fieldWithPath("repairCompanyWebsite").description("수리 회사 웹사이트 URL")
                 ),
                 responseFields(
                     fieldWithPath("code").description("응답 상태 코드")

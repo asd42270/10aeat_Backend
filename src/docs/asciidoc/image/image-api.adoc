@@ -1,0 +1,39 @@
+= Image REST API Docs
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+=== link:../index.html[시작 페이지로 돌아가기]
+
+[[Upload-Image]]
+== 게시글 이미지 업로드
+
+이미지를 업로드하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/upload-image/http-request.adoc[]
+include::{snippets}/upload-image/request-parts.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/upload-image/http-response.adoc[]
+include::{snippets}/upload-image/response-fields.adoc[]
+
+[[Delete-Image]]
+== 게시글 이미지 삭제
+
+이미지를 삭제하는 API 입니다.
+
+=== HttpRequest
+
+include::{snippets}/delete-image/http-request.adoc[]
+include::{snippets}/delete-image/path-parameters.adoc[]
+
+=== HttpResponse
+
+include::{snippets}/delete-image/http-response.adoc[]
+include::{snippets}/delete-image/response-fields.adoc[]
+

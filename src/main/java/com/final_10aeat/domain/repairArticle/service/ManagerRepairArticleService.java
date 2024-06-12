@@ -13,13 +13,14 @@ import com.final_10aeat.domain.repairArticle.entity.RepairArticleImage;
 import com.final_10aeat.domain.repairArticle.exception.ArticleAlreadyDeletedException;
 import com.final_10aeat.domain.repairArticle.exception.ArticleNotFoundException;
 import com.final_10aeat.domain.repairArticle.exception.CustomProgressNotFoundException;
+import com.final_10aeat.domain.repairArticle.exception.ImageNotFoundException;
 import com.final_10aeat.domain.repairArticle.exception.ManagerNotFoundException;
 import com.final_10aeat.domain.repairArticle.repository.CustomProgressRepository;
+import com.final_10aeat.domain.repairArticle.repository.RepairArticleImageRepository;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,15 +34,16 @@ public class ManagerRepairArticleService {
     private final RepairArticleRepository repairArticleRepository;
     private final ManagerRepository managerRepository;
     private final CustomProgressRepository customProgressRepository;
+    private final RepairArticleImageRepository repairArticleImageRepository;
 
     public void createRepairArticle(CreateRepairArticleRequestDto request,
         Long managerId) {
         Manager manager = managerRepository.findById(managerId).orElseThrow(
             ManagerNotFoundException::new);
         RepairArticle repairArticle = buildRepairArticleFromRequest(request, manager);
-        Set<RepairArticleImage> images = createImageEntities(request.images(), repairArticle);
+        List<RepairArticleImage> images = createImageEntitiesFromIds(request.imageIds(),
+            repairArticle);
         repairArticle.setImages(images);
-
         repairArticleRepository.save(repairArticle);
     }
 
@@ -61,14 +63,13 @@ public class ManagerRepairArticleService {
             .build();
     }
 
-    private Set<RepairArticleImage> createImageEntities(List<String> imageUrls,
+    private List<RepairArticleImage> createImageEntitiesFromIds(List<Long> imageIds,
         RepairArticle repairArticle) {
-        return imageUrls.stream()
-            .map(url -> RepairArticleImage.builder()
-                .imageUrl(url)
-                .repairArticle(repairArticle)
-                .build())
-            .collect(Collectors.toSet());
+        return imageIds.stream()
+            .map(id -> repairArticleImageRepository.findById(id).orElseThrow(
+                ImageNotFoundException::new))
+            .peek(image -> image.setRepairArticle(repairArticle))
+            .collect(Collectors.toList());
     }
 
     public void deleteRepairArticleById(Long repairArticleId, Long managerId) {
@@ -111,11 +112,6 @@ public class ManagerRepairArticleService {
         Optional.ofNullable(request.repairCompany()).ifPresent(repairArticle::setCompany);
         Optional.ofNullable(request.repairCompanyWebsite())
             .ifPresent(repairArticle::setCompanyWebsite);
-        Optional.ofNullable(request.images()).ifPresent(images -> {
-            repairArticle.getImages().clear();
-            Set<RepairArticleImage> newImages = createImageEntities(images, repairArticle);
-            repairArticle.getImages().addAll(newImages);
-        });
     }
 
     public void createCustomProgress(Long repairArticleId, Long managerId,

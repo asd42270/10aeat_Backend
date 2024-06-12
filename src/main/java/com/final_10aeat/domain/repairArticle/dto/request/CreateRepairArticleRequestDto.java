@@ -20,7 +20,7 @@ public record CreateRepairArticleRequestDto(
     LocalDateTime constructionEnd,
     String repairCompany,
     String repairCompanyWebsite,
-    List<String> images
+    List<Long> imageIds
 ) {
 
 }
