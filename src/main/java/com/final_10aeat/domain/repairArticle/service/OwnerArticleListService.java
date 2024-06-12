@@ -29,7 +29,7 @@ public class OwnerArticleListService {
 
     public Page<OwnerRepairArticleResponseDto> getAllRepairArticles(Long officeId, Long userId,
         List<Progress> progresses, ArticleCategory category, Pageable pageable) {
-        Page<RepairArticle> articles = repairArticleRepository.findByOfficeIdAndProgressInAndCategoryOrderByUpdatedAtDesc(
+        Page<RepairArticle> articles = repairArticleRepository.findByOfficeIdAndProgressInAndCategoryOrderByIdDesc(
             officeId, progresses, category, pageable);
 
         Set<Long> savedArticleIds;
@@ -76,7 +76,8 @@ public class OwnerArticleListService {
     public Page<OwnerRepairArticleResponseDto> search(
         Long userOfficeId, Long userId, String keyword, Pageable pageRequest
     ) {
-        Page<RepairArticle> articles = repairArticleRepository.searchByTextAnsOfficeId(userOfficeId, keyword, pageRequest);
+        Page<RepairArticle> articles = repairArticleRepository.searchByTextAnsOfficeId(userOfficeId,
+            keyword, pageRequest);
 
         Set<Long> savedArticleIds;
         Set<Long> checkedIssueIds;
