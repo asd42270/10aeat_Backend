@@ -6,6 +6,7 @@ import com.final_10aeat.common.service.S3ImageUploader;
 import com.final_10aeat.domain.repairArticle.dto.response.ImageResponseDto;
 import com.final_10aeat.domain.repairArticle.service.ManagerRepairArticleImageService;
 import com.final_10aeat.global.util.ResponseDTO;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('MANAGER')")
@@ -26,15 +26,16 @@ public class ManageRepairArticleImageController {
     private final S3ImageUploader s3ImageUploader;
     private final AuthenticationService authenticationService;
 
-    @PostMapping( "/images")
+    @PostMapping("/image")
     public ResponseEntity<ResponseDTO<ImageResponseDto>> uploadImage(
-            @RequestPart("image") MultipartFile multipartFile
+        @RequestPart("image") MultipartFile multipartFile
     ) throws IOException {
 
         UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
-
         String imageUrl = s3ImageUploader.upload(multipartFile, "repair-article");
-
-        return ResponseEntity.ok(ResponseDTO.okWithData(repairArticleImageService.saveImage(imageUrl, userIdAndRole)));
+        ImageResponseDto imageResponseDto = repairArticleImageService.saveImage(imageUrl,
+            userIdAndRole);
+        return ResponseEntity.ok(
+            ResponseDTO.okWithData(imageResponseDto));
     }
 }

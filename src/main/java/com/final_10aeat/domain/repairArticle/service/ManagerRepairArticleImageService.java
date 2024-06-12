@@ -1,7 +1,6 @@
 package com.final_10aeat.domain.repairArticle.service;
 
 import com.final_10aeat.common.dto.UserIdAndRole;
-import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.repairArticle.dto.response.ImageResponseDto;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticleImage;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleImageRepository;
@@ -18,19 +17,15 @@ public class ManagerRepairArticleImageService {
 
     public ImageResponseDto saveImage(String imageUrl, UserIdAndRole userIdAndRole) {
 
-        if(!userIdAndRole.isManager()) {
-            throw new UnauthorizedAccessException();
-        }
-
         RepairArticleImage repairArticleImage = RepairArticleImage.builder()
-                .imageUrl(imageUrl)
-                .build();
+            .imageUrl(imageUrl)
+            .build();
 
         RepairArticleImage savedImage = repairArticleImageRepository.save(repairArticleImage);
 
         return ImageResponseDto.builder()
-                .imageId(savedImage.getId())
-                .imageUrl(savedImage.getImageUrl())
-                .build();
+            .imageId(savedImage.getId())
+            .imageUrl(savedImage.getImageUrl())
+            .build();
     }
 }
