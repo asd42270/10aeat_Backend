@@ -8,6 +8,7 @@ import com.final_10aeat.domain.repairArticle.dto.response.OwnerRepairArticleResp
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
 import com.final_10aeat.domain.save.repository.ArticleSaveRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,17 +30,16 @@ public class OwnerArticleListService {
 
     public Page<OwnerRepairArticleResponseDto> getAllRepairArticles(Long officeId, Long userId,
         List<Progress> progresses, ArticleCategory category, Pageable pageable) {
+
+        List<Long> checkedIssueIds = getCheckedIssueIdsForCurrentUser(userId);
+
         Page<RepairArticle> articles = repairArticleRepository.findByOfficeIdAndProgressInAndCategoryOrderByIdDesc(
-            officeId, progresses, category, pageable);
+            officeId, progresses, category, pageable, checkedIssueIds);
 
-        Set<Long> savedArticleIds;
-        Set<Long> checkedIssueIds;
-        List<Long> articleIds = articles.getContent().stream().map(RepairArticle::getId)
-            .collect(Collectors.toList());
-        savedArticleIds = articleSaveRepository.findSavedArticleIdsByMember(userId, articleIds);
-        checkedIssueIds = articleIssueCheckRepository.findCheckedIssueIdsByMember(userId);
+        Set<Long> savedArticleIds = findSavedArticleIds(userId, articles);
+        Set<Long> checkedIssueIdSet = Set.copyOf(checkedIssueIds);
 
-        return articles.map(article -> mapToDto(article, savedArticleIds, checkedIssueIds));
+        return articles.map(article -> mapToDto(article, savedArticleIds, checkedIssueIdSet));
     }
 
     private OwnerRepairArticleResponseDto mapToDto(RepairArticle article, Set<Long> savedArticleIds,
@@ -79,13 +79,19 @@ public class OwnerArticleListService {
         Page<RepairArticle> articles = repairArticleRepository.searchByTextAnsOfficeId(userOfficeId,
             keyword, pageRequest);
 
-        Set<Long> savedArticleIds;
-        Set<Long> checkedIssueIds;
-        List<Long> articleIds = articles.getContent().stream().map(RepairArticle::getId)
-            .collect(Collectors.toList());
-        savedArticleIds = articleSaveRepository.findSavedArticleIdsByMember(userId, articleIds);
-        checkedIssueIds = articleIssueCheckRepository.findCheckedIssueIdsByMember(userId);
+        Set<Long> savedArticleIds = findSavedArticleIds(userId, articles);
+        Set<Long> checkedIssueIds = Set.copyOf(getCheckedIssueIdsForCurrentUser(userId));
 
         return articles.map(article -> mapToDto(article, savedArticleIds, checkedIssueIds));
+    }
+
+    public List<Long> getCheckedIssueIdsForCurrentUser(Long userId) {
+        return new ArrayList<>(articleIssueCheckRepository.findCheckedIssueIdsByMember(userId));
+    }
+
+    private Set<Long> findSavedArticleIds(Long userId, Page<RepairArticle> articles) {
+        List<Long> articleIds = articles.getContent().stream().map(RepairArticle::getId)
+            .collect(Collectors.toList());
+        return Set.copyOf(articleSaveRepository.findSavedArticleIdsByMember(userId, articleIds));
     }
 }

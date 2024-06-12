@@ -18,7 +18,7 @@ public interface RepairArticleQueryDslRepository {
     List<RepairArticle> findSoftDeletedBefore(LocalDateTime cutoffDate);
 
     Page<RepairArticle> findByOfficeIdAndProgressInAndCategoryOrderByIdDesc(
-        Long officeId, List<Progress> progresses, ArticleCategory category, Pageable pageable);
+        Long officeId, List<Progress> progresses, ArticleCategory category, Pageable pageable,List<Long> checkedIssueIds);
 
     List<RepairArticle> findByOfficeIdAndProgressIn(Long officeId, List<Progress> progresses);
 
