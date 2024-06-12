@@ -49,6 +49,9 @@ public enum ErrorCode {
     ARTICLE_NOT_LIKED(HttpStatus.BAD_REQUEST, "저장하지 않은 게시글입니다."),
     ARTICLE_ALREADY_LIKED(HttpStatus.CONFLICT, "이미 저장한 게시글입니다."),
 
+    // IMAGE
+    IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 이미지입니다."),
+
     // SCHEDULE
     SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 일정입니다."),
     SCHEDULE_MUST_HAVE_ONE(HttpStatus.BAD_REQUEST, "일정은 1개 이상 존재해야 합니다."),
@@ -62,7 +65,7 @@ public enum ErrorCode {
     PARENT_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "부모 댓글을 찾을 수 없습니다."),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 댓글입니다."),
 
-    //Alarm
+    // ALARM
     ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "알람을 찾을 수 없습니다."),
 
     // 5xx
