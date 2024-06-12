@@ -18,6 +18,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.final_10aeat.common.enumclass.ManagePeriod;
@@ -67,16 +68,20 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
         );
 
         given(authenticationService.getUserOfficeId()).willReturn(1L);
-        given(readManageArticleService.summary(anyLong())).willReturn(response);
+        given(readManageArticleService.summary(anyLong(), any())).willReturn(response);
 
         // when & then
         mockMvc.perform(get("/manage/articles/summary")
+                .param("year", "2023")
                 .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
             .andDo(document("get-manage-article-summary",
                     preprocessRequest(prettyPrint()),
                     preprocessResponse(prettyPrint()),
+                    queryParameters(
+                        parameterWithName("year").description("조회할 년도, null인 경우 당년도")
+                    ),
                     responseFields(
                         fieldWithPath("code").type(NUMBER).description("응답 상태 코드"),
                         fieldWithPath("data.complete").type(NUMBER).description("완료된 사항 수"),
@@ -196,11 +201,11 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
         );
 
         PageRequest pageRequest = PageRequest.of(0, 10); // 0 페이지, 페이지 당 10개 항목
-        Page<ListManageArticleResponse> responseList = new PageImpl<>(content, pageRequest, content.size());
-
+        Page<ListManageArticleResponse> responseList = new PageImpl<>(content, pageRequest,
+            content.size());
 
         given(authenticationService.getUserOfficeId()).willReturn(1L);
-        given(readManageArticleService.listArticleByProgress(anyInt(), anyLong(), any(),any()))
+        given(readManageArticleService.listArticleByProgress(anyInt(), anyLong(), any(), any()))
             .willReturn(responseList);
 
         // when & then

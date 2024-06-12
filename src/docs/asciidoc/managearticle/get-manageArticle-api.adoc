@@ -15,6 +15,7 @@
 === HttpRequest
 
 include::{snippets}/get-manage-article-summary/http-request.adoc[]
+include::{snippets}/get-manage-article-summary/query-parameters.adoc[]
 
 === HttpResponse
 
