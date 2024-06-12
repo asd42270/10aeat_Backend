@@ -2,6 +2,7 @@ package com.final_10aeat.domain.manageArticle.repository;
 
 import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.domain.manageArticle.dto.request.GetMonthlyListWithYearQuery;
+import com.final_10aeat.domain.manageArticle.dto.request.GetYearListPageQuery;
 import com.final_10aeat.domain.manageArticle.dto.request.GetYearListQuery;
 import com.final_10aeat.domain.manageArticle.dto.request.SearchManageArticleQuery;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
@@ -19,9 +20,11 @@ public interface ManageArticleQueryDslRepository {
         Long userOfficeId, Integer year, Pageable pageRequest, List<Progress> progresses
     );
 
-    Page<ManageArticle> findAllByYear(GetYearListQuery queryDto);
+    Page<ManageArticle> findAllByYear(GetYearListPageQuery queryDto);
 
     Page<ManageArticle> findAllByYearAndMonthly(GetMonthlyListWithYearQuery queryDto);
 
     Page<ManageArticle> searchByKeyword(SearchManageArticleQuery searchQuery);
+
+    List<ManageArticle> findAllByYear(GetYearListQuery queryDto);
 }

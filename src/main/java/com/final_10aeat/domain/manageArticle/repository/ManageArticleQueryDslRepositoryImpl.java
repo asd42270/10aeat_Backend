@@ -4,6 +4,7 @@ import static java.util.Optional.ofNullable;
 
 import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.domain.manageArticle.dto.request.GetMonthlyListWithYearQuery;
+import com.final_10aeat.domain.manageArticle.dto.request.GetYearListPageQuery;
 import com.final_10aeat.domain.manageArticle.dto.request.GetYearListQuery;
 import com.final_10aeat.domain.manageArticle.dto.request.SearchManageArticleQuery;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
@@ -76,7 +77,7 @@ public class ManageArticleQueryDslRepositoryImpl implements ManageArticleQueryDs
     }
 
     @Override
-    public Page<ManageArticle> findAllByYear(GetYearListQuery command) {
+    public Page<ManageArticle> findAllByYear(GetYearListPageQuery command) {
         QManageArticle manageArticle = QManageArticle.manageArticle;
         QManageSchedule manageSchedule = QManageSchedule.manageSchedule;
         Pageable pageRequest = command.pageRequest();
@@ -141,6 +142,21 @@ public class ManageArticleQueryDslRepositoryImpl implements ManageArticleQueryDs
         QueryResults<ManageArticle> queryResult = query.fetchResults();
 
         return new PageImpl<>(queryResult.getResults(), pageRequest, queryResult.getTotal());
+    }
+
+    @Override
+    public List<ManageArticle> findAllByYear(GetYearListQuery command) {
+        QManageArticle manageArticle = QManageArticle.manageArticle;
+        QManageSchedule manageSchedule = QManageSchedule.manageSchedule;
+
+        return queryFactory.selectFrom(manageArticle)
+            .leftJoin(manageArticle.schedules, manageSchedule)
+            .where(
+                manageSchedule.year.eq(command.year()),
+                manageArticle.office.id.eq(command.officeId()),
+                manageArticle.deletedAt.isNull()
+            )
+            .fetch();
     }
 
     private BooleanBuilder setQuery(SearchManageArticleQuery command,
