@@ -1,6 +1,6 @@
 package com.final_10aeat.domain.manageArticle.service;
 
-import static com.final_10aeat.domain.manageArticle.dto.request.GetYearListQuery.toQueryDto;
+import static com.final_10aeat.domain.manageArticle.dto.request.GetYearListPageQuery.toQueryDto;
 import static com.final_10aeat.domain.manageArticle.dto.request.SearchManageArticleQuery.toSearchQuery;
 import static java.util.Optional.ofNullable;
 
@@ -9,6 +9,7 @@ import com.final_10aeat.common.exception.ArticleNotFoundException;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
 import com.final_10aeat.domain.manageArticle.dto.request.GetMonthlyListWithYearQuery;
+import com.final_10aeat.domain.manageArticle.dto.request.GetYearListQuery;
 import com.final_10aeat.domain.manageArticle.dto.response.DetailManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.ListManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleSummaryResponse;
@@ -47,9 +48,9 @@ public class ReadManageArticleService {
         Progress.COMPLETE
     );
 
-    public SummaryManageArticleResponse summary(Long id) {
+    public SummaryManageArticleResponse summary(Long id, Integer year) {
         List<ManageArticle> articles = manageArticleRepository
-            .findAllByOfficeIdAndDeletedAtNull(id);
+            .findAllByYear(GetYearListQuery.toQueryDto(year, id));
 
         return summaryArticleFrom(articles);
     }
@@ -102,6 +103,7 @@ public class ReadManageArticleService {
             .note(article.getResponsibility())
             .manageSchedule(
                 article.getSchedules().stream()
+                    .sorted(Comparator.comparing(ManageSchedule::getScheduleStart).reversed())
                     .map(ScheduleConverter::toScheduleResponse).toList()
             )
             .build();

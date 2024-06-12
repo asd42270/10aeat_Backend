@@ -1,6 +1,7 @@
 package com.final_10aeat.domain.manageArticle.controller;
 
 
+import static java.util.Optional.*;
 import static java.util.Optional.ofNullable;
 
 import com.final_10aeat.common.dto.CustomPageDto;
@@ -13,7 +14,9 @@ import com.final_10aeat.domain.manageArticle.dto.response.SummaryManageArticleRe
 import com.final_10aeat.domain.manageArticle.service.ReadManageArticleService;
 import com.final_10aeat.global.util.ResponseDTO;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -35,11 +38,16 @@ public class ReadManageArticleController {
     private final AuthenticationService authenticationService;
 
     @GetMapping("/summary")
-    public ResponseDTO<SummaryManageArticleResponse> summary() {
+    public ResponseDTO<SummaryManageArticleResponse> summary(
+        @RequestParam(required = false) Integer year
+    ) {
         Long userOfficeId = authenticationService.getUserOfficeId();
 
         return ResponseDTO.okWithData(
-            readManageArticleService.summary(userOfficeId)
+            readManageArticleService.summary(
+                userOfficeId,
+                ofNullable(year).orElse(LocalDateTime.now().getYear())
+            )
         );
     }
 
