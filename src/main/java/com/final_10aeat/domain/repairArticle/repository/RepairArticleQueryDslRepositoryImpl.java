@@ -1,5 +1,6 @@
 package com.final_10aeat.domain.repairArticle.repository;
 
+import static com.querydsl.core.QueryModifiers.limit;
 import static java.util.Optional.ofNullable;
 
 import com.final_10aeat.common.enumclass.ArticleCategory;
@@ -86,9 +87,13 @@ public class RepairArticleQueryDslRepositoryImpl implements RepairArticleQueryDs
                 progressPredicate,
                 categoryPredicate,
                 repairArticle.issues.any().enabled.isTrue())
-            .orderBy(repairArticle.id.desc());
+            .orderBy(repairArticle.id.desc())
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize());
 
         List<RepairArticle> issueArticles = issueQuery.fetch();
+
+        int remainingPageSize = pageable.getPageSize() - issueArticles.size();
 
         JPAQuery<RepairArticle> normalQuery = queryFactory.selectFrom(repairArticle)
             .where(repairArticle.office.id.eq(officeId),
@@ -96,8 +101,8 @@ public class RepairArticleQueryDslRepositoryImpl implements RepairArticleQueryDs
                 categoryPredicate,
                 repairArticle.issues.isEmpty().or(repairArticle.issues.any().enabled.isFalse()))
             .orderBy(repairArticle.id.desc())
-            .offset(pageable.getOffset())
-            .limit(pageable.getPageSize() - issueArticles.size());
+            .offset(Math.max(0, pageable.getOffset() - (long) issueArticles.size()))
+            .limit(remainingPageSize);
 
         List<RepairArticle> normalArticles = normalQuery.fetch();
 
@@ -105,7 +110,12 @@ public class RepairArticleQueryDslRepositoryImpl implements RepairArticleQueryDs
                 normalArticles.stream())
             .collect(Collectors.toList());
 
-        long total = issueArticles.size() + normalQuery.fetchCount();
+        JPAQuery<RepairArticle> totalCountQuery = queryFactory.selectFrom(repairArticle)
+            .where(repairArticle.office.id.eq(officeId),
+                progressPredicate,
+                categoryPredicate);
+
+        long total = totalCountQuery.fetchCount();
 
         return new PageImpl<>(finalResult, pageable, total);
     }
