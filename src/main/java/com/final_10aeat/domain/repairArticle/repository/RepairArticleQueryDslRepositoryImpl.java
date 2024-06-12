@@ -17,6 +17,8 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -69,7 +71,7 @@ public class RepairArticleQueryDslRepositoryImpl implements RepairArticleQueryDs
     }
 
     @Override
-    public Page<RepairArticle> findByOfficeIdAndProgressInAndCategoryOrderByUpdatedAtDesc(
+    public Page<RepairArticle> findByOfficeIdAndProgressInAndCategoryOrderByIdDesc(
         Long officeId, List<Progress> progresses, ArticleCategory category, Pageable pageable
     ) {
         QRepairArticle repairArticle = QRepairArticle.repairArticle;
@@ -79,17 +81,33 @@ public class RepairArticleQueryDslRepositoryImpl implements RepairArticleQueryDs
         BooleanExpression categoryPredicate =
             category != null ? repairArticle.category.eq(category) : null;
 
-        JPAQuery<RepairArticle> query = queryFactory.selectFrom(repairArticle)
+        JPAQuery<RepairArticle> issueQuery = queryFactory.selectFrom(repairArticle)
             .where(repairArticle.office.id.eq(officeId),
                 progressPredicate,
-                categoryPredicate)
-            .orderBy(repairArticle.updatedAt.desc())
+                categoryPredicate,
+                repairArticle.issues.any().enabled.isTrue())
+            .orderBy(repairArticle.id.desc());
+
+        List<RepairArticle> issueArticles = issueQuery.fetch();
+
+        JPAQuery<RepairArticle> normalQuery = queryFactory.selectFrom(repairArticle)
+            .where(repairArticle.office.id.eq(officeId),
+                progressPredicate,
+                categoryPredicate,
+                repairArticle.issues.isEmpty().or(repairArticle.issues.any().enabled.isFalse()))
+            .orderBy(repairArticle.id.desc())
             .offset(pageable.getOffset())
-            .limit(pageable.getPageSize());
+            .limit(pageable.getPageSize() - issueArticles.size());
 
-        QueryResults<RepairArticle> queryResult = query.fetchResults();
+        List<RepairArticle> normalArticles = normalQuery.fetch();
 
-        return new PageImpl<>(queryResult.getResults(), pageable, queryResult.getTotal());
+        List<RepairArticle> finalResult = Stream.concat(issueArticles.stream(),
+                normalArticles.stream())
+            .collect(Collectors.toList());
+
+        long total = issueArticles.size() + normalQuery.fetchCount();
+
+        return new PageImpl<>(finalResult, pageable, total);
     }
 
     @Override
