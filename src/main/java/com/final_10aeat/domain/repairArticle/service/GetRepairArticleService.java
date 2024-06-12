@@ -12,6 +12,7 @@ import com.final_10aeat.domain.repairArticle.entity.CustomProgress;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticleImage;
 import com.final_10aeat.domain.repairArticle.repository.ArticleViewRepository;
+import com.final_10aeat.domain.repairArticle.repository.CustomProgressRepository;
 import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
 import com.final_10aeat.domain.save.repository.ArticleSaveRepository;
 import java.util.List;
@@ -30,6 +31,7 @@ public class GetRepairArticleService {
     private final ArticleSaveRepository articleSaveRepository;
     private final ArticleIssueCheckRepository articleIssueCheckRepository;
     private final ArticleViewRepository articleViewRepository;
+    private final CustomProgressRepository customProgressRepository;
 
     public RepairArticleSummaryDto getRepairArticleSummary(Long officeId,
         UserIdAndRole userIdAndRole) {
@@ -115,10 +117,11 @@ public class GetRepairArticleService {
     }
 
     public List<CustomProgressResponseDto> getCustomProgressList(Long articleId) {
-        RepairArticle article = repairArticleRepository.findById(articleId)
+        repairArticleRepository.findById(articleId)
             .orElseThrow(ArticleNotFoundException::new);
 
-        return article.getCustomProgressSet().stream()
+        return customProgressRepository.findAllByOrderByStartScheduleAsc().stream()
+            .filter(customProgress -> customProgress.getRepairArticle().getId().equals(articleId))
             .map(this::mapToCustomProgressDto)
             .collect(Collectors.toList());
     }
