@@ -1,6 +1,7 @@
 package com.final_10aeat.domain.manageArticle.service;
 
 import static com.final_10aeat.domain.manageArticle.dto.request.GetYearListQuery.toQueryDto;
+import static com.final_10aeat.domain.manageArticle.dto.request.SearchManageArticleQuery.toSearchQuery;
 import static java.util.Optional.ofNullable;
 
 import com.final_10aeat.common.enumclass.Progress;
@@ -11,12 +12,15 @@ import com.final_10aeat.domain.manageArticle.dto.request.GetMonthlyListWithYearQ
 import com.final_10aeat.domain.manageArticle.dto.response.DetailManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.ListManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleSummaryResponse;
+import com.final_10aeat.domain.manageArticle.dto.response.SearchManagersManageResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.SummaryManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.util.ScheduleConverter;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.entity.ManageSchedule;
 import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -186,5 +190,38 @@ public class ReadManageArticleService {
     ) {
         return manageArticleRepository.searchByOfficeIdAndText(userOfficeId, search, pageRequest)
             .map(this::listArticleFrom);
+    }
+
+    public Page<SearchManagersManageResponse> managerSearch(
+        Long userOfficeId, Integer year, String keyword, Integer month, Pageable pageRequest,
+        LocalDateTime now) {
+        return manageArticleRepository.searchByKeyword(
+                toSearchQuery(now, keyword, year, month, userOfficeId, pageRequest)
+            )
+            .map(this::searchArticleFrom);
+    }
+
+    private SearchManagersManageResponse searchArticleFrom(ManageArticle article) {
+        return SearchManagersManageResponse.builder()
+            .id(article.getId())
+            .period(article.getPeriod())
+            .periodCount(article.getPeriodCount())
+            .title(article.getTitle())
+            .allSchedule(article.getSchedules().size())
+            .completedSchedule(
+                (int) article.getSchedules().stream()
+                    .filter(ManageSchedule::isComplete).count()
+            )
+            .currentSchedules(getCurrentSchedules(article))
+            .build();
+    }
+
+    private static LocalDateTime getCurrentSchedules(ManageArticle article) {
+        LocalDateTime now = LocalDateTime.now();
+        return article.getSchedules().stream()
+            .map(ManageSchedule::getScheduleStart)
+            .filter(start -> !start.isBefore(now))
+            .min(Comparator.naturalOrder())
+            .orElse(null);
     }
 }

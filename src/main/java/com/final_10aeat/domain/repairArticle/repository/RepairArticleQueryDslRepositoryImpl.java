@@ -1,9 +1,13 @@
 package com.final_10aeat.domain.repairArticle.repository;
 
+import static java.util.Optional.ofNullable;
+
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
+import com.final_10aeat.domain.repairArticle.dto.request.SearchRepairArticleQueryDto;
 import com.final_10aeat.domain.repairArticle.entity.QRepairArticle;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -97,5 +101,39 @@ public class RepairArticleQueryDslRepositoryImpl implements RepairArticleQueryDs
             .where(repairArticle.office.id.eq(officeId),
                 repairArticle.progress.in(progresses))
             .fetch();
+    }
+
+    @Override
+    public Page<RepairArticle> findAll(SearchRepairArticleQueryDto command) {
+        QRepairArticle repairArticle = QRepairArticle.repairArticle;
+        Pageable pageRequest = command.pageRequest();
+
+        JPAQuery<RepairArticle> query = queryFactory.selectFrom(repairArticle)
+            .where(setQuery(command, repairArticle))
+            .orderBy(repairArticle.id.desc())
+            .offset(pageRequest.getOffset())
+            .limit(pageRequest.getPageSize());
+
+        QueryResults<RepairArticle> queryResult = query.fetchResults();
+
+        return new PageImpl<>(queryResult.getResults(), pageRequest, queryResult.getTotal());
+    }
+
+    private BooleanBuilder setQuery(SearchRepairArticleQueryDto command,
+        QRepairArticle repairArticle) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        booleanBuilder.and(repairArticle.office.id.eq(command.officeId()));
+        booleanBuilder.and(repairArticle.deletedAt.isNull());
+
+        if (ofNullable(command.progress()).isPresent()) {
+            booleanBuilder.and(repairArticle.progress.eq(command.progress()));
+        }
+
+        if (ofNullable(command.keyword()).isPresent()) {
+            booleanBuilder.and(repairArticle.title.contains(command.keyword()));
+        }
+
+        return booleanBuilder;
     }
 }

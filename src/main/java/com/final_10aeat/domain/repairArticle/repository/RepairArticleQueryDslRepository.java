@@ -2,6 +2,7 @@ package com.final_10aeat.domain.repairArticle.repository;
 
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
+import com.final_10aeat.domain.repairArticle.dto.request.SearchRepairArticleQueryDto;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,4 +21,6 @@ public interface RepairArticleQueryDslRepository {
         Long officeId, List<Progress> progresses, ArticleCategory category, Pageable pageable);
 
     List<RepairArticle> findByOfficeIdAndProgressIn(Long officeId, List<Progress> progresses);
+
+    Page<RepairArticle> findAll(SearchRepairArticleQueryDto queryDto);
 }
