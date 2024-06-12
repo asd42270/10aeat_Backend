@@ -21,7 +21,6 @@ import com.final_10aeat.domain.repairArticle.repository.RepairArticleRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,10 +41,9 @@ public class ManagerRepairArticleService {
         Manager manager = managerRepository.findById(managerId).orElseThrow(
             ManagerNotFoundException::new);
         RepairArticle repairArticle = buildRepairArticleFromRequest(request, manager);
-        Set<RepairArticleImage> images = createImageEntitiesFromIds(request.imageIds(),
+        List<RepairArticleImage> images = createImageEntitiesFromIds(request.imageIds(),
             repairArticle);
         repairArticle.setImages(images);
-
         repairArticleRepository.save(repairArticle);
     }
 
@@ -65,13 +63,13 @@ public class ManagerRepairArticleService {
             .build();
     }
 
-    private Set<RepairArticleImage> createImageEntitiesFromIds(List<Long> imageIds,
+    private List<RepairArticleImage> createImageEntitiesFromIds(List<Long> imageIds,
         RepairArticle repairArticle) {
         return imageIds.stream()
             .map(id -> repairArticleImageRepository.findById(id).orElseThrow(
                 ImageNotFoundException::new))
             .peek(image -> image.setRepairArticle(repairArticle))
-            .collect(Collectors.toSet());
+            .collect(Collectors.toList());
     }
 
     public void deleteRepairArticleById(Long repairArticleId, Long managerId) {
