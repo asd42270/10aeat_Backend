@@ -1,10 +1,10 @@
 package com.final_10aeat.domain.repairArticle.repository;
 
-import static com.querydsl.core.QueryModifiers.limit;
 import static java.util.Optional.ofNullable;
 
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
+import com.final_10aeat.domain.articleIssue.entity.QArticleIssue;
 import com.final_10aeat.domain.repairArticle.dto.request.SearchRepairArticleQueryDto;
 import com.final_10aeat.domain.repairArticle.entity.QRepairArticle;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
@@ -73,51 +73,51 @@ public class RepairArticleQueryDslRepositoryImpl implements RepairArticleQueryDs
 
     @Override
     public Page<RepairArticle> findByOfficeIdAndProgressInAndCategoryOrderByIdDesc(
-        Long officeId, List<Progress> progresses, ArticleCategory category, Pageable pageable
+        Long officeId, List<Progress> progresses, ArticleCategory category, Pageable pageable,
+        List<Long> checkedIssueIds
     ) {
         QRepairArticle repairArticle = QRepairArticle.repairArticle;
+        QArticleIssue articleIssue = QArticleIssue.articleIssue;
 
         BooleanExpression progressPredicate =
             progresses != null ? repairArticle.progress.in(progresses) : null;
         BooleanExpression categoryPredicate =
             category != null ? repairArticle.category.eq(category) : null;
 
-        JPAQuery<RepairArticle> issueQuery = queryFactory.selectFrom(repairArticle)
+        List<RepairArticle> redDotArticles = queryFactory.selectFrom(repairArticle)
+            .leftJoin(repairArticle.issues, articleIssue)
             .where(repairArticle.office.id.eq(officeId),
                 progressPredicate,
                 categoryPredicate,
-                repairArticle.issues.any().enabled.isTrue())
+                articleIssue.enabled.isTrue(),
+                articleIssue.id.notIn(checkedIssueIds))
+            .distinct()
             .orderBy(repairArticle.id.desc())
-            .offset(pageable.getOffset())
-            .limit(pageable.getPageSize());
+            .fetch();
 
-        List<RepairArticle> issueArticles = issueQuery.fetch();
-
-        int remainingPageSize = pageable.getPageSize() - issueArticles.size();
-
-        JPAQuery<RepairArticle> normalQuery = queryFactory.selectFrom(repairArticle)
+        List<RepairArticle> nonRedDotArticles = queryFactory.selectFrom(repairArticle)
+            .leftJoin(repairArticle.issues, articleIssue)
             .where(repairArticle.office.id.eq(officeId),
                 progressPredicate,
                 categoryPredicate,
-                repairArticle.issues.isEmpty().or(repairArticle.issues.any().enabled.isFalse()))
+                articleIssue.isNull()
+                    .or(articleIssue.enabled.isFalse().or(articleIssue.id.in(checkedIssueIds))))
+            .distinct()
             .orderBy(repairArticle.id.desc())
-            .offset(Math.max(0, pageable.getOffset() - (long) issueArticles.size()))
-            .limit(remainingPageSize);
+            .fetch();
 
-        List<RepairArticle> normalArticles = normalQuery.fetch();
-
-        List<RepairArticle> finalResult = Stream.concat(issueArticles.stream(),
-                normalArticles.stream())
+        List<RepairArticle> combinedArticles = Stream.concat(redDotArticles.stream(),
+                nonRedDotArticles.stream())
+            .distinct()
             .collect(Collectors.toList());
 
-        JPAQuery<RepairArticle> totalCountQuery = queryFactory.selectFrom(repairArticle)
-            .where(repairArticle.office.id.eq(officeId),
-                progressPredicate,
-                categoryPredicate);
+        long total = combinedArticles.size();
 
-        long total = totalCountQuery.fetchCount();
+        int start = Math.min((int) pageable.getOffset(), combinedArticles.size());
+        int end = Math.min((start + pageable.getPageSize()), combinedArticles.size());
+        List<RepairArticle> paginatedArticles = combinedArticles.subList(start, end);
 
-        return new PageImpl<>(finalResult, pageable, total);
+        return new PageImpl<>(paginatedArticles, pageable, total);
     }
 
     @Override
