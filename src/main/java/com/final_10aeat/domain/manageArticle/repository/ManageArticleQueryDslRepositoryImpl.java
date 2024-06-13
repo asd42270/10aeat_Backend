@@ -165,7 +165,6 @@ public class ManageArticleQueryDslRepositoryImpl implements ManageArticleQueryDs
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
         booleanBuilder.and(manageArticle.office.id.eq(command.officeId()));
-        booleanBuilder.and(manageSchedule.year.eq(command.year()));
         booleanBuilder.and(manageArticle.deletedAt.isNull());
 
         if (ofNullable(command.keyword()).isPresent()) {
@@ -173,6 +172,12 @@ public class ManageArticleQueryDslRepositoryImpl implements ManageArticleQueryDs
                 .or(manageArticle.legalBasis.contains(command.keyword()))
                 .or(manageArticle.target.contains(command.keyword()))
                 .or(manageArticle.responsibility.contains(command.keyword()))
+            );
+        }
+
+        if (ofNullable(command.year()).isPresent()) {
+            booleanBuilder.and(
+                manageSchedule.year.eq(command.year())
             );
         }
 
