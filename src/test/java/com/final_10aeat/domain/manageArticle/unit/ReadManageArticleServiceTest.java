@@ -12,8 +12,8 @@ import com.final_10aeat.common.exception.ArticleNotFoundException;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.common.util.EntityUtil;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
-import com.final_10aeat.domain.manageArticle.dto.request.GetYearListPageQuery;
 import com.final_10aeat.domain.manageArticle.dto.request.GetYearListQuery;
+import com.final_10aeat.domain.manageArticle.dto.request.SearchManageArticleQuery;
 import com.final_10aeat.domain.manageArticle.dto.response.DetailManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.ListManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.SummaryManageArticleResponse;
@@ -171,7 +171,7 @@ public class ReadManageArticleServiceTest {
             List.of(article1, article2)
         );
 
-        given(manageArticleRepository.findAllByYear(any(GetYearListPageQuery.class)))
+        given(manageArticleRepository.searchByKeyword(any(SearchManageArticleQuery.class)))
             .willReturn(articleList);
 
         // when

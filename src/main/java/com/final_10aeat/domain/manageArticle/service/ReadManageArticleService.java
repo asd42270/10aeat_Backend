@@ -1,7 +1,6 @@
 package com.final_10aeat.domain.manageArticle.service;
 
 import static com.final_10aeat.domain.manageArticle.dto.request.GetYearListPageQuery.toQueryDto;
-import static com.final_10aeat.domain.manageArticle.dto.request.SearchManageArticleQuery.toSearchQuery;
 import static java.util.Optional.ofNullable;
 
 import com.final_10aeat.common.enumclass.Progress;
@@ -10,6 +9,7 @@ import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
 import com.final_10aeat.domain.manageArticle.dto.request.GetMonthlyListWithYearQuery;
 import com.final_10aeat.domain.manageArticle.dto.request.GetYearListQuery;
+import com.final_10aeat.domain.manageArticle.dto.request.SearchManageArticleQuery;
 import com.final_10aeat.domain.manageArticle.dto.response.DetailManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.ListManageArticleResponse;
 import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleSummaryResponse;
@@ -113,7 +113,11 @@ public class ReadManageArticleService {
         Integer year, Long userOfficeId, Pageable pageRequest
     ) {
         return manageArticleRepository
-            .findAllByYear(toQueryDto(year, userOfficeId, pageRequest))
+            .searchByKeyword(SearchManageArticleQuery.builder()
+                .year(year)
+                .officeId(userOfficeId)
+                .pageRequest(pageRequest)
+                .build())
             .map(this::listArticleFrom);
     }
 
@@ -198,7 +202,14 @@ public class ReadManageArticleService {
         Long userOfficeId, Integer year, String keyword, Integer month, Pageable pageRequest,
         LocalDateTime now) {
         return manageArticleRepository.searchByKeyword(
-                toSearchQuery(now, keyword, year, month, userOfficeId, pageRequest)
+                SearchManageArticleQuery.builder()
+                    .now(now)
+                    .keyword(keyword)
+                    .year(year)
+                    .month(month)
+                    .officeId(userOfficeId)
+                    .pageRequest(pageRequest)
+                    .build()
             )
             .map(this::searchArticleFrom);
     }
