@@ -12,7 +12,7 @@ import com.final_10aeat.domain.manageArticle.entity.ManageSchedule;
 import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.office.entity.Office;
-import com.final_10aeat.domain.repairArticle.exception.ArticleAlreadyDeletedException;
+import com.final_10aeat.common.exception.ArticleAlreadyDeletedException;
 import com.final_10aeat.domain.repairArticle.exception.ArticleNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

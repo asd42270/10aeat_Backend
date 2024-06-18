@@ -1,7 +1,7 @@
 package com.final_10aeat.domain.alarm.controller;
 
 import com.final_10aeat.common.dto.UserIdAndRole;
-import com.final_10aeat.common.service.AuthenticationService;
+import com.final_10aeat.common.service.AuthUserService;
 import com.final_10aeat.domain.alarm.dto.response.AlarmResponseDto;
 import com.final_10aeat.domain.alarm.service.AlarmService;
 import com.final_10aeat.global.security.principal.MemberPrincipal;
@@ -20,7 +20,7 @@ import java.util.List;
 public class AlarmController {
 
     private final AlarmService alarmService;
-    private final AuthenticationService authenticationService;
+    private final AuthUserService authUserService;
 
     @GetMapping
     public DeferredResult<ResponseEntity<ResponseDTO<AlarmResponseDto>>> getAlarm() {
@@ -34,7 +34,7 @@ public class AlarmController {
     @GetMapping("/history")
     public ResponseDTO<List<AlarmResponseDto>> getAlarmHistory() {
 
-        UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
+        UserIdAndRole userIdAndRole = authUserService.getCurrentUserIdAndRole();
 
         return ResponseDTO.okWithData(alarmService.getAlarmHistory(userIdAndRole));
     }
@@ -43,7 +43,7 @@ public class AlarmController {
     public ResponseDTO<Void> checkedAlarm(
             @PathVariable("alarm_id") Long alarmId
     ) {
-        UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
+        UserIdAndRole userIdAndRole = authUserService.getCurrentUserIdAndRole();
 
         alarmService.checkedAlarm(alarmId, userIdAndRole);
         return ResponseDTO.ok();

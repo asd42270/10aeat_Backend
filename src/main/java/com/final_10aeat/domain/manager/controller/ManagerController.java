@@ -1,10 +1,10 @@
 package com.final_10aeat.domain.manager.controller;
 
 import com.final_10aeat.domain.manager.dto.request.CreateManagerRequestDto;
-import com.final_10aeat.domain.manager.dto.response.GetManagerResponseDto;
+import com.final_10aeat.domain.manager.dto.response.GetManagerInfoResponseDto;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.manager.service.ManagerService;
-import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
+import com.final_10aeat.common.dto.LoginRequestDto;
 import com.final_10aeat.global.util.ResponseDTO;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -41,7 +41,7 @@ public class ManagerController {
     }
 
     @GetMapping("/profile/{managerId}")
-    public ResponseEntity<ResponseDTO<GetManagerResponseDto>> getManagerProfile(
+    public ResponseEntity<ResponseDTO<GetManagerInfoResponseDto>> getManagerProfile(
         @PathVariable Long managerId) {
         Manager manager = managerService.getManagerById(managerId);
         return ResponseEntity.ok(ResponseDTO.okWithData(manager.toDto()));

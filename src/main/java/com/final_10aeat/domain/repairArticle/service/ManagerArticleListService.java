@@ -3,7 +3,7 @@ package com.final_10aeat.domain.repairArticle.service;
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.domain.comment.repository.CommentRepository;
-import com.final_10aeat.domain.repairArticle.dto.request.SearchRepairArticleQueryDto;
+import com.final_10aeat.domain.repairArticle.dto.request.SearchRepairArticleQuery;
 import com.final_10aeat.domain.repairArticle.dto.response.ManagerRepairArticleResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.SearchManagerRepairArticleResponseDto;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
@@ -59,7 +59,7 @@ public class ManagerArticleListService {
         Long userOfficeId, String keyword, Progress progress, Pageable pageRequest
     ) {
         return repairArticleRepository.findAll(
-                SearchRepairArticleQueryDto.toQueryDto(
+                SearchRepairArticleQuery.toQueryDto(
                     userOfficeId, keyword, progress, pageRequest
                 )
             )

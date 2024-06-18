@@ -5,7 +5,7 @@ import static java.util.Optional.ofNullable;
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.domain.articleIssue.entity.QArticleIssue;
-import com.final_10aeat.domain.repairArticle.dto.request.SearchRepairArticleQueryDto;
+import com.final_10aeat.domain.repairArticle.dto.request.SearchRepairArticleQuery;
 import com.final_10aeat.domain.repairArticle.entity.QRepairArticle;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.querydsl.core.BooleanBuilder;
@@ -132,7 +132,7 @@ public class RepairArticleQueryDslRepositoryImpl implements RepairArticleQueryDs
     }
 
     @Override
-    public Page<RepairArticle> findAll(SearchRepairArticleQueryDto command) {
+    public Page<RepairArticle> findAll(SearchRepairArticleQuery command) {
         QRepairArticle repairArticle = QRepairArticle.repairArticle;
         Pageable pageRequest = command.pageRequest();
 
@@ -147,7 +147,7 @@ public class RepairArticleQueryDslRepositoryImpl implements RepairArticleQueryDs
         return new PageImpl<>(queryResult.getResults(), pageRequest, queryResult.getTotal());
     }
 
-    private BooleanBuilder setQuery(SearchRepairArticleQueryDto command,
+    private BooleanBuilder setQuery(SearchRepairArticleQuery command,
         QRepairArticle repairArticle) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 

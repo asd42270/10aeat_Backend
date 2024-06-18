@@ -6,10 +6,10 @@ import static org.mockito.Mockito.verify;
 
 import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.common.exception.ArticleNotFoundException;
-import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssuePublishRequestDto;
+import com.final_10aeat.domain.articleIssue.dto.request.CreateIssueRequestDto;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
 import com.final_10aeat.domain.articleIssue.repository.ArticleIssueRepository;
-import com.final_10aeat.domain.articleIssue.service.ArticleIssueService;
+import com.final_10aeat.domain.articleIssue.service.IssueService;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
 import com.final_10aeat.domain.manager.entity.Manager;
@@ -31,7 +31,7 @@ public class ManagerArticleIssuePublishServiceTest {
     @Mock
     private ArticleIssueRepository articleIssueRepository;
     @InjectMocks
-    private ArticleIssueService articleIssueService;
+    private IssueService issueService;
 
     private final Long articleId = 1L;
     private final String issueTitle = "테스트 이슈";
@@ -41,7 +41,7 @@ public class ManagerArticleIssuePublishServiceTest {
     private final String email = "test@naver.com";
     private final String password = "spring";
 
-    private final ArticleIssuePublishRequestDto requestDto = new ArticleIssuePublishRequestDto(
+    private final CreateIssueRequestDto requestDto = new CreateIssueRequestDto(
         issueTitle, issueContent);
 
     private final Manager manager = Manager.builder()
@@ -82,7 +82,7 @@ public class ManagerArticleIssuePublishServiceTest {
             given(articleIssueRepository.save(any(ArticleIssue.class))).willReturn(articleIssue);
 
             // when
-            articleIssueService.manageIssuePublish(requestDto, articleId, manager);
+            issueService.manageIssuePublish(requestDto, articleId, manager);
 
             // then
             verify(manageArticleRepository).findById(articleId);
@@ -98,7 +98,7 @@ public class ManagerArticleIssuePublishServiceTest {
 
             // when&then
             Assertions.assertThrows(ArticleNotFoundException.class,
-                () -> articleIssueService.manageIssuePublish(requestDto, wrongArticleId, manager));
+                () -> issueService.manageIssuePublish(requestDto, wrongArticleId, manager));
         }
     }
 }

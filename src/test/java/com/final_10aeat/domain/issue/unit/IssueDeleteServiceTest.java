@@ -10,7 +10,7 @@ import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
 import com.final_10aeat.domain.articleIssue.exception.IssueNotFoundException;
 import com.final_10aeat.domain.articleIssue.repository.ArticleIssueRepository;
-import com.final_10aeat.domain.articleIssue.service.ArticleIssueService;
+import com.final_10aeat.domain.articleIssue.service.IssueService;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import java.util.Optional;
@@ -29,7 +29,7 @@ public class IssueDeleteServiceTest {
     private ArticleIssueRepository articleIssueRepository;
 
     @InjectMocks
-    private ArticleIssueService articleIssueService;
+    private IssueService issueService;
 
     private final Manager manager = Manager.builder()
         .id(1L)
@@ -73,7 +73,7 @@ public class IssueDeleteServiceTest {
                 Optional.ofNullable(articleIssue));
 
             // when
-            articleIssueService.deleteIssue(issueId, userIdAndRole);
+            issueService.deleteIssue(issueId, userIdAndRole);
 
             // then
             then(articleIssueRepository).should(times(1)).findById(issueId);
@@ -91,7 +91,7 @@ public class IssueDeleteServiceTest {
 
         // when&then
         Assertions.assertThrows(IssueNotFoundException.class,
-            () -> articleIssueService.deleteIssue(issueId, userIdAndRole));
+            () -> issueService.deleteIssue(issueId, userIdAndRole));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class IssueDeleteServiceTest {
 
         // when&then
         Assertions.assertThrows(UnauthorizedAccessException.class,
-            () -> articleIssueService.deleteIssue(issueId, wrongUserIdAndRole));
+            () -> issueService.deleteIssue(issueId, wrongUserIdAndRole));
     }
 
     @Test
@@ -119,7 +119,7 @@ public class IssueDeleteServiceTest {
 
         // when&then
         Assertions.assertThrows(UnauthorizedAccessException.class,
-            () -> articleIssueService.deleteIssue(issueId, wrongUserIdAndRole));
+            () -> issueService.deleteIssue(issueId, wrongUserIdAndRole));
     }
 
 

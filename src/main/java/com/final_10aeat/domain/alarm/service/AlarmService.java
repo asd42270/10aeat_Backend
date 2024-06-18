@@ -4,7 +4,7 @@ import com.final_10aeat.common.dto.UserIdAndRole;
 import com.final_10aeat.domain.alarm.dto.response.AlarmResponseDto;
 import com.final_10aeat.domain.alarm.entity.Alarm;
 import com.final_10aeat.domain.alarm.entity.enumtype.AlarmType;
-import com.final_10aeat.domain.alarm.event.BookmarkCommentEvent;
+import com.final_10aeat.domain.alarm.event.SavedArticleCommentEvent;
 import com.final_10aeat.domain.alarm.event.CommentEvent;
 import com.final_10aeat.domain.alarm.exception.AlarmNotFoundException;
 import com.final_10aeat.domain.alarm.repository.AlarmRepository;
@@ -21,8 +21,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionPhase;
-import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.List;
@@ -90,7 +88,7 @@ public class AlarmService {
     @Async
 //    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @EventListener
-    public void bookMarkEventHandler(BookmarkCommentEvent event) {
+    public void bookMarkEventHandler(SavedArticleCommentEvent event) {
 
         event.members()
                 .forEach(member -> {

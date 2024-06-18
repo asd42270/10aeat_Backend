@@ -14,9 +14,9 @@ import com.final_10aeat.common.util.EntityUtil;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
 import com.final_10aeat.domain.manageArticle.dto.request.GetYearListQuery;
 import com.final_10aeat.domain.manageArticle.dto.request.SearchManageArticleQuery;
-import com.final_10aeat.domain.manageArticle.dto.response.DetailManageArticleResponse;
-import com.final_10aeat.domain.manageArticle.dto.response.ListManageArticleResponse;
-import com.final_10aeat.domain.manageArticle.dto.response.SummaryManageArticleResponse;
+import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleDetailResponseDto;
+import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleListResponseDto;
+import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleSummaryListResponseDto;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.entity.ManageSchedule;
 import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
@@ -103,7 +103,7 @@ public class ReadManageArticleServiceTest {
             .willReturn(articleList);
 
         // when
-        SummaryManageArticleResponse summary = readManageArticleService.summary(1L, 2024);
+        ManageArticleSummaryListResponseDto summary = readManageArticleService.summary(1L, 2024);
 
         // then
         assertThat(summary.complete()).isEqualTo(1);
@@ -123,7 +123,7 @@ public class ReadManageArticleServiceTest {
                 .willReturn(Optional.of(article1));
 
             // when
-            DetailManageArticleResponse result = readManageArticleService
+            ManageArticleDetailResponseDto result = readManageArticleService
                 .detailArticle(1L, 1L);
 
             // then
@@ -175,7 +175,7 @@ public class ReadManageArticleServiceTest {
             .willReturn(articleList);
 
         // when
-        Page<ListManageArticleResponse> result =
+        Page<ManageArticleListResponseDto> result =
             readManageArticleService.listArticleByProgress(
                 2024, 1L, PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "id"))
             );

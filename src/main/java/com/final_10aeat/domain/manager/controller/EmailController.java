@@ -1,8 +1,8 @@
 package com.final_10aeat.domain.manager.controller;
 
 import com.final_10aeat.domain.manager.dto.request.EmailRequestDto;
-import com.final_10aeat.domain.manager.dto.request.EmailVerificationRequestDto;
-import com.final_10aeat.domain.manager.dto.response.EmailVerificationResponseDto;
+import com.final_10aeat.domain.manager.dto.request.VerifyEmailRequestDto;
+import com.final_10aeat.domain.manager.dto.response.VerifyEmailResponseDto;
 import com.final_10aeat.domain.manager.service.EmailUseCase;
 import com.final_10aeat.global.security.principal.ManagerPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;
@@ -39,9 +39,9 @@ public class EmailController {
     }
 
     @PostMapping("/verification")
-    public ResponseEntity<ResponseDTO<EmailVerificationResponseDto>> verifyEmail(
-        @RequestBody @Valid EmailVerificationRequestDto verificationRequest) {
-        EmailVerificationResponseDto responseDto = emailUseCase.verifyEmailCode(
+    public ResponseEntity<ResponseDTO<VerifyEmailResponseDto>> verifyEmail(
+        @RequestBody @Valid VerifyEmailRequestDto verificationRequest) {
+        VerifyEmailResponseDto responseDto = emailUseCase.verifyEmailCode(
             verificationRequest.email(), verificationRequest.code());
         return ResponseEntity.ok(ResponseDTO.okWithData(responseDto));
     }

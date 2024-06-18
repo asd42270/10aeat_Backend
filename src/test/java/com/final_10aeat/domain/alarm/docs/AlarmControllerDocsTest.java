@@ -2,7 +2,7 @@ package com.final_10aeat.domain.alarm.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.final_10aeat.common.dto.UserIdAndRole;
-import com.final_10aeat.common.service.AuthenticationService;
+import com.final_10aeat.common.service.AuthUserService;
 import com.final_10aeat.common.util.member.WithMember;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.alarm.controller.AlarmController;
@@ -40,14 +40,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AlarmControllerDocsTest extends RestDocsSupport {
 
     private AlarmService alarmService;
-    private AuthenticationService authenticationService;
+    private AuthUserService authUserService;
 
     @Override
     public Object initController() {
         alarmService = Mockito.mock(AlarmService.class);
-        authenticationService = Mockito.mock(AuthenticationService.class);
+        authUserService = Mockito.mock(AuthUserService.class);
         objectMapper = new ObjectMapper();
-        return new AlarmController(alarmService, authenticationService);
+        return new AlarmController(alarmService, authUserService);
     }
 
     @DisplayName("알림 요청 성공 API 문서화")
@@ -130,7 +130,7 @@ public class AlarmControllerDocsTest extends RestDocsSupport {
         UserIdAndRole userIdAndRole = new UserIdAndRole(1L, false);
 
         // when
-        when(authenticationService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
+        when(authUserService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
         when(alarmService.getAlarmHistory(any(UserIdAndRole.class))).thenReturn(response);
 
         // then
@@ -157,7 +157,7 @@ public class AlarmControllerDocsTest extends RestDocsSupport {
         UserIdAndRole userIdAndRole = new UserIdAndRole(1L, false);
 
         // when
-        when(authenticationService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
+        when(authUserService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
         doNothing().when(alarmService).checkedAlarm(any(Long.class), any(UserIdAndRole.class));
 
         // then

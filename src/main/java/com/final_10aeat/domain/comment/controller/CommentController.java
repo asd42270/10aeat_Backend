@@ -1,7 +1,7 @@
 package com.final_10aeat.domain.comment.controller;
 
 import com.final_10aeat.common.dto.UserIdAndRole;
-import com.final_10aeat.common.service.AuthenticationService;
+import com.final_10aeat.common.service.AuthUserService;
 import com.final_10aeat.domain.comment.dto.request.CreateCommentRequestDto;
 import com.final_10aeat.domain.comment.dto.request.UpdateCommentRequestDto;
 import com.final_10aeat.domain.comment.dto.response.CommentResponseDto;
@@ -26,13 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommentController {
 
     private final CommentService commentService;
-    private final AuthenticationService authenticationService;
+    private final AuthUserService authUserService;
 
     @PostMapping("/{repairArticleId}")
     public ResponseEntity<ResponseDTO<Void>> createComment(
         @PathVariable Long repairArticleId,
         @RequestBody @Valid CreateCommentRequestDto request) {
-        UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
+        UserIdAndRole userIdAndRole = authUserService.getCurrentUserIdAndRole();
         commentService.createComment(repairArticleId, request, userIdAndRole.id(),
             userIdAndRole.isManager());
         return ResponseEntity.ok(ResponseDTO.ok());
@@ -42,7 +42,7 @@ public class CommentController {
     public ResponseEntity<ResponseDTO<Void>> updateComment(
         @PathVariable Long commentId,
         @RequestBody @Valid UpdateCommentRequestDto request) {
-        UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
+        UserIdAndRole userIdAndRole = authUserService.getCurrentUserIdAndRole();
         commentService.updateComment(commentId, request, userIdAndRole.id(),
             userIdAndRole.isManager());
         return ResponseEntity.ok(ResponseDTO.ok());
@@ -51,7 +51,7 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<ResponseDTO<Void>> deleteComment(
         @PathVariable Long commentId) {
-        UserIdAndRole userIdAndRole = authenticationService.getCurrentUserIdAndRole();
+        UserIdAndRole userIdAndRole = authUserService.getCurrentUserIdAndRole();
         commentService.deleteComment(commentId, userIdAndRole.id(), userIdAndRole.isManager());
         return ResponseEntity.ok(ResponseDTO.ok());
     }

@@ -20,7 +20,7 @@ import com.final_10aeat.domain.repairArticle.dto.request.UpdateCustomProgressReq
 import com.final_10aeat.domain.repairArticle.dto.request.UpdateRepairArticleRequestDto;
 import com.final_10aeat.domain.repairArticle.entity.CustomProgress;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
-import com.final_10aeat.domain.repairArticle.exception.ArticleAlreadyDeletedException;
+import com.final_10aeat.common.exception.ArticleAlreadyDeletedException;
 import com.final_10aeat.domain.repairArticle.exception.ArticleNotFoundException;
 import com.final_10aeat.domain.repairArticle.exception.CustomProgressNotFoundException;
 import com.final_10aeat.domain.repairArticle.exception.ManagerNotFoundException;

@@ -9,11 +9,11 @@ import static org.mockito.Mockito.verify;
 import com.final_10aeat.common.dto.UserIdAndRole;
 import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
-import com.final_10aeat.domain.articleIssue.dto.request.IssueUpdateRequestDto;
+import com.final_10aeat.domain.articleIssue.dto.request.UpdateIssueRequestDto;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
 import com.final_10aeat.domain.articleIssue.exception.IssueNotFoundException;
 import com.final_10aeat.domain.articleIssue.repository.ArticleIssueRepository;
-import com.final_10aeat.domain.articleIssue.service.ArticleIssueService;
+import com.final_10aeat.domain.articleIssue.service.IssueService;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import java.util.Optional;
@@ -31,7 +31,7 @@ public class IssueUpdateServiceTest {
     @Mock
     private ArticleIssueRepository articleIssueRepository;
     @InjectMocks
-    private ArticleIssueService articleIssueService;
+    private IssueService issueService;
 
     private final Manager manager = Manager.builder()
         .id(1L)
@@ -71,7 +71,7 @@ public class IssueUpdateServiceTest {
         @DisplayName("수정에 성공한다.")
         void _willSuccess() {
             // given
-            IssueUpdateRequestDto request = IssueUpdateRequestDto.builder()
+            UpdateIssueRequestDto request = UpdateIssueRequestDto.builder()
                 .title("수정함")
                 .build();
 
@@ -79,7 +79,7 @@ public class IssueUpdateServiceTest {
                 Optional.ofNullable(articleIssue));
 
             // when
-            articleIssueService.updateIssue(request, 1L, userIdAndRole);
+            issueService.updateIssue(request, 1L, userIdAndRole);
 
             // then
             verify(articleIssueRepository, times(1)).findById(1L);
@@ -92,7 +92,7 @@ public class IssueUpdateServiceTest {
         @DisplayName("이슈가 존재하지 않아 실패한다.")
         void _issueNotFound() {
             // given
-            IssueUpdateRequestDto request = IssueUpdateRequestDto.builder()
+            UpdateIssueRequestDto request = UpdateIssueRequestDto.builder()
                 .title("수정함")
                 .build();
 
@@ -100,14 +100,14 @@ public class IssueUpdateServiceTest {
 
             // when&then
             assertThrows(IssueNotFoundException.class,
-                () -> articleIssueService.updateIssue(request, 1L, userIdAndRole));
+                () -> issueService.updateIssue(request, 1L, userIdAndRole));
         }
 
         @Test
         @DisplayName("권한이 없는 접근으로 인해 실패한다.")
         void _unauthorizedException() {
             // given
-            IssueUpdateRequestDto request = IssueUpdateRequestDto.builder()
+            UpdateIssueRequestDto request = UpdateIssueRequestDto.builder()
                 .title("수정함")
                 .build();
 
@@ -118,14 +118,14 @@ public class IssueUpdateServiceTest {
 
             // when&then
             Assertions.assertThrows(UnauthorizedAccessException.class,
-                () -> articleIssueService.updateIssue(request, 1L, wrongUserIdAndRole));
+                () -> issueService.updateIssue(request, 1L, wrongUserIdAndRole));
         }
 
         @Test
         @DisplayName("매니저가 아니라서 실패한다.")
         void _unauthorizedException_() {
             // given
-            IssueUpdateRequestDto request = IssueUpdateRequestDto.builder()
+            UpdateIssueRequestDto request = UpdateIssueRequestDto.builder()
                 .title("수정함")
                 .build();
 
@@ -136,7 +136,7 @@ public class IssueUpdateServiceTest {
 
             // when&then
             Assertions.assertThrows(UnauthorizedAccessException.class,
-                () -> articleIssueService.updateIssue(request, 1L, wrongUserIdAndRole));
+                () -> issueService.updateIssue(request, 1L, wrongUserIdAndRole));
         }
     }
 }

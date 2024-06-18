@@ -13,8 +13,8 @@ import com.final_10aeat.domain.member.dto.request.BuildingInfoRequestDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.BuildingInfoNotAssociatedException;
-import com.final_10aeat.domain.member.exception.BuildingInfoNotFound;
-import com.final_10aeat.domain.member.exception.DuplicateBuildingInfoException;
+import com.final_10aeat.domain.member.exception.BuildingInfoNotFoundException;
+import com.final_10aeat.domain.member.exception.BuildingInfoDuplicateException;
 import com.final_10aeat.domain.member.exception.MinBuildingInfoRequiredException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;
@@ -170,7 +170,7 @@ class MyPageServiceTest {
             doReturn(Optional.of(member)).when(memberRepository)
                 .findMemberByIdWithBuildingInfos(anyLong());
 
-            assertThrows(DuplicateBuildingInfoException.class,
+            assertThrows(BuildingInfoDuplicateException.class,
                 () -> myPageService.addBuildingInfo(member, buildingInfoRequestDto));
             verify(officeRepository).findById(anyLong());
             verify(memberRepository).findMemberByIdWithBuildingInfos(anyLong());
@@ -219,7 +219,7 @@ class MyPageServiceTest {
                 .findMemberByIdWithBuildingInfos(anyLong());
             doReturn(Optional.empty()).when(buildingInfoRepository).findById(anyLong());
 
-            assertThrows(BuildingInfoNotFound.class,
+            assertThrows(BuildingInfoNotFoundException.class,
                 () -> myPageService.removeBuildingInfo(member, buildingInfoId));
             verify(memberRepository).findMemberByIdWithBuildingInfos(anyLong());
             verify(buildingInfoRepository).findById(anyLong());

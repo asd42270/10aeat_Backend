@@ -20,8 +20,8 @@ import com.final_10aeat.common.util.manager.WithManager;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.manager.controller.EmailController;
 import com.final_10aeat.domain.manager.dto.request.EmailRequestDto;
-import com.final_10aeat.domain.manager.dto.request.EmailVerificationRequestDto;
-import com.final_10aeat.domain.manager.dto.response.EmailVerificationResponseDto;
+import com.final_10aeat.domain.manager.dto.request.VerifyEmailRequestDto;
+import com.final_10aeat.domain.manager.dto.response.VerifyEmailResponseDto;
 import com.final_10aeat.domain.manager.service.EmailUseCase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,10 +78,10 @@ public class EmailControllerDocsTest extends RestDocsSupport {
     @Test
     void testVerifyEmailCode() throws Exception {
         // given
-        EmailVerificationRequestDto verificationRequest = new EmailVerificationRequestDto(
+        VerifyEmailRequestDto verificationRequest = new VerifyEmailRequestDto(
             "test@example.com", "6pidjym");
 
-        EmailVerificationResponseDto responseDto = new EmailVerificationResponseDto(
+        VerifyEmailResponseDto responseDto = new VerifyEmailResponseDto(
             "test@example.com", "TENANT", "102", "101");
 
         when(emailUseCase.verifyEmailCode(anyString(), anyString()))

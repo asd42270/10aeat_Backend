@@ -3,12 +3,12 @@ package com.final_10aeat.domain.issue.unit;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
-import com.final_10aeat.domain.articleIssue.dto.response.ArticleIssueCheckResponseDto;
+import com.final_10aeat.domain.articleIssue.dto.response.IssueDetailResponseDto;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
-import com.final_10aeat.domain.articleIssue.exception.InactiveIssueException;
+import com.final_10aeat.domain.articleIssue.exception.DisabledIssueException;
 import com.final_10aeat.domain.articleIssue.exception.IssueNotFoundException;
 import com.final_10aeat.domain.articleIssue.repository.ArticleIssueRepository;
-import com.final_10aeat.domain.articleIssue.service.ArticleIssueCheckService;
+import com.final_10aeat.domain.articleIssue.service.IssueCheckService;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
@@ -26,7 +26,7 @@ public class ManageIssueDetailServiceTest {
     private ArticleIssueRepository articleIssueRepository;
 
     @InjectMocks
-    private ArticleIssueCheckService articleIssueCheckService;
+    private IssueCheckService issueCheckService;
 
     private final ManageArticle manageArticle = ManageArticle.builder()
         .id(1L)
@@ -59,7 +59,7 @@ public class ManageIssueDetailServiceTest {
             given(articleIssueRepository.findById(issueId)).willReturn(Optional.of(articleIssue));
 
             // when
-            ArticleIssueCheckResponseDto responseDto = articleIssueCheckService.getIssueDetail(
+            IssueDetailResponseDto responseDto = issueCheckService.getIssueDetail(
                 issueId);
 
             // then
@@ -75,7 +75,7 @@ public class ManageIssueDetailServiceTest {
 
             // when & then
             assertThrows(IssueNotFoundException.class,
-                () -> articleIssueCheckService.getIssueDetail(issueId));
+                () -> issueCheckService.getIssueDetail(issueId));
         }
 
         @Test
@@ -87,8 +87,8 @@ public class ManageIssueDetailServiceTest {
             given(articleIssueRepository.findById(issueId)).willReturn(Optional.of(articleIssue));
 
             // when & then
-            assertThrows(InactiveIssueException.class,
-                () -> articleIssueCheckService.getIssueDetail(issueId));
+            assertThrows(DisabledIssueException.class,
+                () -> issueCheckService.getIssueDetail(issueId));
         }
     }
 }

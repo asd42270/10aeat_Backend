@@ -4,7 +4,7 @@ import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.alarm.dto.response.AlarmResponseDto;
 import com.final_10aeat.domain.alarm.entity.Alarm;
 import com.final_10aeat.domain.alarm.entity.enumtype.AlarmType;
-import com.final_10aeat.domain.alarm.event.BookmarkCommentEvent;
+import com.final_10aeat.domain.alarm.event.SavedArticleCommentEvent;
 import com.final_10aeat.domain.alarm.event.CommentEvent;
 import com.final_10aeat.domain.alarm.repository.AlarmRepository;
 import com.final_10aeat.domain.alarm.service.AlarmService;
@@ -51,7 +51,7 @@ public class EventHandlerServiceTest {
             .member(member)
             .build();
 
-    private final BookmarkCommentEvent bookmarkEvent = BookmarkCommentEvent.builder()
+    private final SavedArticleCommentEvent bookmarkEvent = SavedArticleCommentEvent.builder()
             .articleId(1L)
             .members(Collections.singletonList(member))
             .build();

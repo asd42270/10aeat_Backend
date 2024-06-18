@@ -18,9 +18,9 @@ import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.member.controller.MyPageController;
 import com.final_10aeat.domain.member.dto.request.BuildingInfoRequestDto;
 import com.final_10aeat.domain.member.dto.response.MyBuildingInfoResponseDto;
-import com.final_10aeat.domain.member.dto.response.MyCommentsResponseDto;
+import com.final_10aeat.domain.member.dto.response.MyCommentResponseDto;
 import com.final_10aeat.domain.member.dto.response.MyInfoResponseDto;
-import com.final_10aeat.domain.member.dto.response.MySaveResponseDto;
+import com.final_10aeat.domain.member.dto.response.MySavedArticleResponseDto;
 import com.final_10aeat.domain.member.service.MyPageService;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -162,9 +162,9 @@ public class MyPageControllerDocsTest extends RestDocsSupport {
     @DisplayName("내 저장된 게시글 조회 API 문서화")
     @Test
     void testGetMySavedArticles() throws Exception {
-        MySaveResponseDto savedArticle1 = new MySaveResponseDto(1L, "게시글 제목1", LocalDateTime.now(), "김관리");
-        MySaveResponseDto savedArticle2 = new MySaveResponseDto(2L, "게시글 제목2", LocalDateTime.now(), "이관리");
-        List<MySaveResponseDto> savedArticles = List.of(savedArticle1, savedArticle2);
+        MySavedArticleResponseDto savedArticle1 = new MySavedArticleResponseDto(1L, "게시글 제목1", LocalDateTime.now(), "김관리");
+        MySavedArticleResponseDto savedArticle2 = new MySavedArticleResponseDto(2L, "게시글 제목2", LocalDateTime.now(), "이관리");
+        List<MySavedArticleResponseDto> savedArticles = List.of(savedArticle1, savedArticle2);
 
         when(myPageService.getMySavedArticles(Mockito.any())).thenReturn(savedArticles);
 
@@ -187,9 +187,9 @@ public class MyPageControllerDocsTest extends RestDocsSupport {
     @DisplayName("내 게시글 댓글 조회 API 문서화")
     @Test
     void testGetMyComments() throws Exception {
-        MyCommentsResponseDto comment1 = new MyCommentsResponseDto(1L, "댓글 내용1", LocalDateTime.now(), "김소유");
-        MyCommentsResponseDto comment2 = new MyCommentsResponseDto(2L, "댓글 내용2", LocalDateTime.now(), "김소유");
-        List<MyCommentsResponseDto> comments = List.of(comment1, comment2);
+        MyCommentResponseDto comment1 = new MyCommentResponseDto(1L, "댓글 내용1", LocalDateTime.now(), "김소유");
+        MyCommentResponseDto comment2 = new MyCommentResponseDto(2L, "댓글 내용2", LocalDateTime.now(), "김소유");
+        List<MyCommentResponseDto> comments = List.of(comment1, comment2);
 
         when(myPageService.getMyComments(Mockito.any())).thenReturn(comments);
 

@@ -8,11 +8,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.final_10aeat.common.enumclass.MemberRole;
-import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
+import com.final_10aeat.domain.member.dto.request.CreateMemberRequestDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.DisagreementException;
-import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
+import com.final_10aeat.domain.member.exception.EmailDuplicateException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;
 import com.final_10aeat.domain.member.repository.MemberRepository;
 import com.final_10aeat.domain.member.service.MemberService;
@@ -49,7 +49,7 @@ public class RegisterServiceTest {
     @Mock
     private ValueOperations<String, String> valueOperations;
 
-    private final MemberRegisterRequestDto request = new MemberRegisterRequestDto(
+    private final CreateMemberRequestDto request = new CreateMemberRequestDto(
         "test@test.com", "password", "spring", "102동", "2212호", MemberRole.TENANT, true);
 
     private final BuildingInfo buildingInfo = BuildingInfo.builder()
@@ -106,7 +106,7 @@ public class RegisterServiceTest {
                 true);
 
             // When & Then
-            Assertions.assertThrows(EmailDuplicatedException.class, () -> {
+            Assertions.assertThrows(EmailDuplicateException.class, () -> {
                 memberService.register(request);
             });
         }
@@ -115,7 +115,7 @@ public class RegisterServiceTest {
         @DisplayName("약관에 동의하지 않아 가입에 실패한다.")
         void _willDisagreeTerm() {
             // Given
-            MemberRegisterRequestDto disagreeRequest = new MemberRegisterRequestDto(
+            CreateMemberRequestDto disagreeRequest = new CreateMemberRequestDto(
                 "test@test.com", "password", "spring", "102동", "2212호", MemberRole.TENANT, false);
 
             // When & Then

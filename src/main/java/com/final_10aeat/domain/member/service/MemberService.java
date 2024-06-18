@@ -1,13 +1,13 @@
 package com.final_10aeat.domain.member.service;
 
-import com.final_10aeat.domain.manager.exception.VerificationCodeExpiredException;
-import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
-import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
-import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
+import com.final_10aeat.domain.manager.exception.ExpiredVerificationCodeException;
+import com.final_10aeat.common.dto.LoginRequestDto;
+import com.final_10aeat.domain.member.dto.request.CreateMemberRequestDto;
+import com.final_10aeat.domain.member.dto.request.DeleteMemberRequestDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.DisagreementException;
-import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
+import com.final_10aeat.domain.member.exception.EmailDuplicateException;
 import com.final_10aeat.domain.member.exception.PasswordMissMatchException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;
@@ -36,7 +36,7 @@ public class MemberService {
     private final BuildingInfoRepository buildingInfoRepository;
     private final RedisTemplate<String, String> redisTemplate;
 
-    public LoginRequestDto register(MemberRegisterRequestDto request) {
+    public LoginRequestDto register(CreateMemberRequestDto request) {
         validateEmail(request.email());
         ensureTermsAgreed(request.termAgreed());
 
@@ -51,7 +51,7 @@ public class MemberService {
 
     private void validateEmail(String email) {
         if (memberRepository.existsByEmailAndDeletedAtIsNull(email)) {
-            throw new EmailDuplicatedException();
+            throw new EmailDuplicateException();
         }
     }
 
@@ -65,14 +65,14 @@ public class MemberService {
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
         String userInfoJson = ops.get(email + ":info");
         if (userInfoJson == null) {
-            throw new VerificationCodeExpiredException();
+            throw new ExpiredVerificationCodeException();
         }
 
         JsonObject userInfo = new Gson().fromJson(userInfoJson, JsonObject.class);
         return userInfo.get("officeId").getAsLong();
     }
 
-    private void validateDongHo(MemberRegisterRequestDto request) {
+    private void validateDongHo(CreateMemberRequestDto request) {
         JsonObject userInfo = fetchUserInfoFromRedis(request.email());
         if (!userInfo.get("dong").getAsString().equals(request.dong()) ||
             !userInfo.get("ho").getAsString().equals(request.ho())) {
@@ -80,7 +80,7 @@ public class MemberService {
         }
     }
 
-    private BuildingInfo saveBuildingInfo(MemberRegisterRequestDto request, Long officeId) {
+    private BuildingInfo saveBuildingInfo(CreateMemberRequestDto request, Long officeId) {
         BuildingInfo buildingInfo = BuildingInfo.builder()
             .dong(request.dong())
             .ho(request.ho())
@@ -90,7 +90,7 @@ public class MemberService {
         return buildingInfoRepository.save(buildingInfo);
     }
 
-    private void saveMember(MemberRegisterRequestDto request, Long officeId,
+    private void saveMember(CreateMemberRequestDto request, Long officeId,
         BuildingInfo savedBuildingInfo) {
         String encodedPassword = passwordEncoder.encode(request.password());
         Member member = Member.builder()
@@ -123,7 +123,7 @@ public class MemberService {
         return jwtTokenGenerator.createJwtToken(request.email(), member.getRole());
     }
 
-    public void withdraw(MemberWithdrawRequestDto request) {
+    public void withdraw(DeleteMemberRequestDto request) {
         Member member = memberRepository.findByEmailAndDeletedAtIsNull(request.email())
             .orElseThrow(UserNotExistException::new);
 

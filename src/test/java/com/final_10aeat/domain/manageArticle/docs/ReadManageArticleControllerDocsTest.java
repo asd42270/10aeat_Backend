@@ -23,15 +23,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.final_10aeat.common.enumclass.ManagePeriod;
 import com.final_10aeat.common.enumclass.Progress;
-import com.final_10aeat.common.service.AuthenticationService;
+import com.final_10aeat.common.service.AuthUserService;
 import com.final_10aeat.common.util.member.WithMember;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.manageArticle.controller.ReadManageArticleController;
-import com.final_10aeat.domain.manageArticle.dto.response.DetailManageArticleResponse;
-import com.final_10aeat.domain.manageArticle.dto.response.ListManageArticleResponse;
-import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleSummaryResponse;
-import com.final_10aeat.domain.manageArticle.dto.response.ManageScheduleResponse;
-import com.final_10aeat.domain.manageArticle.dto.response.SummaryManageArticleResponse;
+import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleDetailResponseDto;
+import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleListResponseDto;
+import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleSummaryResponseDto;
+import com.final_10aeat.domain.manageArticle.dto.response.ManageScheduleResponseDto;
+import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleSummaryListResponseDto;
 import com.final_10aeat.domain.manageArticle.service.ReadManageArticleService;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,13 +46,13 @@ import org.springframework.restdocs.payload.JsonFieldType;
 public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
 
     private ReadManageArticleService readManageArticleService;
-    private AuthenticationService authenticationService;
+    private AuthUserService authUserService;
 
     @Override
     public Object initController() {
         readManageArticleService = mock(ReadManageArticleService.class);
-        authenticationService = mock(AuthenticationService.class);
-        return new ReadManageArticleController(readManageArticleService, authenticationService);
+        authUserService = mock(AuthUserService.class);
+        return new ReadManageArticleController(readManageArticleService, authUserService);
     }
 
     @DisplayName("manageArticle 요약 API 문서화")
@@ -60,14 +60,14 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
     @WithMember
     void testCreate() throws Exception {
         // given
-        SummaryManageArticleResponse response = new SummaryManageArticleResponse(
+        ManageArticleSummaryListResponseDto response = new ManageArticleSummaryListResponseDto(
             1,
             1,
             1,
             List.of(1L, 2L)
         );
 
-        given(authenticationService.getUserOfficeId()).willReturn(1L);
+        given(authUserService.getUserOfficeId()).willReturn(1L);
         given(readManageArticleService.summary(anyLong(), any())).willReturn(response);
 
         // when & then
@@ -98,7 +98,7 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
     @WithMember
     void testDetail() throws Exception {
         // given
-        ManageScheduleResponse scheduleResponse1 = ManageScheduleResponse.builder()
+        ManageScheduleResponseDto scheduleResponse1 = ManageScheduleResponseDto.builder()
             .manageScheduleId(1L)
             .isComplete(true)
             .scheduleStart(
@@ -108,7 +108,7 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
                 LocalDateTime.of(2022, 4, 5, 0, 0, 0)
             )
             .build();
-        ManageScheduleResponse scheduleResponse2 = ManageScheduleResponse.builder()
+        ManageScheduleResponseDto scheduleResponse2 = ManageScheduleResponseDto.builder()
             .manageScheduleId(2L)
             .isComplete(false)
             .scheduleStart(
@@ -119,7 +119,7 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
             )
             .build();
 
-        DetailManageArticleResponse response = DetailManageArticleResponse.builder()
+        ManageArticleDetailResponseDto response = ManageArticleDetailResponseDto.builder()
             .period(ManagePeriod.YEAR)
             .periodCount(1)
             .title("제목")
@@ -136,7 +136,7 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
             )
             .build();
 
-        given(authenticationService.getUserOfficeId()).willReturn(1L);
+        given(authUserService.getUserOfficeId()).willReturn(1L);
         given(readManageArticleService.detailArticle(anyLong(), anyLong())).willReturn(response);
 
         // when & then
@@ -179,8 +179,8 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
     @WithMember
     void testList() throws Exception {
         // given
-        List<ListManageArticleResponse> content = List.of(
-            ListManageArticleResponse.builder()
+        List<ManageArticleListResponseDto> content = List.of(
+            ManageArticleListResponseDto.builder()
                 .id(1L)
                 .period(ManagePeriod.YEAR)
                 .periodCount(12)
@@ -189,7 +189,7 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
                 .completedSchedule(6)
                 .issueId(1L)
                 .build(),
-            ListManageArticleResponse.builder()
+            ManageArticleListResponseDto.builder()
                 .id(2L)
                 .period(ManagePeriod.MONTH)
                 .periodCount(3)
@@ -201,10 +201,10 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
         );
 
         PageRequest pageRequest = PageRequest.of(0, 10); // 0 페이지, 페이지 당 10개 항목
-        Page<ListManageArticleResponse> responseList = new PageImpl<>(content, pageRequest,
+        Page<ManageArticleListResponseDto> responseList = new PageImpl<>(content, pageRequest,
             content.size());
 
-        given(authenticationService.getUserOfficeId()).willReturn(1L);
+        given(authUserService.getUserOfficeId()).willReturn(1L);
         given(readManageArticleService.listArticleByProgress(anyInt(), anyLong(), any(), any()))
             .willReturn(responseList);
 
@@ -253,14 +253,14 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
     @WithMember
     void testMonthlySummary() throws Exception {
         // given
-        List<ManageArticleSummaryResponse> response =
+        List<ManageArticleSummaryResponseDto> response =
             List.of(
-                new ManageArticleSummaryResponse(1, 1),
-                new ManageArticleSummaryResponse(3, 2),
-                new ManageArticleSummaryResponse(6, 5)
+                new ManageArticleSummaryResponseDto(1, 1),
+                new ManageArticleSummaryResponseDto(3, 2),
+                new ManageArticleSummaryResponseDto(6, 5)
             );
 
-        given(authenticationService.getUserOfficeId()).willReturn(1L);
+        given(authUserService.getUserOfficeId()).willReturn(1L);
         given(readManageArticleService.monthlySummary(anyInt(), anyLong()))
             .willReturn(response);
 
@@ -290,8 +290,8 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
     @WithMember
     void testMonthlyList() throws Exception {
         // given
-        Page<ListManageArticleResponse> responseList = new PageImpl<>(List.of(
-            ListManageArticleResponse.builder()
+        Page<ManageArticleListResponseDto> responseList = new PageImpl<>(List.of(
+            ManageArticleListResponseDto.builder()
                 .id(1L)
                 .period(ManagePeriod.YEAR)
                 .periodCount(12)
@@ -302,7 +302,7 @@ public class ReadManageArticleControllerDocsTest extends RestDocsSupport {
                 .build())
         );
 
-        given(authenticationService.getUserOfficeId()).willReturn(1L);
+        given(authUserService.getUserOfficeId()).willReturn(1L);
         given(readManageArticleService.monthlyListArticle(anyLong(), anyInt(), any(), any()))
             .willReturn(responseList);
 

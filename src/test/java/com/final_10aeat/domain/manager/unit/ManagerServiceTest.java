@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 import com.final_10aeat.domain.manager.dto.request.CreateManagerRequestDto;
 import com.final_10aeat.domain.manager.entity.Manager;
-import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
+import com.final_10aeat.common.dto.LoginRequestDto;
 import com.final_10aeat.domain.member.exception.PasswordMissMatchException;
 import com.final_10aeat.domain.office.entity.Office;
 import com.final_10aeat.domain.office.exception.OfficeNotFoundException;
@@ -18,7 +18,7 @@ import com.final_10aeat.domain.manager.repository.ManagerRepository;
 import com.final_10aeat.domain.office.repository.OfficeRepository;
 import com.final_10aeat.domain.manager.service.ManagerService;
 import com.final_10aeat.common.enumclass.MemberRole;
-import com.final_10aeat.domain.member.exception.EmailDuplicatedException;
+import com.final_10aeat.domain.member.exception.EmailDuplicateException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.global.security.jwt.JwtTokenGenerator;
 import java.time.LocalDateTime;
@@ -116,7 +116,7 @@ public class ManagerServiceTest {
 
             when(managerRepository.findByEmail(anyString())).thenReturn(Optional.of(existingManager));
 
-            assertThrows(EmailDuplicatedException.class, () -> {
+            assertThrows(EmailDuplicateException.class, () -> {
                 managerService.register(requestDto);
             });
         }

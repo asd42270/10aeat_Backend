@@ -2,7 +2,7 @@ package com.final_10aeat.domain.admin.controller;
 
 import com.final_10aeat.domain.admin.dto.CreateAdminRequestDto;
 import com.final_10aeat.domain.admin.service.AdminService;
-import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
+import com.final_10aeat.common.dto.LoginRequestDto;
 import com.final_10aeat.global.util.ResponseDTO;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;

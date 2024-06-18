@@ -1,7 +1,7 @@
 package com.final_10aeat.domain.manageArticle.dto.request;
 
 import com.final_10aeat.common.enumclass.ManagePeriod;
-import com.final_10aeat.domain.manageArticle.dto.request.validator.ScheduleSizeMustBiggerThanZero;
+import com.final_10aeat.domain.manageArticle.dto.request.validator.ListSize;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,8 +18,8 @@ public record CreateManageArticleRequestDto(
     String target,
     String responsibility,
     String note,
-    @Valid @ScheduleSizeMustBiggerThanZero
-    List<ScheduleRequestDto> schedule
+    @Valid @ListSize
+    List<CreateScheduleRequestDto> schedule
 ) {
 
 }

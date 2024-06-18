@@ -1,6 +1,6 @@
 package com.final_10aeat.domain.repairArticle.service;
 
-import com.final_10aeat.common.service.S3ImageUploader;
+import com.final_10aeat.common.service.UploadImageComponent;
 import com.final_10aeat.domain.repairArticle.dto.response.ImageResponseDto;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticleImage;
 import com.final_10aeat.domain.repairArticle.exception.ImageNotFoundException;
@@ -17,10 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class ManagerRepairArticleImageService {
 
     private final RepairArticleImageRepository repairArticleImageRepository;
-    private final S3ImageUploader s3ImageUploader;
+    private final UploadImageComponent uploadImageComponent;
 
     public ImageResponseDto saveImage(MultipartFile multipartFile) throws IOException {
-        String imageUrl = s3ImageUploader.upload(multipartFile, "repair-article");
+        String imageUrl = uploadImageComponent.upload(multipartFile, "repair-article");
         RepairArticleImage repairArticleImage = RepairArticleImage.builder()
             .imageUrl(imageUrl)
             .build();
@@ -34,7 +34,7 @@ public class ManagerRepairArticleImageService {
     public void deleteImage(Long imageId) {
         RepairArticleImage repairArticleImage = repairArticleImageRepository.findById(imageId)
             .orElseThrow(ImageNotFoundException::new);
-        s3ImageUploader.deleteFromS3(repairArticleImage.getImageUrl());
+        uploadImageComponent.deleteFromS3(repairArticleImage.getImageUrl());
         repairArticleImageRepository.delete(repairArticleImage);
     }
 }

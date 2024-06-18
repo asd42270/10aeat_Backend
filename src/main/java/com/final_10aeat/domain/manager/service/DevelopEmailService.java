@@ -1,11 +1,11 @@
 package com.final_10aeat.domain.manager.service;
 
-import com.final_10aeat.domain.manager.dto.response.EmailVerificationResponseDto;
+import com.final_10aeat.domain.manager.dto.response.VerifyEmailResponseDto;
 import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.manager.exception.EmailSendingException;
 import com.final_10aeat.domain.manager.exception.EmailTemplateLoadException;
 import com.final_10aeat.domain.manager.exception.InvalidVerificationCodeException;
-import com.final_10aeat.domain.manager.exception.VerificationCodeExpiredException;
+import com.final_10aeat.domain.manager.exception.ExpiredVerificationCodeException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import jakarta.mail.MessagingException;
@@ -68,18 +68,18 @@ public class DevelopEmailService implements EmailUseCase {
     }
 
     @Override
-    public EmailVerificationResponseDto verifyEmailCode(String email, String code) {
+    public VerifyEmailResponseDto verifyEmailCode(String email, String code) {
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
         String storedCode = ops.get(email + ":code");
         String userInfoJson = ops.get(email + ":info");
 
         if (storedCode == null || userInfoJson == null) {
-            throw new VerificationCodeExpiredException();
+            throw new ExpiredVerificationCodeException();
         }
         if (!code.equals(storedCode)) {
             throw new InvalidVerificationCodeException();
         }
-        return gson.fromJson(userInfoJson, EmailVerificationResponseDto.class);
+        return gson.fromJson(userInfoJson, VerifyEmailResponseDto.class);
     }
 
     private String generateAuthCode() {

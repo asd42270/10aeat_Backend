@@ -12,14 +12,14 @@ import com.final_10aeat.common.enumclass.ManagePeriod;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.common.util.EntityUtil;
 import com.final_10aeat.domain.manageArticle.dto.request.CreateManageArticleRequestDto;
-import com.final_10aeat.domain.manageArticle.dto.request.ScheduleRequestDto;
+import com.final_10aeat.domain.manageArticle.dto.request.CreateScheduleRequestDto;
 import com.final_10aeat.domain.manageArticle.dto.request.UpdateManageArticleRequestDto;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.repository.ManageArticleRepository;
 import com.final_10aeat.domain.manageArticle.service.ManagerManageArticleService;
 import com.final_10aeat.domain.manager.entity.Manager;
 import com.final_10aeat.domain.office.entity.Office;
-import com.final_10aeat.domain.repairArticle.exception.ArticleAlreadyDeletedException;
+import com.final_10aeat.common.exception.ArticleAlreadyDeletedException;
 import com.final_10aeat.domain.repairArticle.exception.ArticleNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -70,7 +70,7 @@ class ManagerManageArticleServiceTest {
     @DisplayName("create()에 성공한다")
     void create_WillSuccess() {
         // given
-        ScheduleRequestDto schedule1 = new ScheduleRequestDto(
+        CreateScheduleRequestDto schedule1 = new CreateScheduleRequestDto(
             LocalDateTime.of(2024, 6, 1, 0, 0),
             LocalDateTime.of(2024, 6, 14, 0, 0)
         );

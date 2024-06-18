@@ -7,10 +7,10 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.final_10aeat.domain.manager.dto.response.EmailVerificationResponseDto;
+import com.final_10aeat.domain.manager.dto.response.VerifyEmailResponseDto;
 import com.final_10aeat.common.enumclass.MemberRole;
+import com.final_10aeat.domain.manager.exception.ExpiredVerificationCodeException;
 import com.final_10aeat.domain.manager.exception.InvalidVerificationCodeException;
-import com.final_10aeat.domain.manager.exception.VerificationCodeExpiredException;
 import com.final_10aeat.domain.manager.service.LocalEmailService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,14 +70,14 @@ public class LocalEmailServiceTest {
         void _willSuccess() {
             String email = "test@example.com";
             String code = "6pidjym";
-            EmailVerificationResponseDto expectedResponse = new EmailVerificationResponseDto(email,
+            VerifyEmailResponseDto expectedResponse = new VerifyEmailResponseDto(email,
                 "TENANT", "102", "101");
             String userInfoJson = gson.toJson(expectedResponse);
 
             when(valueOperations.get(email + ":code")).thenReturn(code);
             when(valueOperations.get(email + ":info")).thenReturn(userInfoJson);
 
-            EmailVerificationResponseDto response = localEmailService.verifyEmailCode(email, code);
+            VerifyEmailResponseDto response = localEmailService.verifyEmailCode(email, code);
             assertEquals(expectedResponse, response);
         }
 
@@ -87,7 +87,7 @@ public class LocalEmailServiceTest {
             String email = "test@example.com";
             String code = "6pidjym";
             String wrongCode = "wrongcode";
-            EmailVerificationResponseDto expectedResponse = new EmailVerificationResponseDto(email,
+            VerifyEmailResponseDto expectedResponse = new VerifyEmailResponseDto(email,
                 "TENANT", "102", "101");
             String userInfoJson = gson.toJson(expectedResponse);
 
@@ -108,7 +108,7 @@ public class LocalEmailServiceTest {
             when(valueOperations.get(email + ":code")).thenReturn(null);
             when(valueOperations.get(email + ":info")).thenReturn(null);
 
-            assertThrows(VerificationCodeExpiredException.class,
+            assertThrows(ExpiredVerificationCodeException.class,
                 () -> localEmailService.verifyEmailCode(email, code));
         }
     }

@@ -3,12 +3,12 @@ package com.final_10aeat.domain.issue.unit;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
-import com.final_10aeat.domain.articleIssue.dto.response.ArticleIssueCheckResponseDto;
+import com.final_10aeat.domain.articleIssue.dto.response.IssueDetailResponseDto;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
-import com.final_10aeat.domain.articleIssue.exception.InactiveIssueException;
+import com.final_10aeat.domain.articleIssue.exception.DisabledIssueException;
 import com.final_10aeat.domain.articleIssue.exception.IssueNotFoundException;
 import com.final_10aeat.domain.articleIssue.repository.ArticleIssueRepository;
-import com.final_10aeat.domain.articleIssue.service.ArticleIssueCheckService;
+import com.final_10aeat.domain.articleIssue.service.IssueCheckService;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
@@ -26,7 +26,7 @@ public class RepairIssueDetailServiceTest {
     private ArticleIssueRepository articleIssueRepository;
 
     @InjectMocks
-    private ArticleIssueCheckService articleIssueCheckService;
+    private IssueCheckService issueCheckService;
 
     private final RepairArticle repairArticle = RepairArticle.builder()
         .id(1L)
@@ -42,7 +42,7 @@ public class RepairIssueDetailServiceTest {
         .enabled(true)
         .build();
 
-    private final ArticleIssueCheckResponseDto responseDto = ArticleIssueCheckResponseDto.builder()
+    private final IssueDetailResponseDto responseDto = IssueDetailResponseDto.builder()
         .title(articleIssue.getTitle())
         .content(articleIssue.getContent())
         .build();
@@ -64,7 +64,7 @@ public class RepairIssueDetailServiceTest {
             given(articleIssueRepository.findById(issueId)).willReturn(Optional.of(articleIssue));
 
             // when & then
-            Assertions.assertThat(articleIssueCheckService.getIssueDetail(issueId).title())
+            Assertions.assertThat(issueCheckService.getIssueDetail(issueId).title())
                 .isEqualTo(responseDto.title());
         }
 
@@ -77,8 +77,8 @@ public class RepairIssueDetailServiceTest {
             given(articleIssueRepository.findById(issueId)).willReturn(Optional.of(articleIssue));
 
             // when & then
-            assertThrows(InactiveIssueException.class,
-                () -> articleIssueCheckService.getIssueDetail(issueId));
+            assertThrows(DisabledIssueException.class,
+                () -> issueCheckService.getIssueDetail(issueId));
         }
 
         @Test
@@ -90,7 +90,7 @@ public class RepairIssueDetailServiceTest {
 
             // when & then
             assertThrows(IssueNotFoundException.class,
-                () -> articleIssueCheckService.getIssueDetail(issueId));
+                () -> issueCheckService.getIssueDetail(issueId));
         }
     }
 }
