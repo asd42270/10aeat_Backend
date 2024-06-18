@@ -5,7 +5,7 @@ import com.final_10aeat.global.exception.ErrorCode;
 
 public class ImageConvertException extends ApplicationException {
 
-    private static final ErrorCode errorCode = ErrorCode.ARTICLE_NOT_FOUND;
+    private static final ErrorCode errorCode = ErrorCode.IMAGE_CONVERT_FAIL;
 
     public ImageConvertException(){super(errorCode);}
 }

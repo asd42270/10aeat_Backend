@@ -46,11 +46,12 @@ public enum ErrorCode {
 
     // ARTICLE
     ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 게시글입니다."),
-    ARTICLE_NOT_LIKED(HttpStatus.BAD_REQUEST, "저장하지 않은 게시글입니다."),
-    ARTICLE_ALREADY_LIKED(HttpStatus.CONFLICT, "이미 저장한 게시글입니다."),
+    ARTICLE_NOT_SAVED(HttpStatus.BAD_REQUEST, "저장하지 않은 게시글입니다."),
+    ARTICLE_ALREADY_SAVED(HttpStatus.CONFLICT, "이미 저장한 게시글입니다."),
 
     // IMAGE
     IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 이미지입니다."),
+    IMAGE_CONVERT_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 변환 실패."),
 
     // SCHEDULE
     SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 일정입니다."),

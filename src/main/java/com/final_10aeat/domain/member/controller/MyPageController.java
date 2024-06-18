@@ -2,9 +2,9 @@ package com.final_10aeat.domain.member.controller;
 
 import com.final_10aeat.domain.member.dto.request.BuildingInfoRequestDto;
 import com.final_10aeat.domain.member.dto.response.MyBuildingInfoResponseDto;
-import com.final_10aeat.domain.member.dto.response.MyCommentsResponseDto;
+import com.final_10aeat.domain.member.dto.response.MyCommentResponseDto;
 import com.final_10aeat.domain.member.dto.response.MyInfoResponseDto;
-import com.final_10aeat.domain.member.dto.response.MySaveResponseDto;
+import com.final_10aeat.domain.member.dto.response.MySavedArticleResponseDto;
 import com.final_10aeat.domain.member.service.MyPageService;
 import com.final_10aeat.global.security.principal.MemberPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;
@@ -64,18 +64,18 @@ public class MyPageController {
     }
 
     @GetMapping("/comments")
-    public ResponseEntity<ResponseDTO<List<MyCommentsResponseDto>>> getMyComments() {
+    public ResponseEntity<ResponseDTO<List<MyCommentResponseDto>>> getMyComments() {
         MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
-        List<MyCommentsResponseDto> comments = myPageService.getMyComments(principal.getMember());
+        List<MyCommentResponseDto> comments = myPageService.getMyComments(principal.getMember());
         return ResponseEntity.ok(ResponseDTO.okWithData(comments));
     }
 
     @GetMapping("/saved-articles")
-    public ResponseEntity<ResponseDTO<List<MySaveResponseDto>>> getMySavedArticles() {
+    public ResponseEntity<ResponseDTO<List<MySavedArticleResponseDto>>> getMySavedArticles() {
         MemberPrincipal principal = (MemberPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
-        List<MySaveResponseDto> savedArticles = myPageService.getMySavedArticles(
+        List<MySavedArticleResponseDto> savedArticles = myPageService.getMySavedArticles(
             principal.getMember().getId());
         return ResponseEntity.ok(ResponseDTO.okWithData(savedArticles));
     }

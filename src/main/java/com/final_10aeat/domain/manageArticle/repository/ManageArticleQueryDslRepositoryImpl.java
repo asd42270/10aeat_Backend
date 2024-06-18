@@ -3,7 +3,7 @@ package com.final_10aeat.domain.manageArticle.repository;
 import static java.util.Optional.ofNullable;
 
 import com.final_10aeat.common.enumclass.Progress;
-import com.final_10aeat.domain.manageArticle.dto.request.GetMonthlyListWithYearQuery;
+import com.final_10aeat.domain.manageArticle.dto.request.GetMonthlyListByYearQuery;
 import com.final_10aeat.domain.manageArticle.dto.request.GetYearListPageQuery;
 import com.final_10aeat.domain.manageArticle.dto.request.GetYearListQuery;
 import com.final_10aeat.domain.manageArticle.dto.request.SearchManageArticleQuery;
@@ -96,7 +96,7 @@ public class ManageArticleQueryDslRepositoryImpl implements ManageArticleQueryDs
     }
 
     @Override
-    public Page<ManageArticle> findAllByYearAndMonthly(GetMonthlyListWithYearQuery command) {
+    public Page<ManageArticle> findAllByYearAndMonthly(GetMonthlyListByYearQuery command) {
         QManageArticle manageArticle = QManageArticle.manageArticle;
         QManageSchedule manageSchedule = QManageSchedule.manageSchedule;
         Pageable pageRequest = command.pageRequest();

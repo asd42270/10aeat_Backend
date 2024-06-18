@@ -10,7 +10,7 @@ import com.final_10aeat.domain.repairArticle.dto.request.UpdateRepairArticleRequ
 import com.final_10aeat.domain.repairArticle.entity.CustomProgress;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticleImage;
-import com.final_10aeat.domain.repairArticle.exception.ArticleAlreadyDeletedException;
+import com.final_10aeat.common.exception.ArticleAlreadyDeletedException;
 import com.final_10aeat.domain.repairArticle.exception.ArticleNotFoundException;
 import com.final_10aeat.domain.repairArticle.exception.CustomProgressNotFoundException;
 import com.final_10aeat.domain.repairArticle.exception.ImageNotFoundException;

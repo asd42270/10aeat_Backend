@@ -6,8 +6,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.final_10aeat.common.enumclass.MemberRole;
-import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
-import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
+import com.final_10aeat.domain.member.dto.request.CreateMemberRequestDto;
+import com.final_10aeat.domain.member.dto.request.DeleteMemberRequestDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.PasswordMissMatchException;
@@ -59,7 +59,7 @@ public class WithdrawServiceTest {
         .role(MemberRole.TENANT)
         .buildingInfos(Set.of(buildingInfo))
         .build();
-    private final MemberRegisterRequestDto requestDto = new MemberRegisterRequestDto(email,
+    private final CreateMemberRequestDto requestDto = new CreateMemberRequestDto(email,
         password, "spring", "102동", "2212호", MemberRole.TENANT, true);
 
     @BeforeEach
@@ -88,7 +88,7 @@ public class WithdrawServiceTest {
         @DisplayName("회원 탈퇴를 성공한다.")
         void _willSuccess() {
             // given
-            MemberWithdrawRequestDto memberRequest = new MemberWithdrawRequestDto(email, password);
+            DeleteMemberRequestDto memberRequest = new DeleteMemberRequestDto(email, password);
 
             // when
             memberService.withdraw(memberRequest);
@@ -102,7 +102,7 @@ public class WithdrawServiceTest {
         @DisplayName("비밀번호가 일치하지 않는 사용자의 탈퇴를 시도하여 실패한다.")
         void _willMissMatch() {
             String wrongPassword = "2222";
-            MemberWithdrawRequestDto memberRequest = new MemberWithdrawRequestDto(email,
+            DeleteMemberRequestDto memberRequest = new DeleteMemberRequestDto(email,
                 wrongPassword);
 
             Assertions.assertThrows(PasswordMissMatchException.class,
@@ -113,7 +113,7 @@ public class WithdrawServiceTest {
         @DisplayName("회원 탈퇴하려는 계정이 존재하지 않아 실패한다.")
         void _willNotExist() {
             String wrongEmail = "2222@naver.com";
-            MemberWithdrawRequestDto memberRequest = new MemberWithdrawRequestDto(wrongEmail,
+            DeleteMemberRequestDto memberRequest = new DeleteMemberRequestDto(wrongEmail,
                 password);
 
             Assertions.assertThrows(UserNotExistException.class,

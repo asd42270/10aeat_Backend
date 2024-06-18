@@ -3,14 +3,14 @@ package com.final_10aeat.domain.member.service;
 import com.final_10aeat.domain.comment.repository.CommentRepository;
 import com.final_10aeat.domain.member.dto.request.BuildingInfoRequestDto;
 import com.final_10aeat.domain.member.dto.response.MyBuildingInfoResponseDto;
-import com.final_10aeat.domain.member.dto.response.MyCommentsResponseDto;
+import com.final_10aeat.domain.member.dto.response.MyCommentResponseDto;
 import com.final_10aeat.domain.member.dto.response.MyInfoResponseDto;
-import com.final_10aeat.domain.member.dto.response.MySaveResponseDto;
+import com.final_10aeat.domain.member.dto.response.MySavedArticleResponseDto;
 import com.final_10aeat.domain.member.entity.BuildingInfo;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.member.exception.BuildingInfoNotAssociatedException;
-import com.final_10aeat.domain.member.exception.BuildingInfoNotFound;
-import com.final_10aeat.domain.member.exception.DuplicateBuildingInfoException;
+import com.final_10aeat.domain.member.exception.BuildingInfoNotFoundException;
+import com.final_10aeat.domain.member.exception.BuildingInfoDuplicateException;
 import com.final_10aeat.domain.member.exception.MinBuildingInfoRequiredException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.domain.member.repository.BuildingInfoRepository;
@@ -77,7 +77,7 @@ public class MyPageService {
         if (buildingInfos.stream().anyMatch(
             info -> info.getDong().equals(requestDto.dong()) && info.getHo()
                 .equals(requestDto.ho()))) {
-            throw new DuplicateBuildingInfoException();
+            throw new BuildingInfoDuplicateException();
         }
 
         BuildingInfo buildingInfo = BuildingInfo.builder()
@@ -104,7 +104,7 @@ public class MyPageService {
         }
 
         BuildingInfo buildingInfoToRemove = buildingInfoRepository.findById(buildingInfoId)
-            .orElseThrow(BuildingInfoNotFound::new);
+            .orElseThrow(BuildingInfoNotFoundException::new);
 
         if (!buildingInfos.contains(buildingInfoToRemove)) {
             throw new BuildingInfoNotAssociatedException();
@@ -115,11 +115,11 @@ public class MyPageService {
         memberRepository.save(managedMember);
     }
 
-    public List<MyCommentsResponseDto> getMyComments(Member member) {
+    public List<MyCommentResponseDto> getMyComments(Member member) {
         return commentRepository.findByMemberAndRepairArticleOfficeId(member,
                 member.getDefaultOffice())
             .stream()
-            .map(comment -> new MyCommentsResponseDto(
+            .map(comment -> new MyCommentResponseDto(
                 comment.getRepairArticle().getId(),
                 comment.getContent(),
                 comment.getCreatedAt(),
@@ -128,13 +128,13 @@ public class MyPageService {
             .collect(Collectors.toList());
     }
 
-    public List<MySaveResponseDto> getMySavedArticles(Long memberId) {
+    public List<MySavedArticleResponseDto> getMySavedArticles(Long memberId) {
         Member member = findMemberByIdWithBuildingInfos(memberId);
         Long defaultOfficeId = member.getDefaultOffice();
 
         return articleSaveRepository.findByMemberAndOffice(member, defaultOfficeId)
             .stream()
-            .map(articleSave -> new MySaveResponseDto(
+            .map(articleSave -> new MySavedArticleResponseDto(
                 articleSave.getRepairArticle().getId(),
                 articleSave.getRepairArticle().getTitle(),
                 articleSave.getRepairArticle().getCreatedAt(),

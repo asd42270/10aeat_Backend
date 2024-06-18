@@ -1,8 +1,8 @@
 package com.final_10aeat.domain.member.controller;
 
-import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
-import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
-import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
+import com.final_10aeat.common.dto.LoginRequestDto;
+import com.final_10aeat.domain.member.dto.request.CreateMemberRequestDto;
+import com.final_10aeat.domain.member.dto.request.DeleteMemberRequestDto;
 import com.final_10aeat.domain.member.service.MemberService;
 import com.final_10aeat.global.util.ResponseDTO;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,7 +24,7 @@ public class MemberController {
     @PostMapping
     public ResponseDTO<Void> register(
         HttpServletResponse response,
-        @RequestBody @Valid MemberRegisterRequestDto request
+        @RequestBody @Valid CreateMemberRequestDto request
     ) {
         LoginRequestDto loginDto = memberService.register(request);
 
@@ -45,7 +45,7 @@ public class MemberController {
 
     @DeleteMapping
     public ResponseDTO<Void> withdraw(
-        @RequestBody @Valid MemberWithdrawRequestDto request
+        @RequestBody @Valid DeleteMemberRequestDto request
     ) {
         memberService.withdraw(request);
         return ResponseDTO.ok();

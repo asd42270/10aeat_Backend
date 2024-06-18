@@ -2,7 +2,7 @@ package com.final_10aeat.domain.comment.service;
 
 import com.final_10aeat.common.exception.ArticleNotFoundException;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
-import com.final_10aeat.domain.alarm.event.BookmarkCommentEvent;
+import com.final_10aeat.domain.alarm.event.SavedArticleCommentEvent;
 import com.final_10aeat.domain.alarm.event.CommentEvent;
 import com.final_10aeat.domain.comment.dto.request.CreateCommentRequestDto;
 import com.final_10aeat.domain.comment.dto.request.UpdateCommentRequestDto;
@@ -91,7 +91,7 @@ public class CommentService {
                     .build());
         }
 
-        eventPublisher.publishEvent(BookmarkCommentEvent.builder()
+        eventPublisher.publishEvent(SavedArticleCommentEvent.builder()
                 .members(articleMembers)
                 .articleId(repairArticleId)
                 .build());

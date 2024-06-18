@@ -18,8 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.final_10aeat.common.util.manager.WithManager;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.manageArticle.controller.ManagerScheduleController;
-import com.final_10aeat.domain.manageArticle.dto.request.ScheduleRequestDto;
-import com.final_10aeat.domain.manageArticle.service.ManageScheduleService;
+import com.final_10aeat.domain.manageArticle.dto.request.CreateScheduleRequestDto;
+import com.final_10aeat.domain.manageArticle.service.ManagerScheduleService;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ public class ManagerScheduleControllerDocsTest extends RestDocsSupport {
 
     @Override
     public Object initController() {
-        ManageScheduleService service = mock(ManageScheduleService.class);
+        ManagerScheduleService service = mock(ManagerScheduleService.class);
         return new ManagerScheduleController(service);
     }
 
@@ -38,7 +38,7 @@ public class ManagerScheduleControllerDocsTest extends RestDocsSupport {
     @WithManager
     void testCreate() throws Exception {
         // given
-        ScheduleRequestDto request = new ScheduleRequestDto(
+        CreateScheduleRequestDto request = new CreateScheduleRequestDto(
             LocalDateTime.of(2024, 6, 1, 0, 0),
             LocalDateTime.of(2024, 6, 14, 0, 0)
         );
@@ -85,7 +85,7 @@ public class ManagerScheduleControllerDocsTest extends RestDocsSupport {
     @WithManager
     void testUpdate() throws Exception {
         // given
-        ScheduleRequestDto request = new ScheduleRequestDto(
+        CreateScheduleRequestDto request = new CreateScheduleRequestDto(
             LocalDateTime.of(2024, 6, 1, 0, 0),
             LocalDateTime.of(2024, 6, 14, 0, 0)
         );

@@ -16,9 +16,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.member.controller.MemberController;
-import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
-import com.final_10aeat.domain.member.dto.request.MemberRegisterRequestDto;
-import com.final_10aeat.domain.member.dto.request.MemberWithdrawRequestDto;
+import com.final_10aeat.common.dto.LoginRequestDto;
+import com.final_10aeat.domain.member.dto.request.CreateMemberRequestDto;
+import com.final_10aeat.domain.member.dto.request.DeleteMemberRequestDto;
 import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
@@ -88,7 +88,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
     @Test
     void testRegister() throws Exception {
         //given
-        MemberRegisterRequestDto registerRequest = new MemberRegisterRequestDto(
+        CreateMemberRequestDto registerRequest = new CreateMemberRequestDto(
             "test@example.com", "password", "test",
             "102동", "2212호", MemberRole.TENANT, true
         );
@@ -132,7 +132,7 @@ public class MemberControllerDocsTest extends RestDocsSupport {
     @Test
     void testWithdraw() throws Exception {
         //given
-        MemberWithdrawRequestDto withdrawRequest = new MemberWithdrawRequestDto(
+        DeleteMemberRequestDto withdrawRequest = new DeleteMemberRequestDto(
             "test@example.com", "password");
 
         // when

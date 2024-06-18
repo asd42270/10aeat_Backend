@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
-import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
+import com.final_10aeat.common.dto.LoginRequestDto;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.member.exception.PasswordMissMatchException;

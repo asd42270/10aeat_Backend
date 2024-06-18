@@ -6,14 +6,14 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 import com.final_10aeat.common.enumclass.MemberRole;
-import com.final_10aeat.domain.articleIssue.dto.request.ArticleIssueCheckRequestDto;
+import com.final_10aeat.domain.articleIssue.dto.request.CheckIssueRequestDto;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssueCheck;
-import com.final_10aeat.domain.articleIssue.exception.InactiveIssueException;
+import com.final_10aeat.domain.articleIssue.exception.DisabledIssueException;
 import com.final_10aeat.domain.articleIssue.exception.IssueNotFoundException;
 import com.final_10aeat.domain.articleIssue.repository.ArticleIssueCheckRepository;
 import com.final_10aeat.domain.articleIssue.repository.ArticleIssueRepository;
-import com.final_10aeat.domain.articleIssue.service.ArticleIssueCheckService;
+import com.final_10aeat.domain.articleIssue.service.IssueCheckService;
 import com.final_10aeat.domain.member.entity.Member;
 import com.final_10aeat.domain.repairArticle.entity.RepairArticle;
 import java.util.Optional;
@@ -33,7 +33,7 @@ public class RepairIssueCheckServiceTest {
     private ArticleIssueRepository articleIssueRepository;
 
     @InjectMocks
-    private ArticleIssueCheckService articleIssueCheckService;
+    private IssueCheckService issueCheckService;
 
     private final Member member = Member.builder()
         .id(1L)
@@ -70,12 +70,12 @@ public class RepairIssueCheckServiceTest {
         @DisplayName("이슈 확인에 성공한다.")
         void _willSuccess() {
             // given
-            ArticleIssueCheckRequestDto requestDto = new ArticleIssueCheckRequestDto(true);
+            CheckIssueRequestDto requestDto = new CheckIssueRequestDto(true);
             given(articleIssueRepository.findById(articleIssue.getId())).willReturn(
                 Optional.of(articleIssue));
 
             // when
-            articleIssueCheckService.checkIssue(requestDto, articleIssue.getId(), member);
+            issueCheckService.checkIssue(requestDto, articleIssue.getId(), member);
 
             // then
             verify(articleIssueRepository).findById(articleIssue.getId());
@@ -86,13 +86,13 @@ public class RepairIssueCheckServiceTest {
         @DisplayName("게시글이 없어 확인에 실패한다.")
         void _articleNotFound() {
             // given
-            ArticleIssueCheckRequestDto requestDto = new ArticleIssueCheckRequestDto(true);
+            CheckIssueRequestDto requestDto = new CheckIssueRequestDto(true);
             given(articleIssueRepository.findById(articleIssue.getId())).willReturn(
                 Optional.empty());
 
             // when&then
             assertThrows(IssueNotFoundException.class,
-                () -> articleIssueCheckService.checkIssue(requestDto, articleIssue.getId(),
+                () -> issueCheckService.checkIssue(requestDto, articleIssue.getId(),
                     member));
         }
 
@@ -100,14 +100,14 @@ public class RepairIssueCheckServiceTest {
         @DisplayName("이슈가 비활성화 상태라 확인에 실패한다.")
         void _inactiveIssue() {
             // given
-            ArticleIssueCheckRequestDto requestDto = new ArticleIssueCheckRequestDto(true);
+            CheckIssueRequestDto requestDto = new CheckIssueRequestDto(true);
             articleIssue.setEnabled(false);
             given(articleIssueRepository.findById(articleIssue.getId())).willReturn(
                 Optional.of(articleIssue));
 
             // when&then
-            assertThrows(InactiveIssueException.class,
-                () -> articleIssueCheckService.checkIssue(requestDto, articleIssue.getId(),
+            assertThrows(DisabledIssueException.class,
+                () -> issueCheckService.checkIssue(requestDto, articleIssue.getId(),
                     member));
         }
     }

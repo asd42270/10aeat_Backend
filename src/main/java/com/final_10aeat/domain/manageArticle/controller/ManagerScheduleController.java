@@ -1,7 +1,7 @@
 package com.final_10aeat.domain.manageArticle.controller;
 
-import com.final_10aeat.domain.manageArticle.dto.request.ScheduleRequestDto;
-import com.final_10aeat.domain.manageArticle.service.ManageScheduleService;
+import com.final_10aeat.domain.manageArticle.dto.request.CreateScheduleRequestDto;
+import com.final_10aeat.domain.manageArticle.service.ManagerScheduleService;
 import com.final_10aeat.global.security.principal.ManagerPrincipal;
 import com.final_10aeat.global.util.ResponseDTO;
 import jakarta.validation.Valid;
@@ -22,17 +22,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/managers/manage/articles/schedules")
 public class ManagerScheduleController {
 
-    private final ManageScheduleService manageScheduleService;
+    private final ManagerScheduleService managerScheduleService;
 
     @PostMapping("/{manageArticleId}")
     public ResponseDTO<Void> register(
         @PathVariable Long manageArticleId,
-        @RequestBody @Valid ScheduleRequestDto request
+        @RequestBody @Valid CreateScheduleRequestDto request
     ) {
         ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
 
-        manageScheduleService.register(manageArticleId, request, principal.getManager());
+        managerScheduleService.register(manageArticleId, request, principal.getManager());
         return ResponseDTO.ok();
     }
 
@@ -43,7 +43,7 @@ public class ManagerScheduleController {
         ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
 
-        manageScheduleService.complete(manageScheduleId, principal.getManager());
+        managerScheduleService.complete(manageScheduleId, principal.getManager());
 
         return ResponseDTO.ok();
     }
@@ -51,12 +51,12 @@ public class ManagerScheduleController {
     @PatchMapping("/progress/{manageScheduleId}")
     public ResponseDTO<Void> update(
         @PathVariable Long manageScheduleId,
-        @RequestBody @Valid ScheduleRequestDto request
+        @RequestBody @Valid CreateScheduleRequestDto request
     ) {
         ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
 
-        manageScheduleService.update(manageScheduleId, request, principal.getManager()
+        managerScheduleService.update(manageScheduleId, request, principal.getManager()
         );
 
         return ResponseDTO.ok();
@@ -69,7 +69,7 @@ public class ManagerScheduleController {
         ManagerPrincipal principal = (ManagerPrincipal) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
 
-        manageScheduleService.delete(manageScheduleId, principal.getManager());
+        managerScheduleService.delete(manageScheduleId, principal.getManager());
 
         return ResponseDTO.ok();
     }

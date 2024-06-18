@@ -18,7 +18,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.final_10aeat.common.dto.UserIdAndRole;
-import com.final_10aeat.common.service.AuthenticationService;
+import com.final_10aeat.common.service.AuthUserService;
 import com.final_10aeat.common.util.member.WithMember;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.comment.controller.CommentController;
@@ -37,13 +37,13 @@ import org.springframework.restdocs.payload.JsonFieldType;
 public class CommentControllerDocsTest extends RestDocsSupport {
 
     private CommentService commentService;
-    private AuthenticationService authenticationService;
+    private AuthUserService authUserService;
 
     @Override
     public Object initController() {
         commentService = Mockito.mock(CommentService.class);
-        authenticationService = Mockito.mock(AuthenticationService.class);
-        return new CommentController(commentService, authenticationService);
+        authUserService = Mockito.mock(AuthUserService.class);
+        return new CommentController(commentService, authUserService);
     }
 
     @DisplayName("댓글 작성 API 문서화")
@@ -57,7 +57,7 @@ public class CommentControllerDocsTest extends RestDocsSupport {
         );
 
         UserIdAndRole userIdAndRole = new UserIdAndRole(1L, false);
-        when(authenticationService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
+        when(authUserService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
 
         // when
         doNothing().when(commentService).createComment(repairArticleId, requestDto, 1L, false);
@@ -91,7 +91,7 @@ public class CommentControllerDocsTest extends RestDocsSupport {
         Long commentId = 1L;
 
         UserIdAndRole userIdAndRole = new UserIdAndRole(1L, false);
-        when(authenticationService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
+        when(authUserService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
 
         // when
         doNothing().when(commentService).deleteComment(commentId, 1L, false);
@@ -123,7 +123,7 @@ public class CommentControllerDocsTest extends RestDocsSupport {
         );
 
         UserIdAndRole userIdAndRole = new UserIdAndRole(1L, false);
-        when(authenticationService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
+        when(authUserService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
 
         // when
         doNothing().when(commentService).updateComment(commentId, requestDto, 1L, false);

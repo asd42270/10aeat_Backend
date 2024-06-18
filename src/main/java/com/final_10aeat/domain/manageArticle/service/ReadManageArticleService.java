@@ -7,14 +7,14 @@ import com.final_10aeat.common.enumclass.Progress;
 import com.final_10aeat.common.exception.ArticleNotFoundException;
 import com.final_10aeat.common.exception.UnauthorizedAccessException;
 import com.final_10aeat.domain.articleIssue.entity.ArticleIssue;
-import com.final_10aeat.domain.manageArticle.dto.request.GetMonthlyListWithYearQuery;
+import com.final_10aeat.domain.manageArticle.dto.request.GetMonthlyListByYearQuery;
 import com.final_10aeat.domain.manageArticle.dto.request.GetYearListQuery;
 import com.final_10aeat.domain.manageArticle.dto.request.SearchManageArticleQuery;
-import com.final_10aeat.domain.manageArticle.dto.response.DetailManageArticleResponse;
-import com.final_10aeat.domain.manageArticle.dto.response.ListManageArticleResponse;
-import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleSummaryResponse;
-import com.final_10aeat.domain.manageArticle.dto.response.SearchManagersManageResponse;
-import com.final_10aeat.domain.manageArticle.dto.response.SummaryManageArticleResponse;
+import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleDetailResponseDto;
+import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleListResponseDto;
+import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleSummaryResponseDto;
+import com.final_10aeat.domain.manageArticle.dto.response.SearchManagerManageArticleResponseDto;
+import com.final_10aeat.domain.manageArticle.dto.response.ManageArticleSummaryListResponseDto;
 import com.final_10aeat.domain.manageArticle.dto.util.ScheduleConverter;
 import com.final_10aeat.domain.manageArticle.entity.ManageArticle;
 import com.final_10aeat.domain.manageArticle.entity.ManageSchedule;
@@ -48,14 +48,14 @@ public class ReadManageArticleService {
         Progress.COMPLETE
     );
 
-    public SummaryManageArticleResponse summary(Long id, Integer year) {
+    public ManageArticleSummaryListResponseDto summary(Long id, Integer year) {
         List<ManageArticle> articles = manageArticleRepository
             .findAllByYear(GetYearListQuery.toQueryDto(year, id));
 
         return summaryArticleFrom(articles);
     }
 
-    private SummaryManageArticleResponse summaryArticleFrom(List<ManageArticle> articles) {
+    private ManageArticleSummaryListResponseDto summaryArticleFrom(List<ManageArticle> articles) {
         ArrayList<Long> issueList = new ArrayList<>();
         int complete = 0;
         int inprogress = 0;
@@ -75,10 +75,10 @@ public class ReadManageArticleService {
             article.getActiveIssue().ifPresent(issue -> issueList.add(issue.getId()));
         }
 
-        return new SummaryManageArticleResponse(complete, inprogress, pending, issueList);
+        return new ManageArticleSummaryListResponseDto(complete, inprogress, pending, issueList);
     }
 
-    public DetailManageArticleResponse detailArticle(Long userOfficeId, Long articleId) {
+    public ManageArticleDetailResponseDto detailArticle(Long userOfficeId, Long articleId) {
         ManageArticle article = manageArticleRepository.findByIdAndDeletedAtNull(
                 articleId)
             .orElseThrow(ArticleNotFoundException::new);
@@ -90,8 +90,8 @@ public class ReadManageArticleService {
         return detailArticleFrom(article);
     }
 
-    private DetailManageArticleResponse detailArticleFrom(ManageArticle article) {
-        return DetailManageArticleResponse.builder()
+    private ManageArticleDetailResponseDto detailArticleFrom(ManageArticle article) {
+        return ManageArticleDetailResponseDto.builder()
             .period(article.getPeriod())
             .periodCount(article.getPeriodCount())
             .title(article.getTitle())
@@ -109,7 +109,7 @@ public class ReadManageArticleService {
             .build();
     }
 
-    public Page<ListManageArticleResponse> listArticleByProgress(
+    public Page<ManageArticleListResponseDto> listArticleByProgress(
         Integer year, Long userOfficeId, Pageable pageRequest
     ) {
         return manageArticleRepository
@@ -121,7 +121,7 @@ public class ReadManageArticleService {
             .map(this::listArticleFrom);
     }
 
-    public Page<ListManageArticleResponse> listArticleByProgress(
+    public Page<ManageArticleListResponseDto> listArticleByProgress(
         Integer year, Long userOfficeId, Pageable pageRequest, Boolean complete
     ) {
         Page<ManageArticle> articles = manageArticleRepository
@@ -132,8 +132,8 @@ public class ReadManageArticleService {
         return articles.map(this::listArticleFrom);
     }
 
-    private ListManageArticleResponse listArticleFrom(ManageArticle article) {
-        return ListManageArticleResponse.builder()
+    private ManageArticleListResponseDto listArticleFrom(ManageArticle article) {
+        return ManageArticleListResponseDto.builder()
             .id(article.getId())
             .period(article.getPeriod())
             .periodCount(article.getPeriodCount())
@@ -147,16 +147,16 @@ public class ReadManageArticleService {
             .build();
     }
 
-    public List<ManageArticleSummaryResponse> monthlySummary(Integer year, Long officeId) {
+    public List<ManageArticleSummaryResponseDto> monthlySummary(Integer year, Long officeId) {
         List<ManageArticle> articles = manageArticleRepository.findAllByOfficeIdAndDeletedAtNull(
             officeId);
 
         return toSummaryDto(articles, year);
     }
 
-    private List<ManageArticleSummaryResponse> toSummaryDto(List<ManageArticle> articles,
+    private List<ManageArticleSummaryResponseDto> toSummaryDto(List<ManageArticle> articles,
         Integer year) {
-        List<ManageArticleSummaryResponse> monthly = new ArrayList<>();
+        List<ManageArticleSummaryResponseDto> monthly = new ArrayList<>();
         HashMap<Integer, Set<Long>> monthArticleIdMap = new HashMap<>();
 
         articles.forEach(
@@ -170,12 +170,12 @@ public class ReadManageArticleService {
         );
 
         monthArticleIdMap.forEach(
-            (key, value) -> monthly.add(new ManageArticleSummaryResponse(key, value.size()))
+            (key, value) -> monthly.add(new ManageArticleSummaryResponseDto(key, value.size()))
         );
         return monthly;
     }
 
-    public Page<ListManageArticleResponse> monthlyListArticle(
+    public Page<ManageArticleListResponseDto> monthlyListArticle(
         Long userOfficeId, Integer year, Integer month, Pageable pageRequest
     ) {
         if (ofNullable(month).isEmpty()) {
@@ -185,20 +185,20 @@ public class ReadManageArticleService {
         }
 
         return manageArticleRepository
-            .findAllByYearAndMonthly(GetMonthlyListWithYearQuery
+            .findAllByYearAndMonthly(GetMonthlyListByYearQuery
                 .toQueryDto(year, month, userOfficeId, pageRequest)
             )
             .map(this::listArticleFrom);
     }
 
-    public Page<ListManageArticleResponse> search(
+    public Page<ManageArticleListResponseDto> search(
         Long userOfficeId, String search, Pageable pageRequest
     ) {
         return manageArticleRepository.searchByOfficeIdAndText(userOfficeId, search, pageRequest)
             .map(this::listArticleFrom);
     }
 
-    public Page<SearchManagersManageResponse> managerSearch(
+    public Page<SearchManagerManageArticleResponseDto> managerSearch(
         Long userOfficeId, Integer year, String keyword, Integer month, Pageable pageRequest,
         LocalDateTime now) {
         return manageArticleRepository.searchByKeyword(
@@ -214,8 +214,8 @@ public class ReadManageArticleService {
             .map(this::searchArticleFrom);
     }
 
-    private SearchManagersManageResponse searchArticleFrom(ManageArticle article) {
-        return SearchManagersManageResponse.builder()
+    private SearchManagerManageArticleResponseDto searchArticleFrom(ManageArticle article) {
+        return SearchManagerManageArticleResponseDto.builder()
             .id(article.getId())
             .period(article.getPeriod())
             .periodCount(article.getPeriodCount())

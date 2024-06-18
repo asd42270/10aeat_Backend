@@ -19,16 +19,16 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.final_10aeat.common.dto.UserIdAndRole;
 import com.final_10aeat.common.enumclass.ArticleCategory;
 import com.final_10aeat.common.enumclass.Progress;
-import com.final_10aeat.common.service.AuthenticationService;
+import com.final_10aeat.common.service.AuthUserService;
 import com.final_10aeat.common.util.manager.WithManager;
 import com.final_10aeat.docs.RestDocsSupport;
-import com.final_10aeat.domain.repairArticle.controller.GetRepairArticleController;
+import com.final_10aeat.domain.repairArticle.controller.ReadRepairArticleController;
 import com.final_10aeat.domain.repairArticle.dto.response.CustomProgressResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.ManagerRepairArticleResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.OwnerRepairArticleResponseDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleDetailDto;
 import com.final_10aeat.domain.repairArticle.dto.response.RepairArticleSummaryDto;
-import com.final_10aeat.domain.repairArticle.service.GetRepairArticleFacade;
+import com.final_10aeat.domain.repairArticle.service.ReadRepairArticleFacade;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,14 +46,14 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 public class GetRepairArticleDocsTest extends RestDocsSupport {
 
-    private GetRepairArticleFacade getRepairArticleFacade;
-    private AuthenticationService authenticationService;
+    private ReadRepairArticleFacade readRepairArticleFacade;
+    private AuthUserService authUserService;
 
     @Override
     public Object initController() {
-        getRepairArticleFacade = mock(GetRepairArticleFacade.class);
-        authenticationService = mock(AuthenticationService.class);
-        return new GetRepairArticleController(getRepairArticleFacade);
+        readRepairArticleFacade = mock(ReadRepairArticleFacade.class);
+        authUserService = mock(AuthUserService.class);
+        return new ReadRepairArticleController(readRepairArticleFacade);
     }
 
     @BeforeEach
@@ -72,8 +72,8 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
     @Test
     void testGetRepairArticleSummary() throws Exception {
         UserIdAndRole userIdAndRole = new UserIdAndRole(1L, true);
-        when(authenticationService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
-        when(authenticationService.getUserOfficeId()).thenReturn(1L);
+        when(authUserService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
+        when(authUserService.getUserOfficeId()).thenReturn(1L);
 
         // given
         RepairArticleSummaryDto summaryDto = new RepairArticleSummaryDto(
@@ -84,7 +84,7 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
             false
         );
 
-        when(getRepairArticleFacade.getRepairArticleSummary()).thenReturn(summaryDto);
+        when(readRepairArticleFacade.getRepairArticleSummary()).thenReturn(summaryDto);
 
         // when & then
         mockMvc.perform(get("/repair/articles/summary")
@@ -114,8 +114,8 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
     @Test
     void testGetAllRepairArticles() throws Exception {
         UserIdAndRole userIdAndRole = new UserIdAndRole(1L, false);
-        when(authenticationService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
-        when(authenticationService.getUserOfficeId()).thenReturn(1L);
+        when(authUserService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
+        when(authUserService.getUserOfficeId()).thenReturn(1L);
 
         // given
         OwnerRepairArticleResponseDto articleDto1 = new OwnerRepairArticleResponseDto(
@@ -136,7 +136,7 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
         Page<OwnerRepairArticleResponseDto> page = new PageImpl<>(articles, PageRequest.of(0, 5),
             articles.size());
 
-        when(getRepairArticleFacade.getAllRepairArticles(
+        when(readRepairArticleFacade.getAllRepairArticles(
             List.of(Progress.INPROGRESS, Progress.PENDING), ArticleCategory.REPAIR,
             PageRequest.of(0, 5)))
             .thenReturn((Page) page);
@@ -209,8 +209,8 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
     @WithManager
     void testGetAllRepairArticlesForManager() throws Exception {
         UserIdAndRole userIdAndRole = new UserIdAndRole(1L, true);
-        when(authenticationService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
-        when(authenticationService.getUserOfficeId()).thenReturn(1L);
+        when(authUserService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
+        when(authUserService.getUserOfficeId()).thenReturn(1L);
 
         // given
         ManagerRepairArticleResponseDto articleDto1 = new ManagerRepairArticleResponseDto(
@@ -229,7 +229,7 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
         Page<ManagerRepairArticleResponseDto> page = new PageImpl<>(articles, PageRequest.of(0, 5),
             articles.size());
 
-        when(getRepairArticleFacade.getAllRepairArticles(
+        when(readRepairArticleFacade.getAllRepairArticles(
             List.of(Progress.PENDING), null, PageRequest.of(0, 5)))
             .thenReturn((Page) page);
 
@@ -292,7 +292,7 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
     @Test
     void testGetRepairArticleDetail() throws Exception {
         UserIdAndRole userIdAndRole = new UserIdAndRole(1L, true);
-        when(authenticationService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
+        when(authUserService.getCurrentUserIdAndRole()).thenReturn(userIdAndRole);
 
         // given
         RepairArticleDetailDto detailDto = new RepairArticleDetailDto(
@@ -304,7 +304,7 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
             "수리회사 이름", "http://repaircompany.com"
         );
 
-        when(getRepairArticleFacade.getArticleDetails(1L)).thenReturn(detailDto);
+        when(readRepairArticleFacade.getArticleDetails(1L)).thenReturn(detailDto);
 
         // when & then
         mockMvc.perform(get("/repair/articles/{repairArticleId}", 1L)
@@ -363,7 +363,7 @@ public class GetRepairArticleDocsTest extends RestDocsSupport {
             LocalDateTime.now().minusDays(1));
 
         List<CustomProgressResponseDto> progressList = List.of(progressDto1, progressDto2);
-        when(getRepairArticleFacade.getCustomProgressList(1L)).thenReturn(progressList);
+        when(readRepairArticleFacade.getCustomProgressList(1L)).thenReturn(progressList);
 
         // when & then
         mockMvc.perform(get("/repair/articles/progress/{repairArticleId}", 1L)

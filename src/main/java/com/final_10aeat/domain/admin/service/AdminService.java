@@ -4,7 +4,7 @@ import com.final_10aeat.common.enumclass.MemberRole;
 import com.final_10aeat.domain.admin.dto.CreateAdminRequestDto;
 import com.final_10aeat.domain.admin.entity.Admin;
 import com.final_10aeat.domain.admin.repository.AdminRepository;
-import com.final_10aeat.domain.member.dto.request.LoginRequestDto;
+import com.final_10aeat.common.dto.LoginRequestDto;
 import com.final_10aeat.domain.member.exception.PasswordMissMatchException;
 import com.final_10aeat.domain.member.exception.UserNotExistException;
 import com.final_10aeat.global.security.jwt.JwtTokenGenerator;

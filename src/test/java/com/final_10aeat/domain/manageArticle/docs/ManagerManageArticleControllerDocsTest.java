@@ -17,7 +17,7 @@ import com.final_10aeat.common.util.manager.WithManager;
 import com.final_10aeat.docs.RestDocsSupport;
 import com.final_10aeat.domain.manageArticle.controller.ManagerManageArticleController;
 import com.final_10aeat.domain.manageArticle.dto.request.CreateManageArticleRequestDto;
-import com.final_10aeat.domain.manageArticle.dto.request.ScheduleRequestDto;
+import com.final_10aeat.domain.manageArticle.dto.request.CreateScheduleRequestDto;
 import com.final_10aeat.domain.manageArticle.dto.request.UpdateManageArticleRequestDto;
 import com.final_10aeat.domain.manageArticle.service.ManagerManageArticleService;
 import java.time.LocalDateTime;
@@ -41,7 +41,7 @@ public class ManagerManageArticleControllerDocsTest extends RestDocsSupport {
     @WithManager
     void testCreate() throws Exception {
         // given
-        ScheduleRequestDto schedule1 = new ScheduleRequestDto(
+        CreateScheduleRequestDto schedule1 = new CreateScheduleRequestDto(
             LocalDateTime.of(2024, 6, 1, 0, 0),
             LocalDateTime.of(2024, 6, 14, 0, 0)
         );

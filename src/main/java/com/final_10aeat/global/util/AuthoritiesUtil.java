@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-//@UtilityClass//써보고싶은데 시간이 없네요 ㅠ
 public class AuthoritiesUtil {
 
     public static final Collection<SimpleGrantedAuthority> ADMIN_AUTHORITIES = Arrays.asList(
