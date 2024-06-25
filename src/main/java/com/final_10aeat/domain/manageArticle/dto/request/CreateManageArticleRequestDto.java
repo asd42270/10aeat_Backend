@@ -1,7 +1,7 @@
 package com.final_10aeat.domain.manageArticle.dto.request;
 
 import com.final_10aeat.common.enumclass.ManagePeriod;
-import com.final_10aeat.domain.manageArticle.dto.request.validator.ListSize;
+import com.final_10aeat.common.dto.validator.ListNotEmpty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,7 +18,7 @@ public record CreateManageArticleRequestDto(
     String target,
     String responsibility,
     String note,
-    @Valid @ListSize
+    @Valid @ListNotEmpty(message = "일정은 1개 이상 존재해야 합니다")
     List<CreateScheduleRequestDto> schedule
 ) {
 
