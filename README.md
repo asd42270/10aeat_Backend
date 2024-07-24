@@ -1,4 +1,7 @@
 # 10aeat
+
+**팀원** : 이유빈(팀장), 최혜미, 권재현
+
 **서비스** : https://www.10aeat.com/
 
 **api 명세서** : https://api.10aeat.com/docs/index.html
